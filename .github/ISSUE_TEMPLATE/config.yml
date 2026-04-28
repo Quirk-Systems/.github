@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/quirk-systems/.github/security/policy
+    about: Please do not open a public issue for security vulnerabilities. See our security policy for private reporting instructions.

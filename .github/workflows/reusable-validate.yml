@@ -1,0 +1,108 @@
+name: Reusable validate
+
+on:
+  workflow_call:
+    inputs:
+      package-manager:
+        description: "Package manager: bun | pnpm | yarn | npm"
+        required: false
+        type: string
+        default: bun
+      node-version:
+        description: "Node.js version (used when package-manager != bun)"
+        required: false
+        type: string
+        default: "20"
+      bun-version:
+        description: "Bun version (used when package-manager = bun)"
+        required: false
+        type: string
+        default: latest
+      working-directory:
+        description: "Directory to run commands from"
+        required: false
+        type: string
+        default: "."
+      test-script:
+        description: "Script name for one-shot tests (e.g. test:run, test)"
+        required: false
+        type: string
+        default: "test:run"
+      run-build:
+        description: "Run the build step"
+        required: false
+        type: boolean
+        default: true
+      run-e2e:
+        description: "Run Playwright e2e tests"
+        required: false
+        type: boolean
+        default: false
+      e2e-script:
+        description: "Script name for e2e tests"
+        required: false
+        type: string
+        default: "test:e2e"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        if: inputs.package-manager == 'bun'
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ inputs.bun-version }}
+
+      - name: Setup pnpm
+        if: inputs.package-manager == 'pnpm'
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        if: inputs.package-manager != 'bun'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: ${{ inputs.package-manager }}
+
+      - name: Install dependencies
+        run: |
+          case "${{ inputs.package-manager }}" in
+            bun)   bun install --frozen-lockfile ;;
+            pnpm)  pnpm install --frozen-lockfile ;;
+            yarn)  yarn install --frozen-lockfile ;;
+            npm)   npm ci ;;
+            *) echo "Unknown package manager: ${{ inputs.package-manager }}" && exit 1 ;;
+          esac
+
+      - name: Lint
+        run: ${{ inputs.package-manager }} run lint
+
+      - name: Type-check
+        run: ${{ inputs.package-manager }} run type-check
+
+      - name: Test
+        run: ${{ inputs.package-manager }} run ${{ inputs.test-script }}
+
+      - name: Build
+        if: inputs.run-build
+        run: ${{ inputs.package-manager }} run build
+
+      - name: Install Playwright browsers
+        if: inputs.run-e2e
+        run: |
+          case "${{ inputs.package-manager }}" in
+            bun)   bunx playwright install --with-deps ;;
+            pnpm)  pnpm exec playwright install --with-deps ;;
+            yarn)  yarn playwright install --with-deps ;;
+            npm)   npx playwright install --with-deps ;;
+          esac
+
+      - name: E2E tests
+        if: inputs.run-e2e
+        run: ${{ inputs.package-manager }} run ${{ inputs.e2e-script }}
