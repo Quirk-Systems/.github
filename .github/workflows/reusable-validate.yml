@@ -9,7 +9,7 @@ on:
         type: string
         default: bun
       node-version:
-        description: "Node.js version (used when package-manager != bun)"
+        description: "Node.js version"
         required: false
         type: string
         default: "20"
@@ -47,6 +47,10 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    env:
+      # Quirk Systems repos use t3-env; allow the build to skip strict env
+      # validation when secrets aren't configured in CI.
+      SKIP_ENV_VALIDATION: "1"
     defaults:
       run:
         working-directory: ${{ inputs.working-directory }}
@@ -63,12 +67,18 @@ jobs:
         if: inputs.package-manager == 'pnpm'
         uses: pnpm/action-setup@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js (with cache)
         if: inputs.package-manager != 'bun'
         uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node-version }}
           cache: ${{ inputs.package-manager }}
+
+      - name: Setup Node.js
+        if: inputs.package-manager == 'bun'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
 
       - name: Install dependencies
         run: |
