@@ -10,6 +10,11 @@ jobs:
     steps:
       - name: Checkout caller repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            .quirk/manifest.json
 
       - name: Checkout Quirk semantic core
         uses: actions/checkout@v4
@@ -17,6 +22,11 @@ jobs:
           repository: Quirk-Systems/.github
           ref: main
           path: .quirk-core
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            .quirk/registry.json
+            scripts/quirk_concept.py
 
       - name: Lint canonical registry
         run: python .quirk-core/scripts/quirk_concept.py --registry .quirk-core/.quirk/registry.json lint
