@@ -18,7 +18,8 @@ The conversation is not the system. The agent is not the system. The repository 
 
 ## Public ecosystem
 
-- [`quirk-os`](https://github.com/Quirk-Systems/project-scaffold) — the implemented Quirk kernel, currently awaiting its repository-name cutover
+- [`project-scaffold`](https://github.com/Quirk-Systems/project-scaffold) — public GitHub template and runnable reference scaffold
+- [`quirk-os`](https://github.com/Quirk-Systems/quirk-os) — separate reserved boundary for the Quirk operating system; not inherited from Project Scaffold
 - [`quirk-feed`](https://github.com/Quirk-Systems/quirk-feed) — knowledge-feed and discovery surface
 - [`quirk-generator`](https://github.com/Quirk-Systems/quirk-generator) — multi-model visual-generation instrument
 - [`.github`](https://github.com/Quirk-Systems/.github) — public governance, semantic authority, and reusable organization workflows
