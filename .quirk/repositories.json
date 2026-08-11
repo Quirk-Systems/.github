@@ -1,7 +1,7 @@
 {
-  "registry_version": "0.1.0",
+  "registry_version": "0.2.0",
   "authority": "Quirk-Systems/.github",
-  "updated_at": "2026-07-29",
+  "updated_at": "2026-08-11",
   "repositories": [
     {
       "repository": "Quirk-Systems/.github",
@@ -21,23 +21,21 @@
     },
     {
       "repository": "Quirk-Systems/project-scaffold",
-      "desired_repository": "Quirk-Systems/quirk-os",
       "visibility": "public",
-      "primary_class": "kernel",
+      "primary_class": "reference",
       "lifecycle": "active",
-      "canonical": true,
-      "purpose": "Implemented Quirk OS kernel, operator surface, asset and mutation engine, and initial runtime",
-      "migration": "Rename after the empty quirk-os placeholder is moved to quirk-os-reserved"
+      "canonical": false,
+      "purpose": "Public GitHub template, runnable application scaffold, and reference implementation for Quirk projects",
+      "identity_invariant": "Must remain Quirk-Systems/project-scaffold; capability does not imply Quirk OS authority"
     },
     {
       "repository": "Quirk-Systems/quirk-os",
-      "desired_repository": "Quirk-Systems/quirk-os-reserved",
-      "visibility": "private",
-      "primary_class": "sandbox",
-      "lifecycle": "proposed_archive",
+      "visibility": "public",
+      "primary_class": "kernel",
+      "lifecycle": "reserved",
       "canonical": false,
-      "purpose": "Empty naming placeholder",
-      "migration": "Rename, verify no unique configuration, document, and archive"
+      "purpose": "Separate reserved boundary for Quirk OS; currently minimal and not admitted as an active kernel",
+      "activation_gate": "Independent canon, runtime, permissions, implementation, evidence, and owner approval"
     },
     {
       "repository": "Quirk-Systems/quirk-data",
