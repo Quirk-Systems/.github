@@ -29,19 +29,21 @@ async preparation
 
 Every repository must clearly declare which part of this loop it serves and which canonical authority it consumes.
 
-## 2. Immediate naming decision
+## 2. Repository identity decision
 
-The implemented kernel is currently `Quirk-Systems/project-scaffold`. The private `Quirk-Systems/quirk-os` repository is an empty placeholder.
+`Quirk-Systems/project-scaffold` remains the public Project Scaffold repository:
+a GitHub template, runnable baseline, and reference implementation. It is not
+Quirk OS and will not be renamed because it contains adjacent or demonstrative
+capabilities.
 
-The intended cutover is:
+`Quirk-Systems/quirk-os` remains a separate repository boundary. Its current
+minimal contents do not inherit the scaffold's implementation, history,
+authority, or admission status. It must define and prove its own canon, runtime,
+permissions, evidence, and release lifecycle.
 
-1. Rename the empty `quirk-os` placeholder to `quirk-os-reserved`.
-2. Archive the renamed placeholder after confirming it contains no unique settings, secrets, environments, releases, packages, or branch rules.
-3. Rename `project-scaffold` to `quirk-os`.
-4. Update manifests, deployments, badges, local remotes, integrations, and policy references.
-5. Verify GitHub redirects, CI, Dependabot, webhooks, environments, and deployment providers.
-
-The operational checklist is maintained in `docs/QUIRK_OS_RENAME_RUNBOOK.md`.
+The former rename runbook is superseded by
+`docs/QUIRK_OS_RENAME_RUNBOOK.md`, which now records the separation decision.
+Issue #75 and PR #76 in Project Scaffold are closed as not planned/superseded.
 
 ## 3. Canonical repository classes
 
@@ -66,8 +68,8 @@ Every repository receives exactly one primary class. Secondary facets are allowe
 | --- | --- | --- | --- | --- |
 | `.github` | public | canon | active | Keep as public constitutional authority and shared workflow source |
 | `.github-private` | private | canon | active | Define internal policy, sensitive templates, and private organization controls |
-| `project-scaffold` | public | kernel | active | Rename to `quirk-os`; preserve history, PRs, issues, and implementation |
-| `quirk-os` | private | sandbox | empty placeholder | Rename to `quirk-os-reserved`, verify, then archive |
+| `project-scaffold` | public | reference | active | Preserve as the GitHub template, runnable scaffold, and reference implementation |
+| `quirk-os` | public | kernel | reserved | Define independently; admit only after its own contracts, implementation, and evidence exist |
 | `quirk-data` | private | registry | reserved | Keep as a boundary until a second consumer or security/release boundary justifies extraction |
 | `quirk-me` | private | interface | reserved | Keep as identity, preference, consent, and memory boundary until independently deployable |
 | `quirk-run` | private | kernel | reserved | Keep as execution and containment boundary until workers/CLI/scheduled agents become real consumers |
@@ -349,7 +351,8 @@ Visibility is a governed property, not the accidental default selected during re
 ```text
 .github              public canon and shared workflows
 .github-private      private internal governance
-quirk-os             implemented kernel and operator surface
+project-scaffold     public reference scaffold and GitHub template
+quirk-os             reserved operating-system boundary
 quirk-feed           preparation and discovery interface
 quirk-generator      visual-generation instrument
 quirk-beauty         realm proof
@@ -376,9 +379,9 @@ These are not automatic next repositories. They are candidate boundaries whose e
 
 ### Phase 0 — truthful topology
 
-- perform the `project-scaffold` → `quirk-os` cutover
-- rename and archive the empty placeholder
-- publish the organization profile
+- preserve `project-scaffold` as the reference scaffold
+- keep `quirk-os` separate and explicitly reserved until independently admitted
+- publish the corrected organization profile
 - classify every repository
 - mark `demo-repository` non-canonical
 
