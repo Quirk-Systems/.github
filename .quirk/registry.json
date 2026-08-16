@@ -1,0 +1,40 @@
+{
+  "registry_version": "0.1.0",
+  "authority": "Quirk-Systems/.github",
+  "policy": {
+    "unknown_concepts": "warn",
+    "duplicate_ids": "error",
+    "duplicate_aliases": "error",
+    "missing_parent": "error",
+    "hierarchy_cycles": "error",
+    "deprecated_without_replacement": "error"
+  },
+  "concepts": [
+    {"id":"system.quirk","name":"Quirk","kind":"system","definition":"The brand-level operating system and shared conceptual machinery of Quirk Systems.","parent":null,"aliases":["Quirk OS"],"status":"canonical"},
+    {"id":"core.quirk","name":"Quirk Core","kind":"core","definition":"Canonical source of identity, ontology, rules, schemas, permissions, prompts, memory and shared logic.","parent":"system.quirk","aliases":[],"status":"canonical"},
+    {"id":"concept.ontology","name":"Ontology","kind":"concept","definition":"Defines what kinds of things exist in Quirk and their essential distinctions.","parent":"core.quirk","aliases":[],"status":"canonical"},
+    {"id":"concept.taxonomy","name":"Taxonomy","kind":"concept","definition":"Classifies Quirk entities into named hierarchical or faceted categories.","parent":"core.quirk","aliases":[],"status":"canonical"},
+    {"id":"concept.topology","name":"Topology","kind":"concept","definition":"Describes how Quirk entities are connected regardless of their classification hierarchy.","parent":"core.quirk","aliases":[],"status":"canonical"},
+    {"id":"concept.grammar","name":"Grammar","kind":"concept","definition":"Defines legal combinations, constructions and transformations among Quirk entities.","parent":"core.quirk","aliases":[],"status":"canonical"},
+    {"id":"concept.constraint","name":"Constraint","kind":"concept","definition":"A required, prohibited or bounded condition applied to Quirk behavior or structure.","parent":"core.quirk","aliases":["Key Rule"],"status":"canonical"},
+    {"id":"concept.semantics","name":"Semantics","kind":"concept","definition":"Defines the precise meaning and interpretation of Quirk terms and structures.","parent":"core.quirk","aliases":[],"status":"canonical"},
+    {"id":"concept.provenance","name":"Provenance","kind":"concept","definition":"Records where an assertion, concept or decision came from and how authority was established.","parent":"core.quirk","aliases":[],"status":"canonical"},
+    {"id":"concept.projection","name":"Projection","kind":"concept","definition":"A rendered or operational view of canonical Quirk knowledge for a specific surface.","parent":"core.quirk","aliases":[],"status":"canonical"},
+    {"id":"asset","name":"Asset","kind":"entity_type","definition":"A preserved reusable Quirk output with identity, state and lineage.","parent":"system.quirk","aliases":["Artifact"],"status":"canonical"},
+    {"id":"capability","name":"Capability","kind":"entity_type","definition":"An ability Quirk can reliably perform or expose.","parent":"system.quirk","aliases":[],"status":"canonical"},
+    {"id":"skill","name":"Skill","kind":"entity_type","definition":"A bounded reusable implementation of a capability.","parent":"capability","aliases":[],"status":"canonical"},
+    {"id":"script","name":"Script","kind":"entity_type","definition":"An executable or procedural sequence that performs defined work.","parent":"capability","aliases":[],"status":"canonical"},
+    {"id":"control","name":"Control","kind":"entity_type","definition":"A mechanism that changes, constrains or selects runtime behavior.","parent":"system.quirk","aliases":[],"status":"canonical"},
+    {"id":"command","name":"Command","kind":"entity_type","definition":"An explicit invocation that requests a Quirk action.","parent":"control","aliases":[],"status":"canonical"},
+    {"id":"character","name":"Character","kind":"entity_type","definition":"A named operating persona with defined behavior, voice, permissions or specialties.","parent":"system.quirk","aliases":[],"status":"canonical"},
+    {"id":"move","name":"Quirk Move","kind":"entity_type","definition":"An atomic purposeful operation that changes, interprets, structures or advances something.","parent":"system.quirk","aliases":["Move"],"status":"canonical"},
+    {"id":"move.transform","name":"Transform","kind":"move_family","definition":"The move family that changes form, representation, state or properties while preserving relevant lineage.","parent":"move","aliases":[],"status":"canonical"},
+    {"id":"move.transform.mutate","name":"Mutate","kind":"move","definition":"A transformation that changes selected properties while preserving enough identity for lineage to remain meaningful.","parent":"move.transform","aliases":[],"status":"canonical"},
+    {"id":"router.action","name":"Quirk Action Router","kind":"system_component","definition":"Routes work into operational lanes and depths without replacing the underlying capability ontology.","parent":"system.quirk","aliases":[],"status":"canonical"},
+    {"id":"registry.capability","name":"Quirk Capability Registry","kind":"registry","definition":"Canonical inventory of Quirk capabilities and their operational metadata.","parent":"core.quirk","aliases":[],"status":"canonical"},
+    {"id":"registry.preference","name":"Quirk Preference Core","kind":"registry","definition":"Canonical preference graph and scoring substrate for personalization decisions.","parent":"core.quirk","aliases":[],"status":"canonical"},
+    {"id":"feed.quirk","name":"Quirk Feed","kind":"system_component","definition":"Aggregation surface for Quirk data feed entries and derived knowledge streams.","parent":"system.quirk","aliases":[],"status":"canonical"},
+    {"id":"realm","name":"Realm","kind":"context_type","definition":"A live contextual operating environment; not a synonym for ontology, taxonomy or organization.","parent":"system.quirk","aliases":[],"status":"canonical"},
+    {"id":"ritual","name":"Ritual","kind":"sequence_type","definition":"A structured repeatable sequence of Quirk operations.","parent":"system.quirk","aliases":[],"status":"canonical"}
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "repository": "Quirk-Systems/.github",
+  "domain": "organization-governance",
+  "registry": {
+    "authority": "Quirk-Systems/.github",
+    "path": ".quirk/registry.json",
+    "version": "0.1.0"
+  },
+  "policy": {"mode": "required"},
+  "semantic_impact": {
+    "default_change_class": "canonical-change",
+    "local_extensions": [],
+    "projections": ["organization-policy", "repository-manifests", "ci", "documentation"]
+  }
+}

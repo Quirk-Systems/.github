@@ -1,0 +1,60 @@
+name: Quirk Semantic Governance
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  semantic-governance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout caller repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            .quirk/manifest.json
+
+      - name: Checkout Quirk semantic core
+        uses: actions/checkout@v4
+        with:
+          repository: Quirk-Systems/.github
+          ref: main
+          path: .quirk-core
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            .quirk/registry.json
+            scripts/quirk_concept.py
+
+      - name: Lint canonical registry
+        run: python .quirk-core/scripts/quirk_concept.py --registry .quirk-core/.quirk/registry.json lint
+
+      - name: Validate repository manifest
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+
+          path = Path('.quirk/manifest.json')
+          if not path.exists():
+              raise SystemExit('Missing .quirk/manifest.json')
+
+          data = json.loads(path.read_text(encoding='utf-8'))
+          required = ['repository', 'registry', 'policy', 'semantic_impact']
+          missing = [key for key in required if key not in data]
+          if missing:
+              raise SystemExit(f'Manifest missing required keys: {missing}')
+
+          registry = data['registry']
+          if registry.get('authority') != 'Quirk-Systems/.github':
+              raise SystemExit('Registry authority must be Quirk-Systems/.github')
+
+          mode = data['policy'].get('mode')
+          if mode not in {'warn', 'required'}:
+              raise SystemExit("policy.mode must be 'warn' or 'required'")
+
+          print(f"Semantic manifest OK: {data['repository']} ({mode})")

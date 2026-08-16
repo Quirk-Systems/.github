@@ -1,0 +1,122 @@
+{
+  "registry_version": "0.1.0",
+  "authority": "Quirk-Systems/.github",
+  "updated_at": "2026-07-29",
+  "repositories": [
+    {
+      "repository": "Quirk-Systems/.github",
+      "visibility": "public",
+      "primary_class": "canon",
+      "lifecycle": "active",
+      "canonical": true,
+      "purpose": "Public organization governance, semantic authority, repository contracts, and reusable workflows"
+    },
+    {
+      "repository": "Quirk-Systems/.github-private",
+      "visibility": "private",
+      "primary_class": "canon",
+      "lifecycle": "active",
+      "canonical": true,
+      "purpose": "Internal policy, sensitive organization templates, and private operational governance"
+    },
+    {
+      "repository": "Quirk-Systems/project-scaffold",
+      "desired_repository": "Quirk-Systems/quirk-os",
+      "visibility": "public",
+      "primary_class": "kernel",
+      "lifecycle": "active",
+      "canonical": true,
+      "purpose": "Implemented Quirk OS kernel, operator surface, asset and mutation engine, and initial runtime",
+      "migration": "Rename after the empty quirk-os placeholder is moved to quirk-os-reserved"
+    },
+    {
+      "repository": "Quirk-Systems/quirk-os",
+      "desired_repository": "Quirk-Systems/quirk-os-reserved",
+      "visibility": "private",
+      "primary_class": "sandbox",
+      "lifecycle": "proposed_archive",
+      "canonical": false,
+      "purpose": "Empty naming placeholder",
+      "migration": "Rename, verify no unique configuration, document, and archive"
+    },
+    {
+      "repository": "Quirk-Systems/quirk-data",
+      "visibility": "private",
+      "primary_class": "registry",
+      "lifecycle": "reserved",
+      "canonical": false,
+      "purpose": "Potential persistent world-state, evidence, provenance, graph, and data projection boundary",
+      "extraction_trigger": "A second independent consumer, separate security boundary, or independent release/runtime requirement"
+    },
+    {
+      "repository": "Quirk-Systems/quirk-me",
+      "visibility": "private",
+      "primary_class": "interface",
+      "lifecycle": "reserved",
+      "canonical": false,
+      "purpose": "Potential identity, preference, consent, memory, and human-authority boundary",
+      "extraction_trigger": "Independent product surface, privacy boundary, or second consumer of identity and preference contracts"
+    },
+    {
+      "repository": "Quirk-Systems/quirk-run",
+      "visibility": "private",
+      "primary_class": "kernel",
+      "lifecycle": "reserved",
+      "canonical": false,
+      "purpose": "Potential execution, containment, durable workflow, receipt, retry, and agent-run boundary",
+      "extraction_trigger": "Workers, CLI, scheduled agents, or another runtime become real independent consumers"
+    },
+    {
+      "repository": "Quirk-Systems/quirk-feed",
+      "visibility": "public",
+      "primary_class": "interface",
+      "lifecycle": "active",
+      "canonical": false,
+      "purpose": "Preparation, ingestion, discovery, source taxonomy, research registry, and derived-knowledge surface"
+    },
+    {
+      "repository": "Quirk-Systems/quirk-generator",
+      "visibility": "public",
+      "primary_class": "instrument",
+      "lifecycle": "active",
+      "canonical": false,
+      "purpose": "Bounded multi-model visual-generation instrument"
+    },
+    {
+      "repository": "Quirk-Systems/quirk-beauty",
+      "visibility": "private",
+      "primary_class": "realm",
+      "lifecycle": "incubating",
+      "canonical": false,
+      "purpose": "Realm proof for deterministic aesthetic interpretation and persisted palette generation",
+      "retirement_condition": "Archive or merge patterns back into Quirk OS after reusable contracts are extracted"
+    },
+    {
+      "repository": "Quirk-Systems/quirk-pet",
+      "visibility": "private",
+      "primary_class": "realm",
+      "lifecycle": "incubating",
+      "canonical": false,
+      "purpose": "Realm proof for persistent state, time decay, bounded actions, consequences, and derived mood",
+      "retirement_condition": "Archive or convert to a maintained reference after state-machine patterns are captured"
+    },
+    {
+      "repository": "Quirk-Systems/quirk-town",
+      "visibility": "private",
+      "primary_class": "realm",
+      "lifecycle": "incubating",
+      "canonical": false,
+      "purpose": "Realm proof for directory identity, residency, listings, and claimable space",
+      "retirement_condition": "Archive or evolve only after a real Quirk ecosystem directory requirement is validated"
+    },
+    {
+      "repository": "Quirk-Systems/demo-repository",
+      "visibility": "private",
+      "primary_class": "sandbox",
+      "lifecycle": "proposed_archive",
+      "canonical": false,
+      "purpose": "GitHub feature demonstration and disposable workflow testing",
+      "retirement_condition": "Archive when no unique GitHub feature test depends on it"
+    }
+  ]
+}
