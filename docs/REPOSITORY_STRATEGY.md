@@ -1,7 +1,7 @@
 # Quirk Systems Repository Strategy
 
-Status: **Proposed foundation**  
-Authority: `Quirk-Systems/.github`  
+Status: **Proposed foundation**
+Authority: `Quirk-Systems/.github`
 Applies to: every repository in the Quirk Systems organization
 
 ## 1. Strategic position

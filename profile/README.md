@@ -34,3 +34,7 @@ The conversation is not the system. The agent is not the system. The repository 
 ## Repository strategy
 
 The organization’s repository classes, lifecycle rules, creation gate, extraction criteria, and management system are defined in [`docs/REPOSITORY_STRATEGY.md`](../docs/REPOSITORY_STRATEGY.md).
+
+## Contributing
+
+See [CONTRIBUTING](https://github.com/Quirk-Systems/.github/blob/main/CONTRIBUTING.md), our [Code of Conduct](https://github.com/Quirk-Systems/.github/blob/main/CODE_OF_CONDUCT.md), and the [security policy](https://github.com/Quirk-Systems/.github/blob/main/SECURITY.md).

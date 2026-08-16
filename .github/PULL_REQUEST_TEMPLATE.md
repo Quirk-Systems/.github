@@ -1,8 +1,10 @@
-## What changed
+## Summary
 
-Describe the concrete change and why it exists.
+<!-- 1-3 bullets explaining what changed and why. -->
 
-## Semantic Impact
+-
+
+## Semantic impact
 
 Classify this change:
 
@@ -24,8 +26,22 @@ What existing concept could this accidentally duplicate, redefine, or outrank?
 
 Which docs, maps, schemas, prompts, agents, APIs, UIs, registries, or generated repos must change with it?
 
-## Validation
+## Test plan
 
+<!-- How did you verify this works? Commands, screenshots, links. -->
+
+- [ ]
+
+## Linked issues
+
+<!-- Closes #123, Refs #456, etc. Delete if none. -->
+
+## Checklist
+
+- [ ] Commits follow [Conventional Commits](https://www.conventionalcommits.org/)
+- [ ] Local validation passes (`bun run validate` or repo equivalent)
+- [ ] Tests added/updated where it makes sense
+- [ ] Docs updated where it makes sense
 - [ ] Repository `.quirk/manifest.json` remains valid
 - [ ] Semantic governance check passes
 - [ ] No canonical concept was silently redefined
