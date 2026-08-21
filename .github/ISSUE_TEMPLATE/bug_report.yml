@@ -1,0 +1,75 @@
+name: Bug report
+description: Report something that isn't working as expected.
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report. The more detail you can give, the faster we can fix it.
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: One-sentence description of the bug.
+      placeholder: e.g. "Vitest fails to find setup file when running with --coverage"
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      description: Minimal steps to reproduce. Numbered list preferred.
+      placeholder: |
+        1. Clone the repo
+        2. Run `bun install`
+        3. Run `bun run test:coverage`
+        4. Observe the error
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include error messages and stack traces if relevant. Use code blocks.
+    validations:
+      required: true
+  - type: input
+    id: repo
+    attributes:
+      label: Repository
+      description: Which Quirk Systems repo is affected?
+      placeholder: e.g. project-scaffold
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version / commit
+      description: Tag, version number, or commit SHA.
+    validations:
+      required: false
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: OS, runtime versions (Node, Bun), browser if relevant.
+      placeholder: |
+        - OS: macOS 14.5
+        - Bun: 1.1.30
+        - Node: 20.18.0
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / screenshots
+      description: Paste relevant logs (use code blocks) or attach screenshots.
+    validations:
+      required: false
