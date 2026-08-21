@@ -57,7 +57,8 @@ The default is to keep work in its existing boundary until those facts exist.
 ## Pull-request control record
 
 [`.quirk/manual-prs.json`](../.quirk/manual-prs.json) is the complete ledger
-of the 27 open non-Dependabot PRs at this snapshot. Its decisions are
+of the 30 open non-Dependabot PRs at this snapshot, including the three draft
+implementation PRs opened by this topology cut. Its decisions are
 recommendations and evidence records, not automatic GitHub actions:
 
 | Decision | Meaning |

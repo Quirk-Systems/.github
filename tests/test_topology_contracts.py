@@ -49,9 +49,9 @@ class TopologyContractsTest(unittest.TestCase):
         self.assertEqual(inventory["scope"]["expected_adjacent_repository_count"], 2)
         self.assertEqual(len(repositories), 19)
         self.assertEqual(len({item["repository"] for item in repositories}), 19)
-        self.assertEqual(ledger["scope"]["expected_open_non_dependabot_pull_request_count"], 27)
-        self.assertEqual(len(pull_requests), 27)
-        self.assertEqual(len({item["id"] for item in pull_requests}), 27)
+        self.assertEqual(ledger["scope"]["expected_open_non_dependabot_pull_request_count"], 30)
+        self.assertEqual(len(pull_requests), 30)
+        self.assertEqual(len({item["id"] for item in pull_requests}), 30)
 
     def test_snapshot_uses_exact_expected_repository_and_pr_sets(self):
         inventory = self.load(INVENTORY)

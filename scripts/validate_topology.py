@@ -28,6 +28,7 @@ EXPECTED_MANUAL_PULL_REQUEST_IDS = {
     "Quirk-Systems/quirk-core#1", "Quirk-Systems/.github#6", "Quirk-Systems/project-scaffold#66",
     "Quirk-Systems/project-scaffold#67", "Quirk-Systems/project-scaffold#62", "Quirk-Systems/project-scaffold#60",
     "Quirk-Systems/project-scaffold#55", "Quirk-Systems/.github#2", "Quirk-Systems/project-scaffold#49",
+    "Quirk-Systems/quirk-os#44", "Quirk-Systems/quirk-core#2", "Quirk-Systems/project-scaffold#95",
 }
 REQUIRED_REPOSITORY_FIELDS = {
     "repository", "scope", "visibility", "primary_class", "lifecycle", "owner",
@@ -117,8 +118,8 @@ def validate(inventory, ledger):
     validate_object(ledger_scope, {"expected_open_non_dependabot_pull_request_count"}, {"expected_open_non_dependabot_pull_request_count"}, "ledger scope", errors)
     if not isinstance(ledger_scope, dict):
         ledger_scope = {}
-    if ledger_scope.get("expected_open_non_dependabot_pull_request_count") != 27:
-        errors.append("expected open non-Dependabot pull-request count must be 27")
+    if ledger_scope.get("expected_open_non_dependabot_pull_request_count") != 30:
+        errors.append("expected open non-Dependabot pull-request count must be 30")
     if not isinstance(repositories, list):
         errors.append("repositories must be an array")
         repositories = []
@@ -127,8 +128,8 @@ def validate(inventory, ledger):
         pull_requests = []
     if len(repositories) != 19:
         errors.append("inventory must contain exactly 19 in-scope repositories")
-    if len(pull_requests) != 27:
-        errors.append("ledger must contain exactly 27 open non-Dependabot pull requests")
+    if len(pull_requests) != 30:
+        errors.append("ledger must contain exactly 30 open non-Dependabot pull requests")
 
     repository_ids = []
     organization_ids = set()
@@ -235,7 +236,7 @@ def main():
     errors = validate(load(args.inventory), load(args.pull_requests))
     if errors:
         parser.error("; ".join(errors))
-    print("Topology validation passed: 19 repositories and 27 manual pull requests")
+    print("Topology validation passed: 19 repositories and 30 manual pull requests")
 
 
 if __name__ == "__main__":

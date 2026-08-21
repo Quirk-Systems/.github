@@ -108,7 +108,7 @@ The wedge is fail-closed and deterministic. It is not an autonomous preference l
 The cut is complete when:
 
 - the inventory validates and contains exactly the 19 in-scope repositories (17 organization repositories plus 2 adjacent commerce candidates);
-- the manual PR ledger validates and contains exactly the 27 open non-Dependabot PRs observed on 2026-08-21;
+- the manual PR ledger validates and contains exactly the 30 open non-Dependabot PRs observed on 2026-08-21 after the three cross-repository implementation PRs were opened;
 - stale repository names such as `demo-repository` are rejected;
 - evidence validator mutation tests fail for changed paths, forged digests, non-ancestor commits, missing proof commands, and admission language;
 - `.github`, `quirk-os`, and `project-scaffold` run the stable evidence check from a pinned revision;

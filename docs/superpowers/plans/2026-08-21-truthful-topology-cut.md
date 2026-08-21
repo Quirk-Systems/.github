@@ -31,7 +31,7 @@
 - `python scripts/validate_topology.py --inventory .quirk/repositories.json --pull-requests .quirk/manual-prs.json`
 - Inventory IDs are exact `owner/repository` names, unique, and exhaustive for the declared snapshot.
 - `scope.expected_organization_repository_count` is `17`; `scope.expected_adjacent_repository_count` is `2`.
-- Manual PR keys are exact `owner/repository#number`, unique, and count `27`.
+- Manual PR keys are exact `owner/repository#number`, unique, and count `30` after the three cross-repository implementation PRs are opened and included in the final freeze.
 - Required fields include lifecycle, primary class, owner state, canonical responsibility, consumers/dependencies, extraction/retirement rules, deployment/security boundary, and evidence anchors.
 - Allowed decisions are `merge`, `revise`, `hold`, `supersede`, and `close`; successors are required for `supersede` and conditional for other states.
 
