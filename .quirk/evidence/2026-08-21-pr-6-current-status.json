@@ -1,0 +1,63 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.pr-6-current-status.2026-08-21",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "e9e79d4501a0ee3806a24ce7ad315c1369e551b2",
+    "commit": "73ce5985f466f2c66f56c0f80086ef3ea12a6835",
+    "changed_paths": [
+      ".quirk/manual-prs.json"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.pr-6-current-status",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The manual PR ledger records PR 6's current title and observed successful Governance Contracts run without granting merge or ruleset authority.",
+      "evidence_paths": [
+        ".quirk/manual-prs.json"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".quirk/manual-prs.json",
+      "state": "present",
+      "git_blob": "a08bddf009fea651bc74a5d488415f015bdcdb67",
+      "sha256": "sha256:fda5ce6aa9b00da89aef31d025d92350648592d70e57c3efde690195373bd3a9"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python -m unittest discover -s tests -v",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python scripts/validate_topology.py --inventory .quirk/repositories.json --pull-requests .quirk/manual-prs.json",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python scripts/validate_evidence_receipts.py --repository Quirk-Systems/.github --root . --receipts .quirk/evidence",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check e9e79d4501a0ee3806a24ce7ad315c1369e551b2..73ce5985f466f2c66f56c0f80086ef3ea12a6835",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-08-21T04:17:54Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:9fca6a8d1940cf0099ffe7da0818fe2f70ba32998902237793a7d632c6fa5532"
+}
