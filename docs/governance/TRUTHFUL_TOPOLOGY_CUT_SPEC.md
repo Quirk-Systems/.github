@@ -1,8 +1,8 @@
 # Truthful Topology Cut
 
-Status: implementation contract  
-Authority: `Quirk-Systems/.github`  
-Cut date: 2026-08-21 UTC  
+Status: implementation contract
+Authority: `Quirk-Systems/.github`
+Cut date: 2026-08-21 UTC
 Scope: every visible `Quirk-Systems` repository, every open non-Dependabot pull request, and the two personal Quirk commerce candidates whose names and product surfaces create a material boundary question
 
 ## Decision
