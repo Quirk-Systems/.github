@@ -1,0 +1,231 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.truthful-topology-cut.2026-08-21",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "422c589758f8d3cdad68019849ef52f428932853",
+    "commit": "476b748f139fd1a18f3a21a2f502e78e390bc6ae",
+    "changed_paths": [
+      ".github/workflows/governance-contracts.yml",
+      ".github/workflows/reusable-evidence-binding.yml",
+      ".gitignore",
+      ".quirk/evidence/README.md",
+      ".quirk/manual-prs.json",
+      ".quirk/registry.json",
+      ".quirk/repositories.json",
+      ".quirk/schemas/evidence-receipt.schema.json",
+      ".quirk/schemas/manual-pr-ledger.schema.json",
+      ".quirk/schemas/repository-inventory.schema.json",
+      "docs/QUIRK_OS_RENAME_RUNBOOK.md",
+      "docs/REPOSITORY_STRATEGY.md",
+      "docs/governance/EVIDENCE_BINDING.md",
+      "docs/governance/REQUIRED_CHECKS_ROLLOUT.md",
+      "docs/governance/TRUTHFUL_TOPOLOGY_CUT_SPEC.md",
+      "docs/superpowers/plans/2026-08-21-truthful-topology-cut.md",
+      "profile/README.md",
+      "scripts/create_evidence_receipt.py",
+      "scripts/validate_evidence_receipts.py",
+      "scripts/validate_topology.py",
+      "tests/test_evidence_receipts.py",
+      "tests/test_topology_contracts.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.truthful-topology-cut",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The 2026-08-21 inventory, manual PR ledger, evidence binding contract, and stable workflow definitions are byte-bound to this implementation snapshot.",
+      "evidence_paths": [
+        ".github/workflows/governance-contracts.yml",
+        ".github/workflows/reusable-evidence-binding.yml",
+        ".gitignore",
+        ".quirk/evidence/README.md",
+        ".quirk/manual-prs.json",
+        ".quirk/registry.json",
+        ".quirk/repositories.json",
+        ".quirk/schemas/evidence-receipt.schema.json",
+        ".quirk/schemas/manual-pr-ledger.schema.json",
+        ".quirk/schemas/repository-inventory.schema.json",
+        "docs/QUIRK_OS_RENAME_RUNBOOK.md",
+        "docs/REPOSITORY_STRATEGY.md",
+        "docs/governance/EVIDENCE_BINDING.md",
+        "docs/governance/REQUIRED_CHECKS_ROLLOUT.md",
+        "docs/governance/TRUTHFUL_TOPOLOGY_CUT_SPEC.md",
+        "docs/superpowers/plans/2026-08-21-truthful-topology-cut.md",
+        "profile/README.md",
+        "scripts/create_evidence_receipt.py",
+        "scripts/validate_evidence_receipts.py",
+        "scripts/validate_topology.py",
+        "tests/test_evidence_receipts.py",
+        "tests/test_topology_contracts.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/workflows/governance-contracts.yml",
+      "state": "present",
+      "git_blob": "da8ecc43d10fca469fef8d9f426a9396ab957ae8",
+      "sha256": "sha256:edc05774443670efb91098a60e8d0e715aaf9fdbfdc3a361cb15006bb5cd4401"
+    },
+    {
+      "path": ".github/workflows/reusable-evidence-binding.yml",
+      "state": "present",
+      "git_blob": "157c24cf2f365ec79b9437650bb3783883f873dd",
+      "sha256": "sha256:e37304abc0b068c2710ab0caec54208e366f4951159f373a6aeee302312af4f1"
+    },
+    {
+      "path": ".gitignore",
+      "state": "present",
+      "git_blob": "161e45b59f237b797f7733cdc1ad98a3bcfbf71d",
+      "sha256": "sha256:6133b81763fe84cb03b43d2f1ac2996f855a35d1109028c30dd70651005464a1"
+    },
+    {
+      "path": ".quirk/evidence/README.md",
+      "state": "present",
+      "git_blob": "49365b0d4cea2f0ab30819499446048046444700",
+      "sha256": "sha256:d4f80de99cf38de8b050414b56bcd7bfbdbd13625913937e99404173e3db7d9f"
+    },
+    {
+      "path": ".quirk/manual-prs.json",
+      "state": "present",
+      "git_blob": "6b04ed103add550dad2fe791273b5bfe2d48eaf1",
+      "sha256": "sha256:b45e87b74fd03350e126b9fd8b156b135535258ce5a6ad3dcb22301281ded2d1"
+    },
+    {
+      "path": ".quirk/registry.json",
+      "state": "present",
+      "git_blob": "601015d1d3faea6c664332b4c243f33eaea0098e",
+      "sha256": "sha256:16ea0a5d6558ccd2f193fd6511fbd8fa9686bd8efb7efe4be5a1661e8629bc7f"
+    },
+    {
+      "path": ".quirk/repositories.json",
+      "state": "present",
+      "git_blob": "969a93484cf0f9b7f602e4de350abf6202d77aea",
+      "sha256": "sha256:4eee4c9ac98a0923600bae5c3b6311da8b01c776ef48b050cb3e019d99aef867"
+    },
+    {
+      "path": ".quirk/schemas/evidence-receipt.schema.json",
+      "state": "present",
+      "git_blob": "e6fd6455d266ae91453b326b4a3774cda62a88b9",
+      "sha256": "sha256:014ace18c346ada69e9c90152ade3264df7618f57e0058cd27a95272002b029b"
+    },
+    {
+      "path": ".quirk/schemas/manual-pr-ledger.schema.json",
+      "state": "present",
+      "git_blob": "0451dc27d10cba5045ad473e727586ddaef08073",
+      "sha256": "sha256:9b90ff1d1c43c83dafb83ba6db4b99e36d1bdad6e8a63ae2475133bf2693e58e"
+    },
+    {
+      "path": ".quirk/schemas/repository-inventory.schema.json",
+      "state": "present",
+      "git_blob": "0d7712b8f3e354cb635c606bbfebe39f988cc933",
+      "sha256": "sha256:3f3cedc7092a536236a17639c23d2bc376f490ccb865adabdd294fec6a2a5fa8"
+    },
+    {
+      "path": "docs/QUIRK_OS_RENAME_RUNBOOK.md",
+      "state": "present",
+      "git_blob": "aaf80581786c5937135401ab947005f61b72db7b",
+      "sha256": "sha256:d5dcfb0217ef6e67af9b0cdb53445f4ba1992008c7fc923f9e483932c80fe3c8"
+    },
+    {
+      "path": "docs/REPOSITORY_STRATEGY.md",
+      "state": "present",
+      "git_blob": "9f9d8217024265ade09de3ff07bdbcb620d11eb2",
+      "sha256": "sha256:c35fee93d6c5acce63643c6b73583c3d175f46b525534230ba1ce8b5405eca15"
+    },
+    {
+      "path": "docs/governance/EVIDENCE_BINDING.md",
+      "state": "present",
+      "git_blob": "63bf8a0d9d73a0b60764ab87de2a5a379879d96b",
+      "sha256": "sha256:4f8ca2afcb84ed48aa783df12fd9dbd3d635a36a911c52f6026110e8f2ec882f"
+    },
+    {
+      "path": "docs/governance/REQUIRED_CHECKS_ROLLOUT.md",
+      "state": "present",
+      "git_blob": "bc6579048a3a6ad12a0239b80c688dbe14047ef7",
+      "sha256": "sha256:d8954bd827883f387f2bd3ef7b38caa5fee22d4a4f1ba0732a4842f91c3fda76"
+    },
+    {
+      "path": "docs/governance/TRUTHFUL_TOPOLOGY_CUT_SPEC.md",
+      "state": "present",
+      "git_blob": "3ade7950af2029eed96ce15b593c2670556a97c5",
+      "sha256": "sha256:def91b28d0768895760b0c5d8ef990bf6dad5220bba26cbe0dd65e9f4e464c46"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-08-21-truthful-topology-cut.md",
+      "state": "present",
+      "git_blob": "e63c1bdd82dd6aeea2e46176a6ee8a74ad44511c",
+      "sha256": "sha256:d78186f462ab01f7ab44212c5ac2d31204667ef2269a7cf21568dcfe3beccf70"
+    },
+    {
+      "path": "profile/README.md",
+      "state": "present",
+      "git_blob": "092d3fff39829fa81bc1d03f2c99db66b543357e",
+      "sha256": "sha256:56051733609148419e2942680808e01f4c0192328bb961cad595e3f2823955d6"
+    },
+    {
+      "path": "scripts/create_evidence_receipt.py",
+      "state": "present",
+      "git_blob": "a849deded27d4d4b25f23f7b9255d8a45e950beb",
+      "sha256": "sha256:628da429192e53e7d0cef247469450ef26a3be468f5c42642ab31850cc8377cf"
+    },
+    {
+      "path": "scripts/validate_evidence_receipts.py",
+      "state": "present",
+      "git_blob": "5f1d9ec026e5c53769a6417e694b0f81d54cde43",
+      "sha256": "sha256:ceb18264b93fba674c242fd7d2f8bd45e8d15a8dcba6f1cdd2f308634d5037fe"
+    },
+    {
+      "path": "scripts/validate_topology.py",
+      "state": "present",
+      "git_blob": "32ffb5dead6a3ebcede0fc398408919e9eb14331",
+      "sha256": "sha256:a38555087b37299c8cffb300dcd847b5907f515c08afd0753bbbb5f6eee31bfb"
+    },
+    {
+      "path": "tests/test_evidence_receipts.py",
+      "state": "present",
+      "git_blob": "836cdb79001f0c484f7392d89db2826d221a495b",
+      "sha256": "sha256:9f4a11bc2c52b2512a2448742657cb8c1b8a66d9178cd9073758326c5e0c5254"
+    },
+    {
+      "path": "tests/test_topology_contracts.py",
+      "state": "present",
+      "git_blob": "87d5c79261337729bdf9c1d3b67bf9fcf286a392",
+      "sha256": "sha256:d8ca7d8927c68fc8dda2d89fc746ee55db1b32f599e261b6c2bb5acb01ff55de"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python -m unittest discover -s tests -v",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python scripts/validate_topology.py --inventory .quirk/repositories.json --pull-requests .quirk/manual-prs.json",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python scripts/validate_evidence_receipts.py --repository Quirk-Systems/.github --root . --receipts .quirk/evidence",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check 422c589758f8d3cdad68019849ef52f428932853..476b748f139fd1a18f3a21a2f502e78e390bc6ae",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-08-21T04:15:15Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:d0526fa91d1c16a61191b83782eb20eb09e23a0b2346f5763b9d56307c666c99"
+}
