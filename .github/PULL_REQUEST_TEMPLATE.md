@@ -56,13 +56,17 @@ What existing concept could this accidentally duplicate, redefine, or outrank?
 
 <!-- Commands must describe what actually ran against the exact subject. -->
 
-- Evidence receipt ID/path:
+- Evidence receipt ID:
+- Receipt source repository:
+- Receipt source commit:
+- Receipt source path:
 - Receipt SHA-256:
 - Validator/evaluator commit or version:
 - Commands and observed results:
 - Checks not run and why:
 
-A green check is not evidence for untested behavior. A receipt does not grant
+A green check is not evidence for untested behavior. A receipt locator must be
+resolved and validated before reliance. A receipt or decision does not grant
 authority.
 
 ## Interoperability impact
@@ -90,8 +94,9 @@ authority.
 - [ ] Exact base/head identity is current
 - [ ] Tests and validators passed for the stated scope
 - [ ] Evidence covers every substantive changed path
+- [ ] Every external receipt citation has an immutable repository/commit/path locator
 - [ ] Documentation and interoperability notes are current
 - [ ] Repository `.quirk/manifest.json` remains valid, when present
 - [ ] No canonical concept was silently redefined
-- [ ] No capability, path, database row, or green check was treated as authority
+- [ ] No capability, path, database row, locator, or green check was treated as authority
 - [ ] A head change will invalidate the current disposition until re-evaluated
