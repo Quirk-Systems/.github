@@ -70,6 +70,38 @@ gate, but cannot satisfy that gate by describing it. GitHub reviews, protected
 branch rules, environment approvals, release controls, and other authorized
 systems remain separate effects.
 
+## Receipt citation versus receipt resolution
+
+A governed decision must cite each receipt with:
+
+```yaml
+receipt_id:
+source_repository:
+source_commit:
+source_path:
+receipt_sha256:
+covered_head_commit:
+```
+
+The decision validator proves that this citation is closed, immutable in shape,
+path-safe, digest-shaped, and tied to the decision's declared head. It does not
+perform network access or claim that an external receipt artifact actually
+exists.
+
+Before relying on a cross-repository decision, the receiving boundary must:
+
+1. fetch `source_repository` at the exact `source_commit`;
+2. read the exact `source_path` bytes;
+3. validate the receipt's canonical digest and schema;
+4. verify the receipt's `repository`, base, subject, changed paths, blobs, and
+   SHA-256 values against the actual subject repository;
+5. confirm `covered_head_commit` equals the decision subject head;
+6. reject the decision if any locator, byte, digest, subject, or status differs.
+
+A locator makes evidence resolvable. It is not itself evidence that resolution
+succeeded. The read-only pilot tracked in issue #11 owns proving this resolver
+boundary before a governed decision can support a consequential action.
+
 ## Head changes and staleness
 
 A receipt remains valid historical evidence for the subject it names. A decision
