@@ -40,6 +40,9 @@ class GovernedDecisionTests(unittest.TestCase):
                 "receipts": [
                     {
                         "receipt_id": "qreceipt.control-booth-proof",
+                        "source_repository": "Quirk-Systems/Quirk",
+                        "source_commit": "3" * 40,
+                        "source_path": ".quirk/evidence/control-booth-proof.json",
                         "receipt_sha256": "sha256:" + "a" * 64,
                         "covered_head_commit": "2" * 40,
                     }
@@ -77,7 +80,34 @@ class GovernedDecisionTests(unittest.TestCase):
             subject["required"],
             ["pull_request", "base_commit", "head_commit", "changed_paths"],
         )
+        receipt = schema["properties"]["evidence"]["properties"]["receipts"]["items"]
+        self.assertFalse(receipt["additionalProperties"])
+        self.assertEqual(
+            receipt["required"],
+            [
+                "receipt_id",
+                "source_repository",
+                "source_commit",
+                "source_path",
+                "receipt_sha256",
+                "covered_head_commit",
+            ],
+        )
         self.assertEqual(schema["properties"]["authority"]["properties"]["effect"]["const"], "none")
+
+    def test_receipt_must_have_immutable_resolvable_locator(self):
+        invalid_values = {
+            "source_repository": "not-a-repository",
+            "source_commit": "3" * 39,
+            "source_path": "../outside.json",
+        }
+        for field, value in invalid_values.items():
+            with self.subTest(field=field):
+                decision = self.valid_decision()
+                decision["evidence"]["receipts"][0][field] = value
+                decision["decision_sha256"] = self.validator.canonical_decision_digest(decision)
+                with self.assertRaises(self.validator.DecisionError):
+                    self.validator.validate_decision(decision)
 
     def test_receipt_must_cover_subject_head(self):
         decision = self.valid_decision()
