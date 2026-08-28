@@ -44,6 +44,14 @@ TOP_LEVEL_FIELDS = {
     "staleness",
     "decision_sha256",
 }
+RECEIPT_CITATION_FIELDS = {
+    "receipt_id",
+    "source_repository",
+    "source_commit",
+    "source_path",
+    "receipt_sha256",
+    "covered_head_commit",
+}
 
 
 class DecisionError(Exception):
@@ -78,7 +86,7 @@ def _require_sha256(value, label):
 
 def _validate_path(path):
     if not isinstance(path, str) or not path:
-        raise DecisionError("subject.changed_paths entries must be non-empty strings")
+        raise DecisionError("subject.changed_paths and source_path entries must be non-empty strings")
     if path.startswith("/") or "\\" in path or any(ord(character) < 32 or ord(character) == 127 for character in path):
         raise DecisionError("unsafe repository path: " + repr(path))
     parts = PurePosixPath(path).parts
@@ -118,22 +126,31 @@ def _validate_evidence(evidence, subject_head, classification):
         raise DecisionError(classification + " requires at least one exact-head evidence receipt")
     receipt_ids = []
     receipt_digests = []
+    receipt_sources = []
     for index, receipt in enumerate(receipts):
         label = "evidence.receipts[" + str(index) + "]"
-        _require_object(receipt, {"receipt_id", "receipt_sha256", "covered_head_commit"}, label)
+        _require_object(receipt, RECEIPT_CITATION_FIELDS, label)
         receipt_id = receipt["receipt_id"]
         if not isinstance(receipt_id, str) or not RECEIPT_ID_PATTERN.fullmatch(receipt_id):
             raise DecisionError(label + ".receipt_id is invalid")
+        source_repository = receipt["source_repository"]
+        if not isinstance(source_repository, str) or not REPOSITORY_PATTERN.fullmatch(source_repository):
+            raise DecisionError(label + ".source_repository must use owner/name form")
+        _require_full_sha(receipt["source_commit"], label + ".source_commit")
+        _validate_path(receipt["source_path"])
         _require_sha256(receipt["receipt_sha256"], label + ".receipt_sha256")
         _require_full_sha(receipt["covered_head_commit"], label + ".covered_head_commit")
         if receipt["covered_head_commit"] != subject_head:
             raise DecisionError(label + ".covered_head_commit must equal subject.head_commit")
         receipt_ids.append(receipt_id)
         receipt_digests.append(receipt["receipt_sha256"])
+        receipt_sources.append((source_repository, receipt["source_commit"], receipt["source_path"]))
     if len(receipt_ids) != len(set(receipt_ids)):
         raise DecisionError("evidence receipt IDs must be unique")
     if len(receipt_digests) != len(set(receipt_digests)):
         raise DecisionError("evidence receipt digests must be unique")
+    if len(receipt_sources) != len(set(receipt_sources)):
+        raise DecisionError("evidence receipt source locators must be unique")
 
 
 def _validate_actor(actor):
