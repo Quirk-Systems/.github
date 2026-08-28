@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Truthful topology manual pull-request ledger",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ledger_version", "authority", "snapshot", "scope", "pull_requests"],
+  "properties": {
+    "ledger_version": {"const": "0.1.0"},
+    "authority": {"const": "Quirk-Systems/.github"},
+    "snapshot": {"const": "2026-08-21"},
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expected_open_non_dependabot_pull_request_count"],
+      "properties": {"expected_open_non_dependabot_pull_request_count": {"const": 30}}
+    },
+    "pull_requests": {
+      "type": "array",
+      "minItems": 30,
+      "maxItems": 30,
+      "items": {"$ref": "#/$defs/pullRequest"},
+      "allOf": [
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/quirk-os#24"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/quirk-os#23"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/project-scaffold#84"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/quirk-os#41"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/quirk-os#36"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/quirk-os#39"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/quirk-os#37"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/quirk-os#35"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/quirk-os#38"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/quirk-os#40"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/quirk-os#25"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/quirk-os#21"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/quirk-os#17"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/quirk-os#22"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/quirk-os#18"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/quirk-os#15"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/quirk-os#20"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/quirk-os#19"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/quirk-core#1"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/.github#6"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/project-scaffold#66"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/project-scaffold#67"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/project-scaffold#62"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/project-scaffold#60"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/project-scaffold#55"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/.github#2"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/project-scaffold#49"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/quirk-os#44"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/quirk-core#2"}},"required":["id"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"id":{"const":"Quirk-Systems/project-scaffold#95"}},"required":["id"]},"minContains":1}
+      ]
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "pullRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "repository", "number", "title", "draft", "age_days", "check_state", "base", "head", "decision", "rationale", "successor"],
+      "properties": {
+        "id": {"pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+#[1-9][0-9]*$", "enum": ["Quirk-Systems/quirk-os#24", "Quirk-Systems/quirk-os#23", "Quirk-Systems/project-scaffold#84", "Quirk-Systems/quirk-os#41", "Quirk-Systems/quirk-os#36", "Quirk-Systems/quirk-os#39", "Quirk-Systems/quirk-os#37", "Quirk-Systems/quirk-os#35", "Quirk-Systems/quirk-os#38", "Quirk-Systems/quirk-os#40", "Quirk-Systems/quirk-os#25", "Quirk-Systems/quirk-os#21", "Quirk-Systems/quirk-os#17", "Quirk-Systems/quirk-os#22", "Quirk-Systems/quirk-os#18", "Quirk-Systems/quirk-os#15", "Quirk-Systems/quirk-os#20", "Quirk-Systems/quirk-os#19", "Quirk-Systems/quirk-core#1", "Quirk-Systems/.github#6", "Quirk-Systems/project-scaffold#66", "Quirk-Systems/project-scaffold#67", "Quirk-Systems/project-scaffold#62", "Quirk-Systems/project-scaffold#60", "Quirk-Systems/project-scaffold#55", "Quirk-Systems/.github#2", "Quirk-Systems/project-scaffold#49", "Quirk-Systems/quirk-os#44", "Quirk-Systems/quirk-core#2", "Quirk-Systems/project-scaffold#95"]},
+        "repository": {"enum": ["Quirk-Systems/.github", "Quirk-Systems/project-scaffold", "Quirk-Systems/quirk-os", "Quirk-Systems/quirk-core"]},
+        "number": {"type": "integer", "minimum": 1},
+        "title": {"$ref": "#/$defs/nonEmptyString"},
+        "draft": {"type": "boolean"},
+        "age_days": {"type": "integer", "minimum": 0},
+        "check_state": {"$ref": "#/$defs/nonEmptyString"},
+        "base": {"$ref": "#/$defs/nonEmptyString"},
+        "head": {"$ref": "#/$defs/nonEmptyString"},
+        "decision": {"enum": ["merge", "revise", "hold", "supersede", "close"]},
+        "rationale": {"$ref": "#/$defs/nonEmptyString"},
+        "successor": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/nonEmptyString"}]}
+      },
+      "allOf": [{"if":{"properties":{"decision":{"const":"supersede"}},"required":["decision"]},"then":{"properties":{"successor":{"$ref":"#/$defs/nonEmptyString"}}}}]
+    }
+  }
+}
