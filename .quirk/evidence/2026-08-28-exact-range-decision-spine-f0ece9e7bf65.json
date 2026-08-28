@@ -1,0 +1,188 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.exact-range-decision-spine.f0ece9e7bf65",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "0c657bcbed85cd81d2da0dcfbaf400bf004098f9",
+    "commit": "f0ece9e7bf65a3bd1cc2cb8b5c5dab396e3bedad",
+    "changed_paths": [
+      ".github/PULL_REQUEST_TEMPLATE.md",
+      ".github/workflows/governance-contracts.yml",
+      ".github/workflows/reusable-evidence-binding.yml",
+      ".gitignore",
+      ".quirk/decisions/README.md",
+      ".quirk/evidence/2026-08-28-exact-range-decision-spine.json",
+      ".quirk/evidence/README.md",
+      ".quirk/schemas/evidence-receipt.schema.json",
+      ".quirk/schemas/governed-decision.schema.json",
+      "docs/governance/EVIDENCE_BINDING.md",
+      "docs/governance/INTEROPERABILITY.md",
+      "docs/governance/REQUIRED_CHECKS_ROLLOUT.md",
+      "docs/superpowers/plans/2026-08-28-exact-range-decision-spine.md",
+      "scripts/create_evidence_receipt.py",
+      "scripts/validate_evidence_receipts.py",
+      "scripts/validate_governed_decisions.py",
+      "tests/test_evidence_receipts.py",
+      "tests/test_governed_decisions.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.exact-range-decision-spine.f0ece9e7bf65",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The exact-range evidence, governed-decision, documentation, and interoperability controls are bound to the cited subject bytes.",
+      "evidence_paths": [
+        ".github/PULL_REQUEST_TEMPLATE.md",
+        ".github/workflows/governance-contracts.yml",
+        ".github/workflows/reusable-evidence-binding.yml",
+        ".gitignore",
+        ".quirk/decisions/README.md",
+        ".quirk/evidence/README.md",
+        ".quirk/schemas/evidence-receipt.schema.json",
+        ".quirk/schemas/governed-decision.schema.json",
+        "docs/governance/EVIDENCE_BINDING.md",
+        "docs/governance/INTEROPERABILITY.md",
+        "docs/governance/REQUIRED_CHECKS_ROLLOUT.md",
+        "docs/superpowers/plans/2026-08-28-exact-range-decision-spine.md",
+        "scripts/create_evidence_receipt.py",
+        "scripts/validate_evidence_receipts.py",
+        "scripts/validate_governed_decisions.py",
+        "tests/test_evidence_receipts.py",
+        "tests/test_governed_decisions.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/PULL_REQUEST_TEMPLATE.md",
+      "state": "present",
+      "git_blob": "8d4050797db51fa75eba35defb446a9190da255c",
+      "sha256": "sha256:82c4f61ab12b7b6824369b1f031cdd2fbfbc719b6b3295bc64803f368b9ff0fb"
+    },
+    {
+      "path": ".github/workflows/governance-contracts.yml",
+      "state": "present",
+      "git_blob": "62af7032a46cdc11aa23003b64838bf49b9ecc2f",
+      "sha256": "sha256:738e82ad65ead4342ac07acdbee1729a9a26cb854a8ce917a2a0f64baff90e51"
+    },
+    {
+      "path": ".github/workflows/reusable-evidence-binding.yml",
+      "state": "present",
+      "git_blob": "157c24cf2f365ec79b9437650bb3783883f873dd",
+      "sha256": "sha256:e37304abc0b068c2710ab0caec54208e366f4951159f373a6aeee302312af4f1"
+    },
+    {
+      "path": ".gitignore",
+      "state": "present",
+      "git_blob": "161e45b59f237b797f7733cdc1ad98a3bcfbf71d",
+      "sha256": "sha256:6133b81763fe84cb03b43d2f1ac2996f855a35d1109028c30dd70651005464a1"
+    },
+    {
+      "path": ".quirk/decisions/README.md",
+      "state": "present",
+      "git_blob": "3e514cfd837676820340056c1a3d9cf63e77cf43",
+      "sha256": "sha256:b1504afa17b33926719994957c54eab87f0dc28f396ba49ed214ac9e0a9e82e3"
+    },
+    {
+      "path": ".quirk/evidence/2026-08-28-exact-range-decision-spine.json",
+      "state": "present",
+      "git_blob": "7c3b6451140e509fdd82ccc3cf944db8049aa25f",
+      "sha256": "sha256:61f9549e2bd81043efcf5353656d118cfdc08bb88c8dbdf81182005d17eb2e25"
+    },
+    {
+      "path": ".quirk/evidence/README.md",
+      "state": "present",
+      "git_blob": "49365b0d4cea2f0ab30819499446048046444700",
+      "sha256": "sha256:d4f80de99cf38de8b050414b56bcd7bfbdbd13625913937e99404173e3db7d9f"
+    },
+    {
+      "path": ".quirk/schemas/evidence-receipt.schema.json",
+      "state": "present",
+      "git_blob": "e6fd6455d266ae91453b326b4a3774cda62a88b9",
+      "sha256": "sha256:014ace18c346ada69e9c90152ade3264df7618f57e0058cd27a95272002b029b"
+    },
+    {
+      "path": ".quirk/schemas/governed-decision.schema.json",
+      "state": "present",
+      "git_blob": "c2f275840e622e5b05d11c6b6231473756000a83",
+      "sha256": "sha256:04f55574d7e0dae9c785efd9d15ea28bb0a51d5aea7258ae9307a1d596e3b78a"
+    },
+    {
+      "path": "docs/governance/EVIDENCE_BINDING.md",
+      "state": "present",
+      "git_blob": "d78d38aa11d7cddd0e954a1ba9803aba504263e2",
+      "sha256": "sha256:95b03c7913246d27ea6c6b281fd12044a0e9923364500ab16b6578cbcc390174"
+    },
+    {
+      "path": "docs/governance/INTEROPERABILITY.md",
+      "state": "present",
+      "git_blob": "34dc53e836c1328299d8b1f208f1ab4a27a8a4a0",
+      "sha256": "sha256:8f05a9f30500659a4288cfcbbd3c531cdad6d308b9bfed8b90faee563fff5f15"
+    },
+    {
+      "path": "docs/governance/REQUIRED_CHECKS_ROLLOUT.md",
+      "state": "present",
+      "git_blob": "bc6579048a3a6ad12a0239b80c688dbe14047ef7",
+      "sha256": "sha256:d8954bd827883f387f2bd3ef7b38caa5fee22d4a4f1ba0732a4842f91c3fda76"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-08-28-exact-range-decision-spine.md",
+      "state": "present",
+      "git_blob": "3c42f9be8e32b4b2d879aca6923f4336b3ae1515",
+      "sha256": "sha256:d0361a376c24532e7c69bd92f6d0bae6cd66a7ed5df46a618a0aeb2bc3ebfbd4"
+    },
+    {
+      "path": "scripts/create_evidence_receipt.py",
+      "state": "present",
+      "git_blob": "a849deded27d4d4b25f23f7b9255d8a45e950beb",
+      "sha256": "sha256:628da429192e53e7d0cef247469450ef26a3be468f5c42642ab31850cc8377cf"
+    },
+    {
+      "path": "scripts/validate_evidence_receipts.py",
+      "state": "present",
+      "git_blob": "5f1d9ec026e5c53769a6417e694b0f81d54cde43",
+      "sha256": "sha256:ceb18264b93fba674c242fd7d2f8bd45e8d15a8dcba6f1cdd2f308634d5037fe"
+    },
+    {
+      "path": "scripts/validate_governed_decisions.py",
+      "state": "present",
+      "git_blob": "dfc2b020477940bc1876e41d9eb0a0ff616d627c",
+      "sha256": "sha256:b320f9a0451e913bed02f07f6abbd50c90a13fa34df03f668fe39a95432a4f32"
+    },
+    {
+      "path": "tests/test_evidence_receipts.py",
+      "state": "present",
+      "git_blob": "46588669266717994b633068f39a79e5cf30a59c",
+      "sha256": "sha256:613f5869cd44dd00e242a5e5dc350d870bd652383f6af90459b265bbe080767f"
+    },
+    {
+      "path": "tests/test_governed_decisions.py",
+      "state": "present",
+      "git_blob": "0267cdae71e330ebabe8352e3455d8d90eee2c07",
+      "sha256": "sha256:29748a8614eb574c96685bde10708018229f0a5208b4794fee3b270022ebe903"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python -m unittest discover -s tests -v",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python scripts/validate_governed_decisions.py --repository Quirk-Systems/.github --root . --decisions .quirk/decisions",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-08-28T16:02:26Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:e6d8dc531200fbffa61923d9c10f7676f081b34633b8e88a843b314ddb78a962"
+}
