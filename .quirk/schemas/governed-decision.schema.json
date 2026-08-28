@@ -48,9 +48,19 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["receipt_id", "receipt_sha256", "covered_head_commit"],
+            "required": [
+              "receipt_id",
+              "source_repository",
+              "source_commit",
+              "source_path",
+              "receipt_sha256",
+              "covered_head_commit"
+            ],
             "properties": {
               "receipt_id": {"type": "string", "pattern": "^qreceipt\\.[a-z0-9][a-z0-9._-]*$"},
+              "source_repository": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},
+              "source_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+              "source_path": {"type": "string", "minLength": 1},
               "receipt_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
               "covered_head_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"}
             }
