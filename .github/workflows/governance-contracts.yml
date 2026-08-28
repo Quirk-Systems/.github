@@ -73,13 +73,14 @@ jobs:
             args+=(--evidence-path "$path")
           done < <(git diff --name-only -z "$RANGE_BASE..$subject")
 
+          suffix="${subject:0:12}"
           verified_at="$(date -u -d "$(git show -s --format=%cI "$subject")" +%Y-%m-%dT%H:%M:%SZ)"
           python scripts/create_evidence_receipt.py \
             --repository Quirk-Systems/.github \
             --base "$RANGE_BASE" \
             --commit "$subject" \
-            --receipt-id qreceipt.exact-range-decision-spine \
-            --claim-id qclaim.exact-range-decision-spine \
+            --receipt-id "qreceipt.exact-range-decision-spine.$suffix" \
+            --claim-id "qclaim.exact-range-decision-spine.$suffix" \
             --claim "The exact-range evidence, governed-decision, documentation, and interoperability controls are bound to the cited subject bytes." \
             "${args[@]}" \
             --verification-command "python -m unittest discover -s tests -v" \
