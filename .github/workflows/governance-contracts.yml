@@ -1,0 +1,106 @@
+name: Governance Contracts
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: validate
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact event revision with history
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: "3.12"
+
+      - name: Run governance unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Validate stored governed decisions
+        run: >-
+          python scripts/validate_governed_decisions.py
+          --repository Quirk-Systems/.github
+          --root .
+          --decisions .quirk/decisions
+
+      - name: Validate evidence receipts on main
+        if: github.event_name != 'pull_request'
+        run: >-
+          python scripts/validate_evidence_receipts.py
+          --repository Quirk-Systems/.github
+          --root .
+          --receipts .quirk/evidence
+
+      - name: Emit exact-range receipt candidate for review
+        if: github.event_name == 'pull_request'
+        env:
+          RANGE_BASE: ${{ github.event.pull_request.base.sha }}
+          RANGE_HEAD: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          subject="$RANGE_HEAD"
+          mapfile -d '' latest_paths < <(git diff --name-only -z "$subject^" "$subject")
+          if ((${#latest_paths[@]} > 0)); then
+            receipt_only=true
+            for path in "${latest_paths[@]}"; do
+              if [[ ! "$path" =~ ^\.quirk/evidence/.*\.json$ ]]; then
+                receipt_only=false
+                break
+              fi
+            done
+            if [[ "$receipt_only" == true ]]; then
+              subject="$(git rev-parse "$subject^")"
+            fi
+          fi
+
+          args=()
+          while IFS= read -r -d '' path; do
+            [[ "$path" =~ ^\.quirk/evidence/.*\.json$ ]] && continue
+            args+=(--evidence-path "$path")
+          done < <(git diff --name-only -z "$RANGE_BASE..$subject")
+
+          suffix="${subject:0:12}"
+          verified_at="$(date -u -d "$(git show -s --format=%cI "$subject")" +%Y-%m-%dT%H:%M:%SZ)"
+          python scripts/create_evidence_receipt.py \
+            --repository Quirk-Systems/.github \
+            --base "$RANGE_BASE" \
+            --commit "$subject" \
+            --receipt-id "qreceipt.exact-range-decision-spine.$suffix" \
+            --claim-id "qclaim.exact-range-decision-spine.$suffix" \
+            --claim "The exact-range evidence, governed-decision, documentation, and interoperability controls are bound to the cited subject bytes." \
+            "${args[@]}" \
+            --verification-command "python -m unittest discover -s tests -v" \
+            --verification-command "python scripts/validate_governed_decisions.py --repository Quirk-Systems/.github --root . --decisions .quirk/decisions" \
+            --verified-at "$verified_at" \
+            --output /tmp/exact-range-decision-spine.json
+          echo '---BEGIN EXACT-RANGE RECEIPT CANDIDATE---'
+          cat /tmp/exact-range-decision-spine.json
+          echo '---END EXACT-RANGE RECEIPT CANDIDATE---'
+
+      - name: Validate exact pull-request evidence coverage
+        if: github.event_name == 'pull_request'
+        env:
+          RANGE_BASE: ${{ github.event.pull_request.base.sha }}
+          RANGE_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: >-
+          python scripts/validate_evidence_receipts.py
+          --repository Quirk-Systems/.github
+          --root .
+          --receipts .quirk/evidence
+          --range-base "$RANGE_BASE"
+          --range-head "$RANGE_HEAD"
+          --require-covered-diff

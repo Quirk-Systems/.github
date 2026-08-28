@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Quirk-Systems/.github/blob/main/.quirk/schemas/governed-decision.schema.json",
+  "title": "Quirk governed decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "decision_id",
+    "repository",
+    "subject",
+    "evidence",
+    "classification",
+    "disposition",
+    "reason",
+    "limitations",
+    "actor",
+    "authority",
+    "staleness",
+    "decision_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "governed-decision.v1"},
+    "decision_id": {"type": "string", "pattern": "^qdecision\\.[a-z0-9][a-z0-9._-]*$"},
+    "repository": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pull_request", "base_commit", "head_commit", "changed_paths"],
+      "properties": {
+        "pull_request": {"type": ["integer", "null"], "minimum": 1},
+        "base_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "head_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "changed_paths": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["receipts"],
+      "properties": {
+        "receipts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "receipt_id",
+              "source_repository",
+              "source_commit",
+              "source_path",
+              "receipt_sha256",
+              "covered_head_commit"
+            ],
+            "properties": {
+              "receipt_id": {"type": "string", "pattern": "^qreceipt\\.[a-z0-9][a-z0-9._-]*$"},
+              "source_repository": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},
+              "source_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+              "source_path": {"type": "string", "minLength": 1},
+              "receipt_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+              "covered_head_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"}
+            }
+          }
+        }
+      }
+    },
+    "classification": {
+      "enum": [
+        "NO_DELTA",
+        "IMPLEMENTATION_DETAIL",
+        "MATERIAL_SCOPE_CHANGE",
+        "AUTHORITY_CHANGE",
+        "BOUNDARY_ONLY",
+        "INSUFFICIENT_EVIDENCE"
+      ]
+    },
+    "disposition": {"enum": ["CONTINUE", "REVIEW", "REAUTHORIZE", "SPLIT", "HOLD", "REJECT"]},
+    "reason": {"type": "string", "minLength": 1},
+    "limitations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["identity", "authority_ref", "decided_at"],
+      "properties": {
+        "identity": {"type": "string", "minLength": 1},
+        "authority_ref": {"type": ["string", "null"], "minLength": 1},
+        "decided_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?Z$"
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["effect", "required_next"],
+      "properties": {
+        "effect": {"const": "none"},
+        "required_next": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"enum": ["merge", "canon", "runtime", "release", "deploy", "publish", "reauthorize"]}
+        }
+      }
+    },
+    "staleness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stale_if_head_changes"],
+      "properties": {"stale_if_head_changes": {"const": true}}
+    },
+    "decision_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}
