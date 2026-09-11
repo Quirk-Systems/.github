@@ -1,0 +1,105 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.portfolio-truth-repair.c7bac756a665",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "a043f905a5fc57e31b74b4f5c5e4316a42d12485",
+    "commit": "c7bac756a665c55aa5c7ccd4de09b7e425df37db",
+    "changed_paths": [
+      ".quirk/repositories.json",
+      "docs/PORTFOLIO-DRIFT-2026-08-28.md",
+      "docs/QUIRK_OS_RENAME_RUNBOOK.md",
+      "docs/REPOSITORY_STRATEGY.md",
+      "docs/superpowers/plans/2026-08-28-portfolio-truth-repair.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.portfolio-truth-repair.c7bac756a665",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The portfolio metadata and historical cutover warnings are bound to the cited subject bytes; existing governance tests, JSON syntax, and registry lint pass. This is no topology migration, operational admission, or independent proof of repository purpose.",
+      "evidence_paths": [
+        ".quirk/repositories.json",
+        "docs/PORTFOLIO-DRIFT-2026-08-28.md",
+        "docs/QUIRK_OS_RENAME_RUNBOOK.md",
+        "docs/REPOSITORY_STRATEGY.md",
+        "docs/superpowers/plans/2026-08-28-portfolio-truth-repair.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".quirk/repositories.json",
+      "state": "present",
+      "git_blob": "eb7714f539dc24d08293dfd9d37887f134426125",
+      "sha256": "sha256:eb88f9097c7b99eb828486ea2aa2fb622fe4ef2402af07095a576069717ea271"
+    },
+    {
+      "path": "docs/PORTFOLIO-DRIFT-2026-08-28.md",
+      "state": "present",
+      "git_blob": "805ef29fd7c04c0462fda61dbf0b28700704aead",
+      "sha256": "sha256:9626a7ac53a10aa7ede99d53f8debf2f5557333fa638cb0c0185811b94b2cfde"
+    },
+    {
+      "path": "docs/QUIRK_OS_RENAME_RUNBOOK.md",
+      "state": "present",
+      "git_blob": "688ee7e65952b51a41aa0b296f969ee3fc4bbb4f",
+      "sha256": "sha256:6082a736146b2a92c2731325089daac5d1560c40ef1325ee7d4259b03336722c"
+    },
+    {
+      "path": "docs/REPOSITORY_STRATEGY.md",
+      "state": "present",
+      "git_blob": "cdc0ebc8cf85668190cba6f71369c32461462181",
+      "sha256": "sha256:fc6941fbd04490376901b8a7b527ef926f3325f887f4faac96872452bac48aa0"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-08-28-portfolio-truth-repair.md",
+      "state": "present",
+      "git_blob": "f1af19782e654a6354bfa1dd0351492bd071f6f4",
+      "sha256": "sha256:3b3e699e0cc2ab6260c8e8fffce556dd7f16bf1bd14f984247618cc2de85b73a"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python -m unittest discover -s tests -v",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python -m json.tool .quirk/repositories.json",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python scripts/quirk_concept.py --registry .quirk/registry.json lint",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python scripts/validate_evidence_receipts.py --repository Quirk-Systems/.github --root . --receipts .quirk/evidence",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python scripts/validate_governed_decisions.py --repository Quirk-Systems/.github --root . --decisions .quirk/decisions",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check a043f905a5fc57e31b74b4f5c5e4316a42d12485..c7bac756a665c55aa5c7ccd4de09b7e425df37db",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-11T16:03:31Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:678376089a313844a82ab389ad24ae97c5e50fd69cc577c79839e43c14d3cfcb"
+}
