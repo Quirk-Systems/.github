@@ -34,6 +34,16 @@ Do not rely on clone-specific filesystem paths when describing the operating mod
 10. **`Quirk-Systems/quirk-connect`** — candidate interoperability and provider-adapter boundary when connectors become shared products instead of local repository details.
 11. **`Quirk-Systems/quirk-cli`** — candidate operator command surface when local tooling, automation entrypoints, and runtime helpers need an independently versioned boundary.
 
+## Additional Quirk capability lanes
+
+When the capability becomes a real shared product rather than lightweight `.github` configuration, prefer a dedicated repository boundary:
+
+- **`Quirk-Systems/quirk-skills`** — versioned Skill source, packaging, examples, and admission tests beyond lightweight shared `.github/skills/` assets.
+- **`Quirk-Systems/quirk-plugins`** — plugin SDKs, extension contracts, compatibility fixtures, and plugin release lifecycle.
+- **`Quirk-Systems/quirk-mcp`** — MCP servers, tool manifests, transport adapters, and host-integration contracts.
+- **`Quirk-Systems/quirk-api`** — versioned query/control APIs, schema publication, and service-surface compatibility guarantees.
+- **`Quirk-Systems/quirk-auth`** — identity, auth, consent, token, and permission-boundary logic that should not be hidden inside generic workflow configuration.
+
 ## Placement rules
 
 Keep a capability in `Quirk-Systems/.github` when it is primarily:
