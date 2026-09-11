@@ -450,7 +450,7 @@ class PassportTests(unittest.TestCase):
             "scope": {"classification": "IMPLEMENTATION_DETAIL", "owner_valid": True, "fingerprint": "sha256:" + "d" * 64},
             "blockers": [],
             "proofs": [],
-            "review": {"complete": True, "independent_review_count": 1, "independent_approval_count": 1, "open_review_thread_count": 0},
+            "review": {"complete": True, "independent_review_count": 1, "independent_approval_count": 1, "active_changes_requested_count": 0, "open_review_thread_count": 0},
             "checks": [],
             "authority": {
                 "ceiling": "merge_candidate",
@@ -600,6 +600,8 @@ CHANGES_REQUESTED then COMMENTED by the same non-author → active_changes_reque
 old-head APPROVED human review by a non-author → independent_approval_count=0
 APPROVED then CHANGES_REQUESTED by the same non-author → active_changes_requested_count=1
 dismissed APPROVED review → independent_approval_count=0
+repeated APPROVED reviews with the latest approval dismissed → independent_approval_count=0
+dismissed latest approval followed by a fresh exact-head APPROVED review → independent_approval_count=1
 review by PR author → not independent
 Bot/App review → not independent
 one unresolved review thread → open_review_thread_count=1
@@ -663,10 +665,11 @@ If any page omits `headRefOid`, review `id`, `commit.oid`, `state`, `submittedAt
 For each reviewer:
 
 ```text
-ignore PENDING and DISMISSED reviews
+ignore PENDING reviews
 order by submittedAt, then review id
 COMMENTED does not erase a prior APPROVED or CHANGES_REQUESTED opinion
 latest effective APPROVED counts only when review.commit.oid == expected_head_sha
+retain DISMISSED history to invalidate older approvals or change requests until a later opinionated review supersedes that dismissal
 active CHANGES_REQUESTED remains blocking until a later opinionated review or demonstrable dismissal supersedes it
 exclude PR author and Bot/App approvals from independent approval counts
 ```
@@ -712,7 +715,8 @@ git commit -m "feat(governance): collect read-only review and check snapshots"
 - Create: `scripts/pr_closure/compiler.py`
 - Create: `tests/pr_closure/test_compiler.py`
 - Create: all three positive fixture directories
-- Create: adversarial fixture directories `stale-head`, `mergeable-open-p1`, `wrong-owner`, `skipped-as-pass`, `hidden-review-thread`, `green-boundary-plus-runtime`, `old-head-approval`, `approve-then-request-changes`, `dismissed-approval`, `missing-review-commit-oid`, and `head-drift-during-snapshot`
+- Create: positive fixture directory `dismissed-then-fresh-exact-head-approval`
+- Create: adversarial fixture directories `stale-head`, `mergeable-open-p1`, `wrong-owner`, `skipped-as-pass`, `hidden-review-thread`, `green-boundary-plus-runtime`, `old-head-approval`, `approve-then-request-changes`, `dismissed-approval`, `repeated-approval-dismissed-latest`, `admission-missing-independent-review`, `missing-review-commit-oid`, and `head-drift-during-snapshot`
 
 **Interfaces:**
 - Produces: `path_is_owned(boundary: RepositoryBoundary, path: str) -> bool`
@@ -738,8 +742,20 @@ class CompilerTests(unittest.TestCase):
         passport = compile_fixture("adversarial/approve-then-request-changes")
         self.assertEqual(passport.disposition.value, "REVISE")
 
+    def test_boundary_admission_review_requires_review_not_approval(self) -> None:
+        passport = compile_fixture("positive/boundary-admission-review")
+        self.assertEqual(passport.disposition.value, "READY_FOR_HUMAN_ADMISSION")
+
+    def test_admission_candidate_without_independent_review_holds(self) -> None:
+        passport = compile_fixture("adversarial/admission-missing-independent-review")
+        self.assertEqual(passport.disposition.value, "HOLD_CANDIDATE")
+
     def test_dismissed_approval_does_not_count_as_independent(self) -> None:
         passport = compile_fixture("adversarial/dismissed-approval")
+        self.assertEqual(passport.disposition.value, "HOLD_CANDIDATE")
+
+    def test_repeated_approval_with_dismissed_latest_approval_holds(self) -> None:
+        passport = compile_fixture("adversarial/repeated-approval-dismissed-latest")
         self.assertEqual(passport.disposition.value, "HOLD_CANDIDATE")
 
     def test_missing_review_commit_oid_forces_hold(self) -> None:
@@ -756,6 +772,10 @@ class CompilerTests(unittest.TestCase):
 
     def test_valid_current_head_independent_approval_allows_ready(self) -> None:
         passport = compile_fixture("positive/ordinary-merge-review")
+        self.assertEqual(passport.disposition.value, "READY_FOR_MERGE")
+
+    def test_fresh_approval_after_dismissal_restores_ready(self) -> None:
+        passport = compile_fixture("positive/dismissed-then-fresh-exact-head-approval")
         self.assertEqual(passport.disposition.value, "READY_FOR_MERGE")
 
     def test_unobserved_required_check_forces_hold(self) -> None:
@@ -799,15 +819,17 @@ elif exact_successor_covers_subject:
     disposition = "CLOSE_AS_REDUNDANT"
 elif open_blocker or active_changes_requested or failed_required_check:
     disposition = "REVISE"
-elif unresolved_owner or stale_evidence or incomplete_snapshot or unobserved_required_check or missing_independent_review or missing_exact_head_independent_approval or boundary_forbids_promotion or mixed_boundary_and_runtime:
+elif unresolved_owner or stale_evidence or incomplete_snapshot or unobserved_required_check or missing_exact_head_independent_review or boundary_forbids_promotion or mixed_boundary_and_runtime:
     disposition = "HOLD_CANDIDATE"
 elif admission_required:
     disposition = "READY_FOR_HUMAN_ADMISSION"
+elif missing_exact_head_independent_approval:
+    disposition = "HOLD_CANDIDATE"
 else:
     disposition = "READY_FOR_MERGE"
 ```
 
-`READY_FOR_MERGE` requires at least one independent approval whose effective review is bound to the exact expected head, zero open review threads, and zero active `CHANGES_REQUESTED` reviews. `READY_FOR_HUMAN_ADMISSION` requires at least one exact-head independent review, but the human admission decision remains external.
+`READY_FOR_MERGE` requires at least one independent approval whose effective review is bound to the exact expected head, zero open review threads, and zero active `CHANGES_REQUESTED` reviews. `READY_FOR_HUMAN_ADMISSION` requires at least one exact-head independent review, but not an approval, and the human admission decision remains external.
 
 - [ ] **Step 5: Enforce external-write and authority ceilings**
 

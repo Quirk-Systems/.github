@@ -224,15 +224,15 @@ The compiler applies the following precedence from most restrictive to least res
 1. `SUPERSEDE` when repository ownership is invalid and a named successor/extraction path exists.
 2. `CLOSE_AS_REDUNDANT` when an exact successor fully covers the PR and preservation requirements are recorded.
 3. `REVISE` when a reproducible blocker is open, an active `CHANGES_REQUESTED` review remains unsuperseded, or a required check is `FAIL`.
-4. `HOLD_CANDIDATE` when ownership is unresolved, evidence is stale, a check is `NOT_EXECUTED` or `NOT_OBSERVED`, the review snapshot is incomplete, an exact-head independent reviewer is missing, or candidate boundaries forbid promotion.
-5. `READY_FOR_HUMAN_ADMISSION` when all required proof is current and green but a separate admission decision is required.
+4. `HOLD_CANDIDATE` when ownership is unresolved, evidence is stale, a check is `NOT_EXECUTED` or `NOT_OBSERVED`, the review snapshot is incomplete, an exact-head independent review is missing, or candidate boundaries forbid promotion.
+5. `READY_FOR_HUMAN_ADMISSION` when all required proof is current and green, an exact-head independent review is present, and a separate admission decision is required.
 6. `READY_FOR_MERGE` only when the repository boundary allows ordinary integration, all required proof is current and green, review threads are resolved, at least one exact-head independent approval is present, no active `CHANGES_REQUESTED` review remains, and no admission/runtime/authority decision is bundled into the merge.
 
 A blocker list is monotonic: a more permissive result cannot override a stricter active condition.
 
 Review collection is bound to one expected full 40-character head SHA. The collector must query the current `headRefOid` and, for every review, `id`, `commit { oid }`, `state`, `submittedAt`, and `author { login __typename }`. If `headRefOid` differs from the expected head during collection, if any required review field is unavailable, or if a required page cannot be collected, the snapshot fails closed as incomplete and cannot support a ready disposition.
 
-Reviewer state is computed from each reviewer's latest effective opinionated review, ordered by `submittedAt` and then review `id`. `COMMENTED` does not erase an earlier `APPROVED` or `CHANGES_REQUESTED` opinion. `PENDING` and `DISMISSED` reviews are excluded from the effective opinion set. PR-author reviews and Bot/App approvals never count toward independent approval totals.
+Reviewer state is computed from each reviewer's latest effective opinionated review, ordered by `submittedAt` and then review `id`. `COMMENTED` does not erase an earlier `APPROVED` or `CHANGES_REQUESTED` opinion. `PENDING` is excluded from the effective opinion set. `DISMISSED` is not an effective opinion, but its record must remain available to invalidate earlier approvals or change requests until a later opinionated review supersedes that dismissal. PR-author reviews and Bot/App approvals never count toward independent approval totals.
 
 Independent approval counts only when the reviewer's latest effective `APPROVED` review is bound to the exact expected head SHA. An active `CHANGES_REQUESTED` review remains a blocker until a later opinionated review by the same reviewer or a demonstrable dismissal supersedes it; the harness must not clear that blocker merely because the review targeted an older commit.
 
@@ -406,8 +406,9 @@ Version 0.1 uses Python 3.12 standard library, JSON Schema documents as contract
 Required positive fixtures:
 
 1. ordinary repository change eligible for human merge review;
-2. boundary-only candidate eligible for human admission review;
-3. explicitly held runtime candidate with all fixture proof present.
+2. boundary-only candidate eligible for human admission review with an exact-head independent review and no approval requirement;
+3. dismissed latest approval followed by a fresh exact-head approval that restores merge eligibility;
+4. explicitly held runtime candidate with all fixture proof present.
 
 Required adversarial fixtures:
 
@@ -428,7 +429,9 @@ Required adversarial fixtures:
 15. a dismissed approval is counted as active;
 16. a review record is missing `commit.oid`;
 17. `headRefOid` drifts during review snapshot collection;
-18. a valid current-head independent approval survives all exclusion rules.
+18. a valid current-head independent approval survives all exclusion rules;
+19. a boundary-admission candidate lacks an exact-head independent review and therefore holds;
+20. a repeated approval is followed by a dismissed latest approval that must not resurrect an older approval.
 
 Every mutation must fail for the intended invariant, not merely because parsing crashed.
 
