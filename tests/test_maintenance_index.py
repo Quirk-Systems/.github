@@ -36,6 +36,8 @@ class MaintenanceIndexTests(unittest.TestCase):
         self.assertIn("./EVIDENCE_BINDING.md", self.text)
         self.assertIn("Observed at: **2026-09-11 UTC**", self.text)
         self.assertIn("Authority effect: **none**", self.text)
+        self.assertIn("they are not a privacy-enforcement", self.text)
+        self.assertIn("mechanism or a proof-producing reasoning guard", self.text)
 
     def test_index_table_binds_records_to_relationships_and_exact_commits(self):
         rows = [
@@ -53,15 +55,19 @@ class MaintenanceIndexTests(unittest.TestCase):
             if columns[4] != "—":
                 self.assertRegex(columns[4], r"[0-9a-f]{40}", row)
 
-    def test_negative_case_rejects_plan_or_green_check_as_implementation(self):
+    def test_negative_control_section_records_non_inference_statements(self):
         self.assertIn("not prove a Closure Harness implementation", self.text)
         self.assertIn("It is not evidence that `quirk-core#4` enforcement is installed", self.text)
         self.assertIn("does not close", self.text)
 
-    def test_privacy_check_marks_inaccessible_sources(self):
+    def test_privacy_section_marks_inaccessible_sources(self):
         self.assertIn("**inaccessible/unverified**", self.text)
         self.assertIn("copies no private document titles", self.text)
         self.assertIn("instead of being paraphrased as verified facts", self.text)
+        self.assertIn(
+            "document-level checks only confirm that this markdown keeps its explicit",
+            self.text,
+        )
 
     def test_local_links_resolve(self):
         for target in re.findall(r"\]\(([^)]+)\)", self.text):
