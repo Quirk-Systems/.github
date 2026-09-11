@@ -4,6 +4,10 @@ Status: **Proposed foundation**
 Authority: `Quirk-Systems/.github`
 Applies to: every repository in the Quirk Systems organization
 
+> **Portfolio correction:** The naming decision, portfolio table, target topology, and Phase 0 cutover below are historical proposal text. Their empty/private `quirk-os` premise is stale: `project-scaffold` and `quirk-os` are distinct, public, non-empty repositories. See [the portfolio drift record](PORTFOLIO-DRIFT-2026-08-28.md) and the [candidate registry](../.quirk/repositories.json). Do not execute rename, archive, migration, or classification actions from these historical sections; a successor topology decision is required.
+
+`Quirk-Systems/quirk-skills` is recorded as a private candidate Skill source repository. That source ownership grants no Skill admission, activation, runtime, Canon, deployment, or publication authority. Repository existence and observed development activity do not settle portfolio classification or operational admission.
+
 ## 1. Strategic position
 
 Quirk Systems is not managed as a loose collection of applications. It is managed as a stateful human–agent operating system with one governed portfolio of repositories.
@@ -29,7 +33,7 @@ async preparation
 
 Every repository must clearly declare which part of this loop it serves and which canonical authority it consumes.
 
-## 2. Immediate naming decision
+## 2. Historical naming proposal — stale premises
 
 The implemented kernel is currently `Quirk-Systems/project-scaffold`. The private `Quirk-Systems/quirk-os` repository is an empty placeholder.
 
@@ -60,7 +64,7 @@ Every repository receives exactly one primary class. Secondary facets are allowe
 | `lab` | Time-bounded experimental work that is not yet canonical |
 | `sandbox` | Disposable, non-canonical testing or demonstration environment |
 
-## 4. Current portfolio classification
+## 4. Historical portfolio classification — see drift record
 
 | Repository | Visibility | Primary class | Current state | Strategic action |
 | --- | --- | --- | --- | --- |
@@ -342,7 +346,7 @@ Private repositories should contain personal data, unreleased strategy, credenti
 
 Visibility is a governed property, not the accidental default selected during repository creation.
 
-## 9. Target topology
+## 9. Historical target topology — not current inventory
 
 ### Now
 
@@ -374,7 +378,7 @@ These are not automatic next repositories. They are candidate boundaries whose e
 
 ## 10. Phased implementation
 
-### Phase 0 — truthful topology
+### Phase 0 — historical cutover proposal; successor decision required
 
 - perform the `project-scaffold` → `quirk-os` cutover
 - rename and archive the empty placeholder

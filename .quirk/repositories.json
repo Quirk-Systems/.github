@@ -1,7 +1,8 @@
 {
-  "registry_version": "0.1.0",
+  "registry_version": "0.1.1-candidate",
   "authority": "Quirk-Systems/.github",
-  "updated_at": "2026-07-29",
+  "updated_at": "2026-08-28",
+  "status": "candidate_truth_repair_pending_independent_merge_gate",
   "repositories": [
     {
       "repository": "Quirk-Systems/.github",
@@ -9,7 +10,7 @@
       "primary_class": "canon",
       "lifecycle": "active",
       "canonical": true,
-      "purpose": "Public organization governance, semantic authority, repository contracts, and reusable workflows"
+      "purpose": "Public organization governance, semantic authority, repository contracts, portfolio truth, and reusable workflows"
     },
     {
       "repository": "Quirk-Systems/.github-private",
@@ -21,23 +22,42 @@
     },
     {
       "repository": "Quirk-Systems/project-scaffold",
-      "desired_repository": "Quirk-Systems/quirk-os",
       "visibility": "public",
       "primary_class": "kernel",
       "lifecycle": "active",
       "canonical": true,
-      "purpose": "Implemented Quirk OS kernel, operator surface, asset and mutation engine, and initial runtime",
-      "migration": "Rename after the empty quirk-os placeholder is moved to quirk-os-reserved"
+      "purpose": "Implemented Quirk kernel/operator codebase retained as a distinct current repository",
+      "topology_status": "REQUIRES_OWNER_DECISION",
+      "historical_note": "Earlier strategy proposed renaming this repository to quirk-os; current observed topology contains both repositories and does not prove that cutover occurred."
     },
     {
       "repository": "Quirk-Systems/quirk-os",
-      "desired_repository": "Quirk-Systems/quirk-os-reserved",
-      "visibility": "private",
-      "primary_class": "sandbox",
-      "lifecycle": "proposed_archive",
+      "visibility": "public",
+      "primary_class": "kernel",
+      "lifecycle": "active",
       "canonical": false,
-      "purpose": "Empty naming placeholder",
-      "migration": "Rename, verify no unique configuration, document, and archive"
+      "purpose": "Candidate Quirk OS runtime, Skill runtime/projection architecture, and bounded system candidates",
+      "topology_status": "ACTIVE_OBSERVED_REQUIRES_OWNER_RECONCILIATION",
+      "historical_note": "This repository is no longer accurately described as a private empty placeholder."
+    },
+    {
+      "repository": "Quirk-Systems/quirk-core",
+      "visibility": "public",
+      "primary_class": "canon",
+      "lifecycle": "active",
+      "canonical": false,
+      "purpose": "Shared Quirk contracts, governance documentation, schemas, validators, and canonical-candidate definitions",
+      "classification_status": "PROPOSED_PENDING_REVIEW"
+    },
+    {
+      "repository": "Quirk-Systems/quirk-skills",
+      "visibility": "private",
+      "primary_class": "instrument",
+      "lifecycle": "incubating",
+      "canonical": false,
+      "purpose": "Portable Quirk Skill candidate source packages and attributable package-local evaluation evidence",
+      "authority_boundary": "Candidate source only; no admission, activation, runtime, canon, deployment, or publication authority",
+      "classification_status": "PROPOSED_PENDING_REVIEW"
     },
     {
       "repository": "Quirk-Systems/quirk-data",
@@ -118,5 +138,6 @@
       "purpose": "GitHub feature demonstration and disposable workflow testing",
       "retirement_condition": "Archive when no unique GitHub feature test depends on it"
     }
-  ]
+  ],
+  "unclassified_policy": "Repositories observed outside this registry remain OBSERVED_UNCLASSIFIED until an owner-approved classification is merged. Existence or naming alone does not establish purpose, lifecycle, authority, or canon."
 }
