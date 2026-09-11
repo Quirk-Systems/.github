@@ -582,21 +582,30 @@ git commit -m "feat(governance): bind closure subject to exact Git state"
 - Create: `tests/pr_closure/test_github_snapshot.py`
 
 **Interfaces:**
-- Produces: `fetch_review_snapshot(repository: str, pr_number: int, author_login: str, token: str) -> ReviewSnapshot`
+- Produces: `fetch_review_snapshot(repository: str, pr_number: int, author_login: str, expected_head_sha: str, token: str) -> ReviewSnapshot`
 - Produces: `fetch_check_snapshot(repository: str, head_sha: str, required_checks: tuple[str, ...], token: str) -> CheckSnapshot`
 - Produces normalized JSON at `/tmp/pr-closure/github-snapshot.json`
+
+The snippets below are unexecuted plan examples. The implementation must re-confirm the live GitHub schema at execution time and fail closed when required fields or pages are unavailable.
 
 - [ ] **Step 1: Write mocked HTTP tests**
 
 Test these cases with `unittest.mock.patch`:
 
 ```text
-one COMMENTED human review by a non-author → independent_review_count=1
-one APPROVED human review by a non-author → independent_approval_count=1
+one COMMENTED human review by a non-author on expected head → independent_review_count=1
+one APPROVED human review by a non-author on expected head → independent_approval_count=1
+APPROVED then COMMENTED by the same non-author on expected head → independent_approval_count remains 1
+CHANGES_REQUESTED then COMMENTED by the same non-author → active_changes_requested_count remains 1
+old-head APPROVED human review by a non-author → independent_approval_count=0
+APPROVED then CHANGES_REQUESTED by the same non-author → active_changes_requested_count=1
+dismissed APPROVED review → independent_approval_count=0
 review by PR author → not independent
 Bot/App review → not independent
 one unresolved review thread → open_review_thread_count=1
-GraphQL pageInfo.hasNextPage=true → complete=false
+missing review commit OID → complete=false
+GraphQL pageInfo.hasNextPage=true and a later page is unavailable → complete=false
+headRefOid changes during review pagination → complete=false
 missing required check → NOT_OBSERVED
 skipped or cancelled required check → NOT_EXECUTED
 successful exact-head check → PASS
@@ -612,20 +621,33 @@ python -m unittest tests.pr_closure.test_github_snapshot -v
 
 - [ ] **Step 3: Implement the read-only GraphQL review query**
 
-Use this exact query and fail `complete=false` when either collection has another page:
+Use this exact query shape, collect every required page, and fail closed unless every page reports the expected head SHA:
 
 ```graphql
-query($owner: String!, $name: String!, $number: Int!) {
+query(
+  $owner: String!,
+  $name: String!,
+  $number: Int!,
+  $reviewCursor: String,
+  $threadCursor: String
+) {
   repository(owner: $owner, name: $name) {
     pullRequest(number: $number) {
       author { login }
-      reviews(first: 100) {
-        nodes { state submittedAt author { login __typename } }
-        pageInfo { hasNextPage }
+      headRefOid
+      reviews(first: 100, after: $reviewCursor) {
+        nodes {
+          id
+          commit { oid }
+          state
+          submittedAt
+          author { login __typename }
+        }
+        pageInfo { hasNextPage endCursor }
       }
-      reviewThreads(first: 100) {
+      reviewThreads(first: 100, after: $threadCursor) {
         nodes { isResolved }
-        pageInfo { hasNextPage }
+        pageInfo { hasNextPage endCursor }
       }
     }
   }
@@ -634,7 +656,22 @@ query($owner: String!, $name: String!, $number: Int!) {
 
 Use `urllib.request` with `Authorization: Bearer <token>` and `X-GitHub-Api-Version: 2022-11-28`. Never log the token or raw response headers.
 
-- [ ] **Step 4: Implement exact-head check-run normalization**
+If any page omits `headRefOid`, review `id`, `commit.oid`, `state`, `submittedAt`, or author identity/type, mark the snapshot incomplete and prevent a ready disposition.
+
+- [ ] **Step 4: Normalize latest effective reviewer opinions**
+
+For each reviewer:
+
+```text
+ignore PENDING and DISMISSED reviews
+order by submittedAt, then review id
+COMMENTED does not erase a prior APPROVED or CHANGES_REQUESTED opinion
+latest effective APPROVED counts only when review.commit.oid == expected_head_sha
+active CHANGES_REQUESTED remains blocking until a later opinionated review or demonstrable dismissal supersedes it
+exclude PR author and Bot/App approvals from independent approval counts
+```
+
+- [ ] **Step 5: Implement exact-head check-run normalization**
 
 Call:
 
@@ -654,13 +691,13 @@ queued, in_progress             → NOT_OBSERVED
 
 If more than 100 check runs exist, set snapshot `complete=false` and prevent a ready disposition.
 
-- [ ] **Step 5: Run focused tests**
+- [ ] **Step 6: Run focused tests**
 
 ```bash
 python -m unittest tests.pr_closure.test_github_snapshot -v
 ```
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
 git add scripts/pr_closure/github_snapshot.py scripts/fetch_pr_review_snapshot.py tests/pr_closure/test_github_snapshot.py
@@ -675,11 +712,13 @@ git commit -m "feat(governance): collect read-only review and check snapshots"
 - Create: `scripts/pr_closure/compiler.py`
 - Create: `tests/pr_closure/test_compiler.py`
 - Create: all three positive fixture directories
-- Create: adversarial fixture directories `stale-head`, `mergeable-open-p1`, `wrong-owner`, `skipped-as-pass`, `hidden-review-thread`, and `green-boundary-plus-runtime`
+- Create: adversarial fixture directories `stale-head`, `mergeable-open-p1`, `wrong-owner`, `skipped-as-pass`, `hidden-review-thread`, `green-boundary-plus-runtime`, `old-head-approval`, `approve-then-request-changes`, `dismissed-approval`, `missing-review-commit-oid`, and `head-drift-during-snapshot`
 
 **Interfaces:**
 - Produces: `path_is_owned(boundary: RepositoryBoundary, path: str) -> bool`
 - Produces: `compile_passport(boundary, closure_input, subject, review, checks) -> ProofPassport`
+
+The snippets below are unexecuted plan examples. The implementation must preserve exact-head safety and fail closed if any fixture lacks the required review identity or commit binding.
 
 - [ ] **Step 1: Write the disposition matrix tests**
 
@@ -691,9 +730,33 @@ class CompilerTests(unittest.TestCase):
         passport = compile_fixture("adversarial/mergeable-open-p1")
         self.assertEqual(passport.disposition.value, "REVISE")
 
+    def test_old_head_approval_does_not_make_candidate_ready(self) -> None:
+        passport = compile_fixture("adversarial/old-head-approval")
+        self.assertEqual(passport.disposition.value, "HOLD_CANDIDATE")
+
+    def test_approve_then_request_changes_forces_revise(self) -> None:
+        passport = compile_fixture("adversarial/approve-then-request-changes")
+        self.assertEqual(passport.disposition.value, "REVISE")
+
+    def test_dismissed_approval_does_not_count_as_independent(self) -> None:
+        passport = compile_fixture("adversarial/dismissed-approval")
+        self.assertEqual(passport.disposition.value, "HOLD_CANDIDATE")
+
+    def test_missing_review_commit_oid_forces_hold(self) -> None:
+        passport = compile_fixture("adversarial/missing-review-commit-oid")
+        self.assertEqual(passport.disposition.value, "HOLD_CANDIDATE")
+
+    def test_head_drift_during_snapshot_forces_hold(self) -> None:
+        passport = compile_fixture("adversarial/head-drift-during-snapshot")
+        self.assertEqual(passport.disposition.value, "HOLD_CANDIDATE")
+
     def test_wrong_owner_with_successor_forces_supersede(self) -> None:
         passport = compile_fixture("adversarial/wrong-owner")
         self.assertEqual(passport.disposition.value, "SUPERSEDE")
+
+    def test_valid_current_head_independent_approval_allows_ready(self) -> None:
+        passport = compile_fixture("positive/ordinary-merge-review")
+        self.assertEqual(passport.disposition.value, "READY_FOR_MERGE")
 
     def test_unobserved_required_check_forces_hold(self) -> None:
         passport = compile_fixture("adversarial/skipped-as-pass")
@@ -734,9 +797,9 @@ if wrong_owner and successors:
     disposition = "SUPERSEDE"
 elif exact_successor_covers_subject:
     disposition = "CLOSE_AS_REDUNDANT"
-elif open_blocker or failed_required_check:
+elif open_blocker or active_changes_requested or failed_required_check:
     disposition = "REVISE"
-elif unresolved_owner or stale_evidence or incomplete_snapshot or unobserved_required_check or missing_independent_review or boundary_forbids_promotion or mixed_boundary_and_runtime:
+elif unresolved_owner or stale_evidence or incomplete_snapshot or unobserved_required_check or missing_independent_review or missing_exact_head_independent_approval or boundary_forbids_promotion or mixed_boundary_and_runtime:
     disposition = "HOLD_CANDIDATE"
 elif admission_required:
     disposition = "READY_FOR_HUMAN_ADMISSION"
@@ -744,7 +807,7 @@ else:
     disposition = "READY_FOR_MERGE"
 ```
 
-`READY_FOR_MERGE` requires at least one independent approval and zero open review threads. `READY_FOR_HUMAN_ADMISSION` requires at least one independent review, but the human admission decision remains external.
+`READY_FOR_MERGE` requires at least one independent approval whose effective review is bound to the exact expected head, zero open review threads, and zero active `CHANGES_REQUESTED` reviews. `READY_FOR_HUMAN_ADMISSION` requires at least one exact-head independent review, but the human admission decision remains external.
 
 - [ ] **Step 5: Enforce external-write and authority ceilings**
 

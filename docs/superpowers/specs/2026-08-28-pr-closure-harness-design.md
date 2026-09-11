@@ -223,12 +223,18 @@ The compiler applies the following precedence from most restrictive to least res
 
 1. `SUPERSEDE` when repository ownership is invalid and a named successor/extraction path exists.
 2. `CLOSE_AS_REDUNDANT` when an exact successor fully covers the PR and preservation requirements are recorded.
-3. `REVISE` when a reproducible blocker is open or a required check is `FAIL`.
-4. `HOLD_CANDIDATE` when ownership is unresolved, evidence is stale, a check is `NOT_EXECUTED` or `NOT_OBSERVED`, an independent reviewer is missing, or candidate boundaries forbid promotion.
+3. `REVISE` when a reproducible blocker is open, an active `CHANGES_REQUESTED` review remains unsuperseded, or a required check is `FAIL`.
+4. `HOLD_CANDIDATE` when ownership is unresolved, evidence is stale, a check is `NOT_EXECUTED` or `NOT_OBSERVED`, the review snapshot is incomplete, an exact-head independent reviewer is missing, or candidate boundaries forbid promotion.
 5. `READY_FOR_HUMAN_ADMISSION` when all required proof is current and green but a separate admission decision is required.
-6. `READY_FOR_MERGE` only when the repository boundary allows ordinary integration, all required proof is current and green, review threads are resolved, an independent review is present, and no admission/runtime/authority decision is bundled into the merge.
+6. `READY_FOR_MERGE` only when the repository boundary allows ordinary integration, all required proof is current and green, review threads are resolved, at least one exact-head independent approval is present, no active `CHANGES_REQUESTED` review remains, and no admission/runtime/authority decision is bundled into the merge.
 
 A blocker list is monotonic: a more permissive result cannot override a stricter active condition.
+
+Review collection is bound to one expected full 40-character head SHA. The collector must query the current `headRefOid` and, for every review, `id`, `commit { oid }`, `state`, `submittedAt`, and `author { login __typename }`. If `headRefOid` differs from the expected head during collection, if any required review field is unavailable, or if a required page cannot be collected, the snapshot fails closed as incomplete and cannot support a ready disposition.
+
+Reviewer state is computed from each reviewer's latest effective opinionated review, ordered by `submittedAt` and then review `id`. `COMMENTED` does not erase an earlier `APPROVED` or `CHANGES_REQUESTED` opinion. `PENDING` and `DISMISSED` reviews are excluded from the effective opinion set. PR-author reviews and Bot/App approvals never count toward independent approval totals.
+
+Independent approval counts only when the reviewer's latest effective `APPROVED` review is bound to the exact expected head SHA. An active `CHANGES_REQUESTED` review remains a blocker until a later opinionated review by the same reviewer or a demonstrable dismissal supersedes it; the harness must not clear that blocker merely because the review targeted an older commit.
 
 ## 5. Code Ontology Companion seam
 
@@ -416,7 +422,13 @@ Required adversarial fixtures:
 9. authority field smuggled through an unknown key;
 10. path traversal in changed paths or artifact locators;
 11. telemetry presented as proof of value;
-12. the seductive false version: every check is green, but the PR combines a boundary admission decision with runtime activation.
+12. the seductive false version: every check is green, but the PR combines a boundary admission decision with runtime activation;
+13. an old-head approval is presented as a current approval;
+14. an approval is later superseded by `CHANGES_REQUESTED`;
+15. a dismissed approval is counted as active;
+16. a review record is missing `commit.oid`;
+17. `headRefOid` drifts during review snapshot collection;
+18. a valid current-head independent approval survives all exclusion rules.
 
 Every mutation must fail for the intended invariant, not merely because parsing crashed.
 
