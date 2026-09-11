@@ -1,8 +1,10 @@
 # Quirk OS Repository Rename Runbook
 
+**Status: historical proposal / non-operative.** The empty, private `quirk-os` premise below is stale. `project-scaffold` and `quirk-os` currently exist as distinct, public, non-empty repositories. Preserve this sequence as historical context; do not execute its rename, archive, migration, or classification steps without a successor topology decision and fresh repository-specific preflight evidence. See [the portfolio drift record](PORTFOLIO-DRIFT-2026-08-28.md).
+
 Goal: preserve the implemented kernel and its full history while moving the canonical repository name from `project-scaffold` to `quirk-os`.
 
-## Current state
+## Historical assumed state — superseded by drift evidence
 
 - `Quirk-Systems/project-scaffold` — active public repository containing the implemented Quirk OS kernel, history, issues, pull requests, workflows, and architecture.
 - `Quirk-Systems/quirk-os` — empty private placeholder blocking the desired name.
