@@ -1,0 +1,135 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.copilot-maintenance.adfab1fab46a",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "59c05caf9b68ef006d8627d9fc679b536c0a4e56",
+    "commit": "adfab1fab46a905e776e7d0f876122faf352bd2d",
+    "changed_paths": [
+      ".github/skills/quirk-repo-maintenance/SKILL.md",
+      "agents/quirk-artifact-provenance.agent.md",
+      "agents/quirk-dependency-steward.agent.md",
+      "agents/quirk-repo-repair.agent.md",
+      "docs/copilot-maintenance/README.md",
+      "docs/copilot-maintenance/evaluation-answers.json",
+      "docs/copilot-maintenance/evaluation.md",
+      "docs/copilot-maintenance/rubric.json",
+      "docs/copilot-maintenance/scenarios.json",
+      "scripts/validate-copilot-maintenance.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.copilot-maintenance.adfab1fab46a",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Three Copilot instruction profiles, one maintenance skill, package validation, and six synthetic evaluation records are bound to the cited subject bytes. Structural checks passed; live Copilot execution and policy enforcement are not established.",
+      "evidence_paths": [
+        ".github/skills/quirk-repo-maintenance/SKILL.md",
+        "agents/quirk-artifact-provenance.agent.md",
+        "agents/quirk-dependency-steward.agent.md",
+        "agents/quirk-repo-repair.agent.md",
+        "docs/copilot-maintenance/README.md",
+        "docs/copilot-maintenance/evaluation-answers.json",
+        "docs/copilot-maintenance/evaluation.md",
+        "docs/copilot-maintenance/rubric.json",
+        "docs/copilot-maintenance/scenarios.json",
+        "scripts/validate-copilot-maintenance.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/skills/quirk-repo-maintenance/SKILL.md",
+      "state": "present",
+      "git_blob": "d92c7dff52802d6bf654745feb2579213581abce",
+      "sha256": "sha256:56ed3f8afa52e70c0882a7657de7ce8c3058e7ee4cec16a2e013317243067632"
+    },
+    {
+      "path": "agents/quirk-artifact-provenance.agent.md",
+      "state": "present",
+      "git_blob": "dd1ffd4297b97e75bfca8ca6196db9a438c7eeae",
+      "sha256": "sha256:d91f4f0c83a1c79c0ac8fd703cac7b70327d24f873cdf619a83319d35e3d74a1"
+    },
+    {
+      "path": "agents/quirk-dependency-steward.agent.md",
+      "state": "present",
+      "git_blob": "cdaa252df7dc2cf272d27558adb1c6cd9c585599",
+      "sha256": "sha256:a911559ba581acc2a63c51e981ee7e5eb1d8ffe1a0006d979b45b296ad43bb41"
+    },
+    {
+      "path": "agents/quirk-repo-repair.agent.md",
+      "state": "present",
+      "git_blob": "4746a61cbb9b3188afcc86758d747e96e9d3d036",
+      "sha256": "sha256:03257ec72f813c78bd3d426f1c8a8888d37d4d9f2fa12f2978e8d3d2d93daea1"
+    },
+    {
+      "path": "docs/copilot-maintenance/README.md",
+      "state": "present",
+      "git_blob": "b7b7fbb49d14406f549fb8e8de5efdf928028124",
+      "sha256": "sha256:c8e2d0d6d285332ec5f0718f830be19b9bd815d9668f84948954bc81c17fef74"
+    },
+    {
+      "path": "docs/copilot-maintenance/evaluation-answers.json",
+      "state": "present",
+      "git_blob": "caef3584a33b9326a31534f95f65c3848748fcb6",
+      "sha256": "sha256:5335c43d04dd3f008c0518974b4064b4dd0f814c7ece5b44aeff8183626da631"
+    },
+    {
+      "path": "docs/copilot-maintenance/evaluation.md",
+      "state": "present",
+      "git_blob": "78cb8b87cf7da44d991e56f54717f318bde06c4b",
+      "sha256": "sha256:c468e52f9815a18b4e63fef896702f64c24c2855b4e6df4d8b8d474697173a51"
+    },
+    {
+      "path": "docs/copilot-maintenance/rubric.json",
+      "state": "present",
+      "git_blob": "9efe8662c6c6c2b1e08c438be32dc1bf0b88484b",
+      "sha256": "sha256:5682365ae708bf793ba39b6c12c081bc9e815d0858d9d2350f93bbecba425007"
+    },
+    {
+      "path": "docs/copilot-maintenance/scenarios.json",
+      "state": "present",
+      "git_blob": "ea2013cb58bba001490933f96c878653904acfcd",
+      "sha256": "sha256:c84af86570cae8846e594821af630c81645201e08d2349257de8a561a52571ec"
+    },
+    {
+      "path": "scripts/validate-copilot-maintenance.py",
+      "state": "present",
+      "git_blob": "47e40456b62ccfaf32109057c5934e3256953cf4",
+      "sha256": "sha256:41223eded85e14e4573496270254a553c6ee08eaa730e3466f737e4431cb8158"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python3 scripts/validate-copilot-maintenance.py",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python -m unittest discover -s tests -v",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python scripts/validate_governed_decisions.py --repository Quirk-Systems/.github --root . --decisions .quirk/decisions",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python scripts/quirk_concept.py --registry .quirk/registry.json lint",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-11T16:08:06Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:37e503d7d6d5f7e676b27e560e358a9f867c42e38efa78f6ba29e2217120e25c"
+}
