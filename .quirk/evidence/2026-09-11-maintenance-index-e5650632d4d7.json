@@ -1,0 +1,61 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.maintenance-index.e5650632d4d7",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "44c2374229191894f970edad9fb857bfbe13892a",
+    "commit": "e5650632d4d7ff64502702769c70da8b718fe09e",
+    "changed_paths": [
+      "docs/governance/MAINTENANCE_INDEX.md",
+      "tests/test_maintenance_index.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.maintenance-index.e5650632d4d7",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The maintenance index and its focused structural validation are bound to the cited subject bytes.",
+      "evidence_paths": [
+        "docs/governance/MAINTENANCE_INDEX.md",
+        "tests/test_maintenance_index.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/governance/MAINTENANCE_INDEX.md",
+      "state": "present",
+      "git_blob": "a9b78df058a2b2d22c80e496c48745701402249c",
+      "sha256": "sha256:2fd320117593239f30f043dfbb8152eeb52b2cfc23d6d9422c28a0175e0b718a"
+    },
+    {
+      "path": "tests/test_maintenance_index.py",
+      "state": "present",
+      "git_blob": "8cd8e20ab4837538e7a7579d461cca29d09931bb",
+      "sha256": "sha256:a8f51124b0deeb9f8ee91ba604f105a8f2fff9ec34244ccdbf3c3b971937c75b"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python -m unittest tests.test_maintenance_index -v",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python -m unittest discover -s tests -v",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-11T16:10:00Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:d388e7fd24a2062fcfd1c34b8c35406b66a40d68e198591f04c46245db95c9ce"
+}
