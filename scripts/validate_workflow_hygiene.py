@@ -12,7 +12,7 @@ MAPPING_EVENT_PATTERN = re.compile(
     r"^(?: {2})?(?P<event>push|pull_request|pull_request_target|workflow_dispatch|workflow_call|workflow_run|schedule):\s*(?:#.*)?$",
     re.MULTILINE,
 )
-USES_PATTERN = re.compile(r"^\s*uses:\s*(?P<value>[^\s#]+)", re.MULTILINE)
+USES_PATTERN = re.compile(r"^\s*(?:-\s*)?uses:\s*(?P<value>[^\s#]+)", re.MULTILINE)
 TOP_LEVEL_KEY_TEMPLATE = r"^(?P<key>{key}):(?:\s*(?:#.*|\{{.*\}}))?$"
 UNSAFE_TRIGGERS = {"pull_request_target", "workflow_run"}
 CONCURRENCY_TRIGGERS = {"push", "pull_request", "workflow_dispatch", "schedule"}
