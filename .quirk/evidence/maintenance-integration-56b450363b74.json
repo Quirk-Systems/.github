@@ -1,0 +1,73 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.maintenance-integration.56b450363b74",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "ef109a03a6e0619a2281916bf03398f7e2f94ff6",
+    "commit": "56b450363b74256302976379d91815d18808f8b3",
+    "changed_paths": [
+      ".quirk/evidence/2026-09-11-maintenance-index-17067cc1b6e0.json",
+      "docs/governance/MAINTENANCE_INDEX.md",
+      "tests/test_maintenance_index.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.maintenance-integration.56b450363b74",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The unchanged dated maintenance index and structural tests are integrated with the current main revision and bound to this exact range.",
+      "evidence_paths": [
+        "docs/governance/MAINTENANCE_INDEX.md",
+        "tests/test_maintenance_index.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".quirk/evidence/2026-09-11-maintenance-index-17067cc1b6e0.json",
+      "state": "present",
+      "git_blob": "ec4a65188afc93339a2d0ec62917a505a6347843",
+      "sha256": "sha256:813c62a1f5febc211d5e945dd5d6783a41b65b2988befd3c1e0c0de6493cf3f9"
+    },
+    {
+      "path": "docs/governance/MAINTENANCE_INDEX.md",
+      "state": "present",
+      "git_blob": "44cba71356cdb66f4ceb5a24f11e575fe00a757b",
+      "sha256": "sha256:b4efced87e45a8a627edf68d4208318a4dc0fd384fb5b349d52db4dbfe4345b8"
+    },
+    {
+      "path": "tests/test_maintenance_index.py",
+      "state": "present",
+      "git_blob": "1b20fccd07a5c804ab117a4cc4fb4e795c926376",
+      "sha256": "sha256:1a1cff8d10e43b7aaefd6c867595421f7ae796d9a07cd51a4d030dbcfd9649f7"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python3 -m unittest discover -s tests -v",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate-copilot-maintenance.py",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_governed_decisions.py --repository Quirk-Systems/.github --root . --decisions .quirk/decisions",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-12T12:01:02Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:8b44b90c8ba11b684276cac1ca089d08ae5079fa9394ba2a5043ca785801e527"
+}
