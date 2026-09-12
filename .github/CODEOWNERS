@@ -1,0 +1,22 @@
+# Quirk Systems organization canon and shared workflow spine.
+* @bryansayler
+
+# Canonical state and governance.
+/.quirk/ @bryansayler
+/docs/ @bryansayler
+/profile/ @bryansayler
+
+# Shared GitHub defaults.
+/.github/workflows/ @bryansayler
+/.github/ISSUE_TEMPLATE/ @bryansayler
+/.github/PULL_REQUEST_TEMPLATE.md @bryansayler
+/.github/copilot-instructions.md @bryansayler
+/.github/dependabot.yml @bryansayler
+/.github/release-drafter.yml @bryansayler
+/.github/labeler.yml @bryansayler
+
+# Executable governance and reusable agent assets.
+/scripts/ @bryansayler
+/tests/ @bryansayler
+/prompt-packs/ @bryansayler
+/agents/ @bryansayler
