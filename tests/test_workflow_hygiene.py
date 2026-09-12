@@ -1,8 +1,13 @@
+import shutil
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 
 from scripts.validate_workflow_hygiene import validate_workflows
+from scripts.validate_workflow_hygiene import WorkflowLoader
+import yaml
 
 
 class WorkflowHygieneTests(unittest.TestCase):
@@ -101,6 +106,99 @@ class WorkflowHygieneTests(unittest.TestCase):
     def test_merge_keys_and_empty_concurrency_fail(self):
         self.assertTrue(self.check_text('base: &base {on: workflow_call}\n<<: *base\npermissions: {}\njobs: {}'))
         self.assertTrue(any('concurrency' in e for e in self.check_text('on: push\npermissions: {}\nconcurrency: {}\njobs: {}')))
+
+    def test_job_permission_override_cannot_escape_top_level_policy(self):
+        for declaration in ['write-all', '{contents: write-all}', 'false', '[]']:
+            with self.subTest(declaration=declaration):
+                text = ('on: workflow_call\npermissions: read-all\njobs:\n'
+                        '  test:\n    permissions: ' + declaration + '\n    steps: []\n')
+                self.assertTrue(any('permissions' in e for e in self.check_text(text)))
+
+    def test_explicit_job_permissions_and_inheritance_remain_supported(self):
+        for declaration in ['', '    permissions: {}\n', '    permissions: read-all\n',
+                            '    permissions: {contents: read, pull-requests: write}\n']:
+            with self.subTest(declaration=declaration):
+                text = ('on: workflow_call\npermissions: {}\njobs:\n  test:\n'
+                        + declaration + '    steps: []\n')
+                self.assertEqual(self.check_text(text), [])
+
+    def test_job_and_service_images_require_immutable_digests(self):
+        for declaration in ['container: node:latest', 'container: {image: node:20}',
+                            'services: {db: {image: postgres:latest}}',
+                            'container: {image: "${{ inputs.image }}"}',
+                            'container: {}', 'services: {db: {}}']:
+            with self.subTest(declaration=declaration):
+                text = ('on: workflow_call\npermissions: {}\njobs:\n  test:\n    '
+                        + declaration + '\n    steps: []\n')
+                self.assertTrue(self.check_text(text))
+
+    def test_digest_pinned_job_and_service_images_pass(self):
+        image = 'ghcr.io/quirk/image@sha256:' + 'a' * 64
+        for declaration in ['container: ' + image,
+                            'container: {image: "' + image + '"}',
+                            'services: {db: {image: "' + image + '"}}']:
+            with self.subTest(declaration=declaration):
+                text = ('on: workflow_call\npermissions: {}\njobs:\n  test:\n    '
+                        + declaration + '\n    steps: []\n')
+                self.assertEqual(self.check_text(text), [])
+
+    def test_trusted_checker_ignores_subject_validator_and_python_modules(self):
+        """Execute the actual isolated checker against attacker-owned files."""
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            policy = root / '.quirk-policy' / 'scripts'
+            policy.mkdir(parents=True)
+            shutil.copyfile(Path(__file__).parents[1] / 'scripts/validate_workflow_hygiene.py',
+                            policy / 'validate_workflow_hygiene.py')
+            subject = root / '.quirk-subject'
+            (subject / 'scripts').mkdir(parents=True)
+            (subject / 'scripts/validate_workflow_hygiene.py').write_text('raise SystemExit(0)\n')
+            (subject / 'yaml.py').write_text('raise RuntimeError("untrusted import executed")\n')
+            self.write(subject, 'unsafe.yml',
+                       'on: workflow_call\npermissions: {}\njobs:\n  test:\n'
+                       '    steps: [{uses: actions/checkout@v4}]\n')
+            result = subprocess.run(
+                [sys.executable, '-I', str(policy / 'validate_workflow_hygiene.py'),
+                 '--root', str(subject), '--workflows', '.github/workflows'],
+                cwd=subject, text=True, capture_output=True)
+            self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+            self.assertIn('pin a full commit SHA', result.stderr)
+            self.assertNotIn('untrusted import executed', result.stderr)
+
+    def test_reusable_job_keeps_subject_and_policy_checkouts_separate(self):
+        workflow = yaml.load((Path(__file__).parents[1] /
+                              '.github/workflows/workflow-hygiene.yml').read_text(),
+                             Loader=WorkflowLoader)
+        steps = workflow['jobs']['validate']['steps']
+        checkouts = [s for s in steps if s.get('uses', '').startswith('actions/checkout@')]
+        self.assertEqual([s['with']['path'] for s in checkouts],
+                         ['.quirk-subject', '.quirk-policy'])
+        commands = '\n'.join(s.get('run', '') for s in steps)
+        self.assertIn('python -I .quirk-policy/scripts/validate_workflow_hygiene.py', commands)
+        self.assertIn('--root .quirk-subject', commands)
+        self.assertNotIn('python .quirk-subject/', commands)
+
+    def test_governance_uses_immutable_policy_in_a_separate_job(self):
+        root = Path(__file__).parents[1]
+        workflow = yaml.load((root / '.github/workflows/governance-contracts.yml').read_text(),
+                             Loader=WorkflowLoader)
+        job = workflow['jobs']['workflow-hygiene']
+        self.assertRegex(job['uses'],
+                         r'^Quirk-Systems/\.github/\.github/workflows/workflow-hygiene\.yml@[0-9a-f]{40}$')
+        self.assertEqual(job['permissions'], {'contents': 'read'})
+        self.assertNotIn('steps', job)
+        self.assertNotIn('secrets', job)
+        sha = job['uses'].rsplit('@', 1)[1]
+        pinned = subprocess.run(
+            ['git', 'show', sha + ':.github/workflows/workflow-hygiene.yml'],
+            cwd=root, check=True, text=True, capture_output=True).stdout
+        called = yaml.load(pinned, Loader=WorkflowLoader)
+        commands = '\n'.join(step.get('run', '') for step in called['jobs']['validate']['steps'])
+        self.assertIn('python -I .quirk-policy/scripts/validate_workflow_hygiene.py', commands)
+        self.assertIn('--root .quirk-subject', commands)
+        candidate_commands = '\n'.join(step.get('run', '')
+                                       for step in workflow['jobs']['validate']['steps'])
+        self.assertNotIn('python scripts/validate_workflow_hygiene.py', candidate_commands)
 
 
 if __name__ == "__main__":
