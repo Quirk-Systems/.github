@@ -1,0 +1,152 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.workflow-hygiene.341be91c47ba",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "ef109a03a6e0619a2281916bf03398f7e2f94ff6",
+    "commit": "341be91c47ba5232f3b39943bd1f7c481d6ed4ce",
+    "changed_paths": [
+      ".github/CODEOWNERS",
+      ".github/copilot-instructions.md",
+      ".github/dependabot.yml",
+      ".github/labeler.yml",
+      ".github/release-drafter.yml",
+      ".github/workflows/governance-contracts.yml",
+      ".github/workflows/quirk-semantic-governance.yml",
+      ".github/workflows/reusable-pr-title-lint.yml",
+      ".github/workflows/reusable-validate.yml",
+      ".github/workflows/workflow-hygiene.yml",
+      "docs/ORG_DEFAULTS_AND_REPO_MAP.md",
+      "requirements-workflow-hygiene.txt",
+      "scripts/validate_workflow_hygiene.py",
+      "tests/test_workflow_hygiene.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.workflow-hygiene.341be91c47ba",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The candidate organization-default files are bound to the cited subject bytes; parsed-YAML workflow hygiene and repository structural checks passed locally.",
+      "evidence_paths": [
+        ".github/workflows/governance-contracts.yml",
+        ".github/workflows/workflow-hygiene.yml",
+        "scripts/validate_workflow_hygiene.py",
+        "tests/test_workflow_hygiene.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/CODEOWNERS",
+      "state": "present",
+      "git_blob": "6e8bad1f3f07c5031d10c87327d7bb47152ed21b",
+      "sha256": "sha256:bc080769d77e13ba8ff47b9d6b5bde30946b43ea3f8771bd8a9fdffd41eb2b87"
+    },
+    {
+      "path": ".github/copilot-instructions.md",
+      "state": "present",
+      "git_blob": "3bfe19876c11463332b037e42a7b1b664691f6a7",
+      "sha256": "sha256:e246e04e3768a64b4c80fa9e74a2b43f8064b1aef9fc0ecc47c5185f3babad78"
+    },
+    {
+      "path": ".github/dependabot.yml",
+      "state": "present",
+      "git_blob": "18f8df596e8f59350b399bbcedb9c8855b2b4a77",
+      "sha256": "sha256:d4138f05a32b5460af42a39abbb16274f595c150256de871490147402590e3eb"
+    },
+    {
+      "path": ".github/labeler.yml",
+      "state": "present",
+      "git_blob": "d1dfae34269d097ca1151299e5eb8642585b57f4",
+      "sha256": "sha256:952377410ec494c042cf5ca2f085efbb2e0a4fe5a319e87cbd7713843550cf1a"
+    },
+    {
+      "path": ".github/release-drafter.yml",
+      "state": "present",
+      "git_blob": "ea20fc0594f74480620d72c576f510c49829f9ac",
+      "sha256": "sha256:30f2b210b004272bde223f365f0224231e10c372a01eb99ccc1b5ab6ba28302a"
+    },
+    {
+      "path": ".github/workflows/governance-contracts.yml",
+      "state": "present",
+      "git_blob": "1c583274e77cd7f3e54de3853a2e2f6cb06fb8bb",
+      "sha256": "sha256:4cf81c45fba30d628a33427502331372bb2925c016e1d180d1b55b255612c23b"
+    },
+    {
+      "path": ".github/workflows/quirk-semantic-governance.yml",
+      "state": "present",
+      "git_blob": "bdbcc687515d13fc80a28c72584c538d12361570",
+      "sha256": "sha256:15c7c7f9b929dc4c2a88e2c96a61328db66e915ee63a1f9e914a5d477a476737"
+    },
+    {
+      "path": ".github/workflows/reusable-pr-title-lint.yml",
+      "state": "present",
+      "git_blob": "9358d9e21afacd9249a130d0d774aa76b9f0642c",
+      "sha256": "sha256:b6c4c6ae096386ed0db8e96086d1b7c241318d73e647e2a995d8513ae3a14688"
+    },
+    {
+      "path": ".github/workflows/reusable-validate.yml",
+      "state": "present",
+      "git_blob": "6aa7836d7552f63c02ad899c6dd9ed5fd060335c",
+      "sha256": "sha256:d2d4a594ec9b34cb9459a12b831354fde8f40ca9a7130f86a9d3ac2c7182bd10"
+    },
+    {
+      "path": ".github/workflows/workflow-hygiene.yml",
+      "state": "present",
+      "git_blob": "e5ac5bd98bd10514b9fb6e3700deab3356b7eafa",
+      "sha256": "sha256:7a4ba4e8ca68962ae51204ba7e61be496ae71af52e7f85bb5f90de05ddf8dd62"
+    },
+    {
+      "path": "docs/ORG_DEFAULTS_AND_REPO_MAP.md",
+      "state": "present",
+      "git_blob": "b499959fbf366d670906656534250b9dc4f584b8",
+      "sha256": "sha256:e99bc8ac5fe213322f5cd9d8e20ecea64140cb8ec89efd1f0d4da8c23d52ff9f"
+    },
+    {
+      "path": "requirements-workflow-hygiene.txt",
+      "state": "present",
+      "git_blob": "f62ce0c56db2b5d134cff98f7fb1625023cd2874",
+      "sha256": "sha256:0969da99a0bc2a1b71ed50584560f4588a37567ac63af3ddbaf3c4617ca5621a"
+    },
+    {
+      "path": "scripts/validate_workflow_hygiene.py",
+      "state": "present",
+      "git_blob": "8197f16043f18bdc2e1b64890ab6ff5e4fdc3083",
+      "sha256": "sha256:d49cd368c40a6c9ab78efb1d6e1e4efcc6a070a8c67e5b2e7985e903383e433b"
+    },
+    {
+      "path": "tests/test_workflow_hygiene.py",
+      "state": "present",
+      "git_blob": "ffac170a6261ea1a92a1db91db8e125a1a3ccd6c",
+      "sha256": "sha256:615f43e09f8d298a574b9dcd68be2abb61e9215333e439e801c768073ad5afd5"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "../schema-check-env/bin/python -m unittest discover -s tests -v",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "../schema-check-env/bin/python scripts/validate_workflow_hygiene.py --root . --workflows .github/workflows",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "../schema-check-env/bin/python scripts/validate_governed_decisions.py --repository Quirk-Systems/.github --root . --decisions .quirk/decisions",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-12T12:18:38Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:3d00c318050c40e8a316b8c144cdbc5ee03b6b2971e0e37fedf557fddccdbf35"
+}
