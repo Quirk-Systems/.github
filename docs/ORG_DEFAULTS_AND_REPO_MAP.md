@@ -26,6 +26,31 @@ Do not rely on clone-specific filesystem paths when describing the operating mod
 5. **`.github/workflows/workflow-hygiene.yml`** — validates workflow defaults from an immutable policy source.
 6. **`.github/copilot-instructions.md`** — gives repositories a concise Copilot operating contract focused on bounded change, verification, and authority boundaries.
 
+### Workflow hygiene proof boundary
+
+The validator checks actual action references, job and service container image
+digests, unsafe triggers, top-level concurrency, and both workflow and job
+permission declarations. An explicit job permission mapping remains allowed;
+`write-all` is rejected at either level. Expressions cannot substitute for a
+literal immutable container digest.
+
+The reusable hygiene workflow checks out candidate data in `.quirk-subject` and
+its own immutable source in `.quirk-policy`. It executes no candidate code and
+uses Python isolated mode so candidate files cannot supply imported modules.
+The GitHub.com [`job.workflow_repository` and `job.workflow_sha` contexts](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#example-usage-of-job-context-workflow-identity)
+identify the called workflow, including for external callers. They are supported
+on GitHub.com and unavailable on GitHub Enterprise Server. Missing or unexpected
+identity fails before policy execution; no caller or default-branch fallback is
+used. The policy checkout SHA is read back before use.
+
+Local adversarial tests demonstrate rejection of mutable images and job-level
+permission overrides, and execute the isolated validator against a subject
+containing a no-op replacement checker and a hostile Python module. These tests
+do not establish a hosted cross-repository invocation or required-check policy.
+Making the job mandatory, admitting a policy revision, and changing repository
+permissions remain separate reviewed decisions. A workflow in a PR cannot make
+its own definition an independently enforced repository rule.
+
 ## Candidate extracted repositories and advanced defaults
 
 7. **`Quirk-Systems/quirk-repo-template`** — a starter repository containing `.devcontainer/devcontainer.json`, `mise.toml`, a `.quirk/manifest.json`, baseline workflows, validation entrypoints, security defaults, and starter docs.

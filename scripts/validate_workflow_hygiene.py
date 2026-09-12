@@ -9,6 +9,7 @@ import yaml
 
 PINNED_ACTION_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*@[0-9a-f]{40}$")
 PINNED_IMAGE_PATTERN = re.compile(r"^docker://[^\s@]+@sha256:[0-9a-f]{64}$")
+PINNED_CONTAINER_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]*@sha256:[0-9a-f]{64}$")
 UNSAFE_TRIGGERS = {"pull_request_target", "workflow_run"}
 CONCURRENCY_TRIGGERS = {"push", "pull_request", "workflow_dispatch", "schedule"}
 
@@ -85,6 +86,33 @@ def iter_actions(workflow):
                 yield step["uses"]
 
 
+def iter_containers(workflow):
+    for job_id, job in workflow["jobs"].items():
+        if "container" in job:
+            value = job["container"]
+            yield f"jobs.{job_id}.container", value.get("image") if isinstance(value, dict) else value
+        services = job.get("services", {})
+        if not isinstance(services, dict):
+            raise WorkflowHygieneError(f"jobs.{job_id}.services must be a mapping")
+        for service_id, service in services.items():
+            if not isinstance(service, dict):
+                raise WorkflowHygieneError(f"jobs.{job_id}.services.{service_id} must be a mapping")
+            yield f"jobs.{job_id}.services.{service_id}.image", service.get("image")
+
+
+def permission_errors(value, location):
+    if value == "write-all":
+        return [f"{location}: permissions: write-all is not allowed"]
+    if value == "read-all":
+        return []
+    if not isinstance(value, dict):
+        return [f"{location}: missing top-level permissions or invalid permissions value"]
+    if any(not isinstance(access, str) or access not in {"read", "write", "none"}
+           for access in value.values()):
+        return [f"{location}: invalid permissions access value"]
+    return []
+
+
 def validate_file(path: Path, root: Path):
     relative = path.resolve().relative_to(root.resolve()).as_posix()
     try:
@@ -93,6 +121,7 @@ def validate_file(path: Path, root: Path):
             raise WorkflowHygieneError("workflow must be a mapping")
         triggers = parse_triggers(workflow)
         actions = list(iter_actions(workflow))
+        containers = list(iter_containers(workflow))
     except (yaml.YAMLError, WorkflowHygieneError) as error:
         return [f"{relative}: invalid workflow structure: {error}"]
     errors = []
@@ -103,11 +132,13 @@ def validate_file(path: Path, root: Path):
             continue
         if not isinstance(value, str) or PINNED_ACTION_PATTERN.fullmatch(value) is None:
             errors.append(f"{relative}: remote action must pin a full commit SHA (Docker requires a SHA-256 digest): {value}")
-    permissions = workflow.get("permissions")
-    if permissions == "write-all":
-        errors.append(f"{relative}: permissions: write-all is not allowed")
-    elif not isinstance(permissions, dict) and permissions != "read-all":
-        errors.append(f"{relative}: missing top-level permissions or invalid permissions value")
+    for location, image in containers:
+        if not isinstance(image, str) or PINNED_CONTAINER_PATTERN.fullmatch(image) is None:
+            errors.append(f"{relative}: {location} must pin an immutable SHA-256 image digest: {image}")
+    errors.extend(permission_errors(workflow.get("permissions"), relative))
+    for job_id, job in workflow["jobs"].items():
+        if "permissions" in job:
+            errors.extend(permission_errors(job["permissions"], f"{relative}: jobs.{job_id}"))
     unsafe = sorted(triggers & UNSAFE_TRIGGERS)
     if unsafe:
         errors.append(f"{relative}: unsafe trigger requires separate review: {', '.join(unsafe)}")
