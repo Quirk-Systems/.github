@@ -178,6 +178,28 @@ class WorkflowHygieneTests(unittest.TestCase):
         self.assertIn('--root .quirk-subject', commands)
         self.assertNotIn('python .quirk-subject/', commands)
 
+    def test_governance_uses_immutable_policy_in_a_separate_job(self):
+        root = Path(__file__).parents[1]
+        workflow = yaml.load((root / '.github/workflows/governance-contracts.yml').read_text(),
+                             Loader=WorkflowLoader)
+        job = workflow['jobs']['workflow-hygiene']
+        self.assertRegex(job['uses'],
+                         r'^Quirk-Systems/\.github/\.github/workflows/workflow-hygiene\.yml@[0-9a-f]{40}$')
+        self.assertEqual(job['permissions'], {'contents': 'read'})
+        self.assertNotIn('steps', job)
+        self.assertNotIn('secrets', job)
+        sha = job['uses'].rsplit('@', 1)[1]
+        pinned = subprocess.run(
+            ['git', 'show', sha + ':.github/workflows/workflow-hygiene.yml'],
+            cwd=root, check=True, text=True, capture_output=True).stdout
+        called = yaml.load(pinned, Loader=WorkflowLoader)
+        commands = '\n'.join(step.get('run', '') for step in called['jobs']['validate']['steps'])
+        self.assertIn('python -I .quirk-policy/scripts/validate_workflow_hygiene.py', commands)
+        self.assertIn('--root .quirk-subject', commands)
+        candidate_commands = '\n'.join(step.get('run', '')
+                                       for step in workflow['jobs']['validate']['steps'])
+        self.assertNotIn('python scripts/validate_workflow_hygiene.py', candidate_commands)
+
 
 if __name__ == "__main__":
     unittest.main()

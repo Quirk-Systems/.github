@@ -43,6 +43,14 @@ on GitHub.com and unavailable on GitHub Enterprise Server. Missing or unexpected
 identity fails before policy execution; no caller or default-branch fallback is
 used. The policy checkout SHA is read back before use.
 
+Governance Contracts invokes that reusable workflow in a separate runner job at
+immutable source `a36db88c2a3ddb0f2587e7edc8cef9c60ae78f90`. Candidate unit tests run
+in their existing job and cannot modify the policy job's checkout or process.
+This pin is part of the review candidate: its existence does not establish
+independent approval. A future policy repair requires review of a new exact
+source revision and a deliberate caller-pin update. Consumers must likewise pin
+their reviewed reusable-workflow revision, not a branch or caller-supplied ref.
+
 Local adversarial tests demonstrate rejection of mutable images and job-level
 permission overrides, and execute the isolated validator against a subject
 containing a no-op replacement checker and a hostile Python module. These tests
