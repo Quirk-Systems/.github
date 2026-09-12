@@ -64,3 +64,21 @@ Extract a capability into another repository when it requires:
 ## Relationship to existing strategy
 
 `docs/REPOSITORY_STRATEGY.md` defines the governing extraction rule: do not create a repository merely because a concept has a name. The repositories above are target boundaries, not automatic admissions. Create them only when their second-consumer, ownership, release, or security boundary is proven.
+
+## Workflow validator development
+
+Install the pinned parser in an isolated Python environment with
+`python -m pip install -r requirements-workflow-hygiene.txt`, then run
+`python -m unittest tests.test_workflow_hygiene -v` and
+`python scripts/validate_workflow_hygiene.py --root . --workflows .github/workflows`.
+Governance CI runs these rules against the repository; the reusable workflow
+checks out its own parser and dependency pin for downstream callers.
+
+The validator reads YAML structure rather than scanning text. It handles scalar,
+sequence, mapping, quoted and aliased triggers; nested remote action paths; and
+read-only permission shorthand. Duplicate keys, YAML merge keys, missing event
+structure, mutable remote actions/images, and empty concurrency groups fail
+closed. Text inside `run` blocks is not interpreted as workflow configuration.
+Only direct `.github/workflows/*.yml` and `*.yaml` files are workflow inputs.
+This checks the declared hygiene policy, not the complete GitHub Actions schema
+or runtime execution of every reusable workflow.

@@ -65,6 +65,43 @@ class WorkflowHygieneTests(unittest.TestCase):
             self.assertEqual(len(errors), 1)
             self.assertIn("unsafe trigger", errors[0])
 
+    def check_text(self, content):
+        with tempfile.TemporaryDirectory() as directory:
+            self.write(directory, "case.yml", content)
+            return validate_workflows(Path(directory), ".github/workflows")
+
+    def test_scalar_quoted_flow_and_aliased_triggers_are_checked(self):
+        for event in ["on: pull_request_target", '"on": [pull_request_target]', "on: {pull_request_target: {}}", "event: &event pull_request_target\non: *event"]:
+            with self.subTest(event=event):
+                errors = self.check_text(event + "\npermissions: {}\njobs: {}\n")
+                self.assertTrue(any("unsafe trigger" in e for e in errors), errors)
+
+    def test_valid_quoted_and_nested_actions_and_permissions(self):
+        action = 'owner/repo/sub/action@' + 'a' * 40
+        text = '"on": [push]\npermissions: read-all\nconcurrency: build\njobs: {test: {steps: [{uses: "' + action + '"}]}}\n'
+        self.assertEqual(self.check_text(text), [])
+
+    def test_workflow_call_path_and_digest_pinned_docker(self):
+        for action in ['owner/repo/.github/workflows/test.yml@' + 'a' * 40, 'docker://alpine@sha256:' + 'a' * 64]:
+            self.assertEqual(self.check_text('on: workflow_call\npermissions: {}\njobs: {test: {uses: "' + action + '"}}'), [])
+
+    def test_mutable_docker_and_expression_actions_fail(self):
+        for action in ['docker://alpine:latest', '${{ inputs.action }}', 'owner/repo', 'owner/repo@main']:
+            errors = self.check_text('on: workflow_call\npermissions: {}\njobs: {test: {uses: "' + action + '"}}')
+            self.assertTrue(any('pin a full commit SHA' in e for e in errors), errors)
+
+    def test_malformed_duplicate_and_missing_trigger_fail(self):
+        for text in ['on: [', 'on: push\non: workflow_call\npermissions: {}\njobs: {}', 'permissions: {}\njobs: {}']:
+            self.assertTrue(any('invalid workflow structure' in e for e in self.check_text(text)))
+
+    def test_run_body_is_not_interpreted_as_workflow_metadata(self):
+        text = 'on: workflow_call\npermissions: {}\njobs:\n  test:\n    steps:\n      - run: |\n          on: pull_request_target\n          uses: unpinned/repo@main\n'
+        self.assertEqual(self.check_text(text), [])
+
+    def test_merge_keys_and_empty_concurrency_fail(self):
+        self.assertTrue(self.check_text('base: &base {on: workflow_call}\n<<: *base\npermissions: {}\njobs: {}'))
+        self.assertTrue(any('concurrency' in e for e in self.check_text('on: push\npermissions: {}\nconcurrency: {}\njobs: {}')))
+
 
 if __name__ == "__main__":
     unittest.main()

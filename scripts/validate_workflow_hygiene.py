@@ -1,19 +1,14 @@
 #!/usr/bin/env python3
-"""Validate Quirk workflow hygiene defaults."""
-
+"""Validate Quirk workflow hygiene defaults from YAML structure."""
 import argparse
 import re
 import sys
 from pathlib import Path
 
-PINNED_ACTION_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+@(?P<sha>[0-9a-f]{40})$")
-INLINE_ON_PATTERN = re.compile(r"^on:\s*\[(?P<body>[^\]]+)\]\s*$", re.MULTILINE)
-MAPPING_EVENT_PATTERN = re.compile(
-    r"^(?: {2})?(?P<event>push|pull_request|pull_request_target|workflow_dispatch|workflow_call|workflow_run|schedule):\s*(?:#.*)?$",
-    re.MULTILINE,
-)
-USES_PATTERN = re.compile(r"^\s*(?:-\s*)?uses:\s*(?P<value>[^\s#]+)", re.MULTILINE)
-TOP_LEVEL_KEY_TEMPLATE = r"^(?P<key>{key}):(?:\s*(?:#.*|\{{.*\}}))?$"
+import yaml
+
+PINNED_ACTION_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*@[0-9a-f]{40}$")
+PINNED_IMAGE_PATTERN = re.compile(r"^docker://[^\s@]+@sha256:[0-9a-f]{64}$")
 UNSAFE_TRIGGERS = {"pull_request_target", "workflow_run"}
 CONCURRENCY_TRIGGERS = {"push", "pull_request", "workflow_dispatch", "schedule"}
 
@@ -22,85 +17,110 @@ class WorkflowHygieneError(Exception):
     """Validation failure safe to show to contributors."""
 
 
+class WorkflowLoader(yaml.BaseLoader):
+    """Keep GitHub's `on` key as text; reject ambiguous duplicate mappings."""
+
+    def construct_mapping(self, node, deep=False):
+        result = {}
+        for key_node, value_node in node.value:
+            key = self.construct_object(key_node, deep=deep)
+            if not isinstance(key, str):
+                raise WorkflowHygieneError("mapping keys must be strings")
+            if key in result:
+                raise WorkflowHygieneError(f"duplicate YAML key: {key}")
+            if key == "<<":
+                raise WorkflowHygieneError("YAML merge keys are not supported; use explicit mappings")
+            result[key] = self.construct_object(value_node, deep=deep)
+        return result
+
+
 def discover_workflows(root: Path, workflows: str):
-    workflows_path = Path(workflows)
-    if not workflows_path.is_absolute():
-        workflows_path = root / workflows_path
-    workflows_path = workflows_path.resolve()
+    root = root.resolve()
+    folder = Path(workflows)
+    folder = (folder if folder.is_absolute() else root / folder).resolve()
     try:
-        workflows_path.relative_to(root)
+        folder.relative_to(root)
     except ValueError as error:
         raise WorkflowHygieneError("workflow directory must be inside repository root") from error
-    if not workflows_path.exists():
-        raise WorkflowHygieneError(f"workflow directory does not exist: {workflows}")
-    if not workflows_path.is_dir():
-        raise WorkflowHygieneError("workflow path must be a directory")
-    candidates = sorted(
-        path for pattern in ("*.yml", "*.yaml") for path in workflows_path.rglob(pattern) if path.is_file()
-    )
+    if not folder.is_dir():
+        raise WorkflowHygieneError("workflow path must be an existing directory")
+    candidates = sorted(path for pattern in ("*.yml", "*.yaml") for path in folder.glob(pattern) if path.is_file())
     if not candidates:
         raise WorkflowHygieneError("workflow directory contains no workflow files")
+    for path in candidates:
+        try:
+            path.resolve().relative_to(root)
+        except ValueError as error:
+            raise WorkflowHygieneError("workflow file resolves outside repository root") from error
     return candidates
 
 
-def _relative(path: Path, root: Path):
-    return path.resolve().relative_to(root).as_posix()
+def parse_triggers(workflow):
+    value = workflow.get("on")
+    if isinstance(value, str) and value:
+        return {value}
+    if isinstance(value, dict) and value:
+        return set(value)
+    if isinstance(value, list) and value and all(isinstance(item, str) and item for item in value):
+        return set(value)
+    raise WorkflowHygieneError("on must contain an event name, sequence, or mapping")
 
 
-def parse_triggers(text: str):
-    triggers = set()
-    inline = INLINE_ON_PATTERN.search(text)
-    if inline:
-        triggers.update(item.strip().strip("'\"") for item in inline.group("body").split(",") if item.strip())
-    triggers.update(match.group("event") for match in MAPPING_EVENT_PATTERN.finditer(text))
-    return triggers
-
-
-def has_top_level_key(text: str, key: str):
-    return re.search(TOP_LEVEL_KEY_TEMPLATE.format(key=re.escape(key)), text, re.MULTILINE) is not None
-
-
-def iter_remote_actions(text: str):
-    for match in USES_PATTERN.finditer(text):
-        value = match.group("value")
-        if value.startswith("./") or value.startswith("docker://") or value.startswith("${{"):
-            continue
-        if "/" not in value or "@" not in value:
-            continue
-        yield value
+def iter_actions(workflow):
+    jobs = workflow.get("jobs")
+    if not isinstance(jobs, dict):
+        raise WorkflowHygieneError("jobs must be a mapping")
+    for job in jobs.values():
+        if not isinstance(job, dict):
+            raise WorkflowHygieneError("job must be a mapping")
+        if "uses" in job:
+            yield job["uses"]
+        steps = job.get("steps", [])
+        if not isinstance(steps, list):
+            raise WorkflowHygieneError("steps must be a sequence")
+        for step in steps:
+            if not isinstance(step, dict):
+                raise WorkflowHygieneError("step must be a mapping")
+            if "uses" in step:
+                yield step["uses"]
 
 
 def validate_file(path: Path, root: Path):
-    text = path.read_text(encoding="utf-8")
+    relative = path.resolve().relative_to(root.resolve()).as_posix()
+    try:
+        workflow = yaml.load(path.read_text(encoding="utf-8"), Loader=WorkflowLoader)
+        if not isinstance(workflow, dict):
+            raise WorkflowHygieneError("workflow must be a mapping")
+        triggers = parse_triggers(workflow)
+        actions = list(iter_actions(workflow))
+    except (yaml.YAMLError, WorkflowHygieneError) as error:
+        return [f"{relative}: invalid workflow structure: {error}"]
     errors = []
-    relative = _relative(path, root)
-    triggers = parse_triggers(text)
-
-    for value in iter_remote_actions(text):
-        if PINNED_ACTION_PATTERN.fullmatch(value) is None:
-            errors.append(f"{relative}: remote action must pin a full commit SHA: {value}")
-
-    if not has_top_level_key(text, "permissions"):
-        errors.append(f"{relative}: missing top-level permissions")
-    if "permissions: write-all" in text:
+    for value in actions:
+        if isinstance(value, str) and value.startswith("./"):
+            continue
+        if isinstance(value, str) and PINNED_IMAGE_PATTERN.fullmatch(value):
+            continue
+        if not isinstance(value, str) or PINNED_ACTION_PATTERN.fullmatch(value) is None:
+            errors.append(f"{relative}: remote action must pin a full commit SHA (Docker requires a SHA-256 digest): {value}")
+    permissions = workflow.get("permissions")
+    if permissions == "write-all":
         errors.append(f"{relative}: permissions: write-all is not allowed")
-
-    unsafe = sorted(trigger for trigger in triggers if trigger in UNSAFE_TRIGGERS)
+    elif not isinstance(permissions, dict) and permissions != "read-all":
+        errors.append(f"{relative}: missing top-level permissions or invalid permissions value")
+    unsafe = sorted(triggers & UNSAFE_TRIGGERS)
     if unsafe:
         errors.append(f"{relative}: unsafe trigger requires separate review: {', '.join(unsafe)}")
-
-    if triggers & CONCURRENCY_TRIGGERS and not has_top_level_key(text, "concurrency"):
-        needed = ", ".join(sorted(triggers & CONCURRENCY_TRIGGERS))
-        errors.append(f"{relative}: missing top-level concurrency for event-driven workflow ({needed})")
-
+    concurrency = workflow.get("concurrency")
+    group = concurrency.get("group") if isinstance(concurrency, dict) else concurrency
+    if triggers & CONCURRENCY_TRIGGERS and (not isinstance(group, str) or not group.strip()):
+        errors.append(f"{relative}: missing top-level concurrency for event-driven workflow")
     return errors
 
 
 def validate_workflows(root: Path, workflows: str):
-    errors = []
-    for path in discover_workflows(root, workflows):
-        errors.extend(validate_file(path, root))
-    return errors
+    root = root.resolve()
+    return [error for path in discover_workflows(root, workflows) for error in validate_file(path, root)]
 
 
 def main(argv=None):
@@ -108,14 +128,12 @@ def main(argv=None):
     parser.add_argument("--root", default=".")
     parser.add_argument("--workflows", default=".github/workflows")
     args = parser.parse_args(argv)
-    root = Path(args.root).resolve()
     try:
-        errors = validate_workflows(root, args.workflows)
+        errors = validate_workflows(Path(args.root), args.workflows)
     except (OSError, WorkflowHygieneError) as error:
         parser.error(str(error))
     if errors:
-        for error in errors:
-            print(error, file=sys.stderr)
+        print("\n".join(errors), file=sys.stderr)
         print(f"Workflow hygiene errors: {len(errors)}", file=sys.stderr)
         return 1
     print("Workflow hygiene OK")
