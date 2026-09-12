@@ -1,0 +1,95 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.workflow-hygiene-repair.bf7e143b43e0",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "a6ea90f056c3ce6c9e845ae04d16ff701939454d",
+    "commit": "bf7e143b43e0c7738f4ead4bf0c520b51cb170cc",
+    "changed_paths": [
+      ".github/workflows/governance-contracts.yml",
+      ".github/workflows/workflow-hygiene.yml",
+      "docs/ORG_DEFAULTS_AND_REPO_MAP.md",
+      "scripts/validate_workflow_hygiene.py",
+      "tests/test_workflow_hygiene.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.workflow-hygiene-repair.bf7e143b43e0",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The exact bounded hygiene repair passed 55 local and hosted governance tests. Hosted run 34717253582 job 103616613672 successfully read subject bf7e143b43e0c7738f4ead4bf0c520b51cb170cc and immutable policy a36db88c2a3ddb0f2587e7edc8cef9c60ae78f90 via GitHub.com job.workflow contexts and passed isolated hygiene validation. The sibling validation job failed only for missing committed receipt coverage. Cross-repository caller behavior, mandatory rules, human approval, deployment and live enforcement are not established.",
+      "evidence_paths": [
+        ".github/workflows/governance-contracts.yml",
+        ".github/workflows/workflow-hygiene.yml",
+        "docs/ORG_DEFAULTS_AND_REPO_MAP.md",
+        "scripts/validate_workflow_hygiene.py",
+        "tests/test_workflow_hygiene.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/workflows/governance-contracts.yml",
+      "state": "present",
+      "git_blob": "5cbb5eb883806f2ed16ccd1275011f365f8eb46d",
+      "sha256": "sha256:c5f10b483c168a0b8a2be70988b0c44116cbffaff4eb9b3da076eb8df3c3862f"
+    },
+    {
+      "path": ".github/workflows/workflow-hygiene.yml",
+      "state": "present",
+      "git_blob": "3ce0adf61316631342fe97371c4c44e9450da5c8",
+      "sha256": "sha256:cd943ca655ba03693721bbd96c4420653c31b43c0678f02625db153e8b9ab546"
+    },
+    {
+      "path": "docs/ORG_DEFAULTS_AND_REPO_MAP.md",
+      "state": "present",
+      "git_blob": "48d9ef3c2ab043264603338160cc486d56c94fae",
+      "sha256": "sha256:cfa83146f88dba96f817bdb0a152dee3a2981ca32a5e3efbef8f1dcb97916a04"
+    },
+    {
+      "path": "scripts/validate_workflow_hygiene.py",
+      "state": "present",
+      "git_blob": "9631c884814600227013fe1886bb1b2b82269d38",
+      "sha256": "sha256:55e6c580f49398048013fbe5d4aee013504283c9fab96c9c6d2efab2445f0a65"
+    },
+    {
+      "path": "tests/test_workflow_hygiene.py",
+      "state": "present",
+      "git_blob": "20e142b5acd04d8b1c35ff15b87a517048e2c176",
+      "sha256": "sha256:21c627f142f7b60a7a4df99e881bd73846110e45126012253ee79cc81344c183"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python -m unittest discover -s tests -v",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python scripts/validate_workflow_hygiene.py --root . --workflows .github/workflows",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python scripts/validate_governed_decisions.py --repository Quirk-Systems/.github --root . --decisions .quirk/decisions",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check a6ea90f056c3ce6c9e845ae04d16ff701939454d bf7e143b43e0c7738f4ead4bf0c520b51cb170cc",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-12T20:31:12Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:79d7a9fdcde751d6c6b715151ccb9d88aef2711996c8e3c92e0c92485ee0d7f4"
+}
