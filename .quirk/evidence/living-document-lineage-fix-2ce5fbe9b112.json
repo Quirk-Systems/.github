@@ -1,0 +1,90 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.living-document-lineage-fix.2ce5fbe9b112",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "5576e2530845fcbf118bb48e60013b94a4915137",
+    "commit": "2ce5fbe9b1121ebd5cdf520cd002946c5aaffd61",
+    "changed_paths": [
+      ".github/skills/quirk-living-doc/SKILL.md",
+      ".quirk/schemas/living-document.schema.json",
+      "scripts/validate_living_docs.py",
+      "templates/README.md",
+      "tests/test_living_docs.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.living-document-lineage-fix.2ce5fbe9b112",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The cited bytes require at least one Derived from entry, reject absolute and checkout-escaping lineage paths, validate every Markdown file under the four contract directories unconditionally, enforce checkbox discipline on every list marker in roadmap and todo sections, add regression tests for each case, and update the template index and skill wording. scripts/validate.sh and python scripts/validate_living_docs.py --strict passed locally on this subject (15 living-document tests, 4 documents, 0 stale).",
+      "evidence_paths": [
+        ".github/skills/quirk-living-doc/SKILL.md",
+        ".quirk/schemas/living-document.schema.json",
+        "scripts/validate_living_docs.py",
+        "templates/README.md",
+        "tests/test_living_docs.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/skills/quirk-living-doc/SKILL.md",
+      "state": "present",
+      "git_blob": "f6a3e4b91ee36b59260c867a03c378c86eaa1fc4",
+      "sha256": "sha256:796389e17033384469a34e84ede2d443083103debca793a1abca43938e38d249"
+    },
+    {
+      "path": ".quirk/schemas/living-document.schema.json",
+      "state": "present",
+      "git_blob": "178db206409e9fc0940f0c923530517587ae1fe7",
+      "sha256": "sha256:be155077e38e1746aa793e4451f282de529722d57afdc278a011836b39630ace"
+    },
+    {
+      "path": "scripts/validate_living_docs.py",
+      "state": "present",
+      "git_blob": "445867f61e912a656716cf1a7754a88fc2b1e706",
+      "sha256": "sha256:f0d8e93d514587b247e1b0796493f0e2b8196a542030a4342f215101f02fc1c8"
+    },
+    {
+      "path": "templates/README.md",
+      "state": "present",
+      "git_blob": "819adb935474a910b3dfcac236ff86b7a17e54d8",
+      "sha256": "sha256:6b1dcdcc49cf1f02944034d1e54ccdb02a0cf7cd838d7c02154a7755ac9c71c4"
+    },
+    {
+      "path": "tests/test_living_docs.py",
+      "state": "present",
+      "git_blob": "8ee48a6ea2679bd3a3e7994859cde54c6b3414d1",
+      "sha256": "sha256:2745ef936643e8051b89c91203c587349dce353b8b11cc75a224502c491a75c7"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_living_docs.py --strict",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check 5576e2530845fcbf118bb48e60013b94a4915137 2ce5fbe9b1121ebd5cdf520cd002946c5aaffd61",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T23:06:00Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:991ed7fc4ab0d08df5c2bb576f7a9e23dbf74839c96dd1fccf96633ba713d4d8"
+}
