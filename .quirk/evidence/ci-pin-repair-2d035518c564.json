@@ -1,0 +1,135 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.ci-pin-repair.2d035518c564",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "e8e87906da2364a6704bc1b938b33439de2d368b",
+    "commit": "2d035518c5641cae2e1dc6dcba80e09d68875be7",
+    "changed_paths": [
+      ".github/workflows/agent-task-dispatch.yml",
+      ".github/workflows/codeql.yml",
+      ".github/workflows/dependency-review.yml",
+      ".github/workflows/reusable-codeql.yml",
+      ".github/workflows/reusable-sbom-provenance.yml",
+      ".github/workflows/scorecard.yml",
+      ".github/zizmor.yml",
+      "docs/governance/AUTONOMOUS_OPERATIONS.md",
+      "docs/governance/REUSABLE_WORKFLOWS.md",
+      "docs/superpowers/plans/2026-09-20-org-control-plane.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.ci-pin-repair.2d035518c564",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The cited bytes replace four annotated-tag object pins with the peeled commit SHAs the tags point to, scope zizmor online-audit findings on the legacy workflows by filename, and make the self-applied dependency-review workflow dispatch-only until the owner-only Dependency graph setting is enabled; the catalog, operations doc, and plan ledger say so. Hosted runs 35511456275 and 35511456263 on the earlier head are the observed failures this repairs. 133 unit tests, all validators, ruff, actionlint, and zizmor (offline, pedantic) passed locally on this subject; the hosted online audit has not yet run on it.",
+      "evidence_paths": [
+        ".github/workflows/agent-task-dispatch.yml",
+        ".github/workflows/codeql.yml",
+        ".github/workflows/dependency-review.yml",
+        ".github/workflows/reusable-codeql.yml",
+        ".github/workflows/reusable-sbom-provenance.yml",
+        ".github/workflows/scorecard.yml",
+        ".github/zizmor.yml",
+        "docs/governance/AUTONOMOUS_OPERATIONS.md",
+        "docs/governance/REUSABLE_WORKFLOWS.md",
+        "docs/superpowers/plans/2026-09-20-org-control-plane.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/workflows/agent-task-dispatch.yml",
+      "state": "present",
+      "git_blob": "a26e48ebb5414f4ddabc2ffc6e8b46a423ba1cc5",
+      "sha256": "sha256:f2fa6502001fe79fdf85244b7ddae42e3a3842520944eea9c6d0a81460c204c9"
+    },
+    {
+      "path": ".github/workflows/codeql.yml",
+      "state": "present",
+      "git_blob": "21567e68c57e22c56eb5e94e56fa01004b7da906",
+      "sha256": "sha256:6a70d0fed93e80791a7d0f1bbda48efac67cb8c7b4b47157afbbb56025e59f4b"
+    },
+    {
+      "path": ".github/workflows/dependency-review.yml",
+      "state": "present",
+      "git_blob": "4f2b1f7384cbf2fdc2258c62e132ac5c7dcae2b1",
+      "sha256": "sha256:3d157c65c4e4a664b9948d63fe0dc312a79904677d579929f552bf250b90dfe4"
+    },
+    {
+      "path": ".github/workflows/reusable-codeql.yml",
+      "state": "present",
+      "git_blob": "34fa7a3da35cdfdbe181b20d425301be90db5c47",
+      "sha256": "sha256:9f055ce8765f5659de095963fd7cbb14eb88f96de4912341d243d5ae9bc21af5"
+    },
+    {
+      "path": ".github/workflows/reusable-sbom-provenance.yml",
+      "state": "present",
+      "git_blob": "1d96a913eb815a432395a819d62b2334d5116395",
+      "sha256": "sha256:b0ee3abec71a255b8fa4b6c70f814710ffcb980a6f197283ab2a50907ba7a2c6"
+    },
+    {
+      "path": ".github/workflows/scorecard.yml",
+      "state": "present",
+      "git_blob": "a0690dc2ac9f0688b26e651292025372f00e4de0",
+      "sha256": "sha256:17245c3384469f07d87a21a48d7680b7fb0520fd853d99f6617a88d075d5b96a"
+    },
+    {
+      "path": ".github/zizmor.yml",
+      "state": "present",
+      "git_blob": "3ff5bcbcb5d699d2b57f78d1ad34f527d6551bfd",
+      "sha256": "sha256:d9e4eb9f571348633aa04a938a7fa8c889128d80bd6b0f90c652cd73ce4464db"
+    },
+    {
+      "path": "docs/governance/AUTONOMOUS_OPERATIONS.md",
+      "state": "present",
+      "git_blob": "6aa3cd92c53167f1c21a2b5257b9649a0040762f",
+      "sha256": "sha256:15ff4867fccad4be12a89174f551b93d419ce3f905a5e23ad815833afd607bba"
+    },
+    {
+      "path": "docs/governance/REUSABLE_WORKFLOWS.md",
+      "state": "present",
+      "git_blob": "30b1575bdf3ab5754eeb6a328b0598cbd3e80d96",
+      "sha256": "sha256:75409ef52328dbc07e25e3ad802d3667e971f189b6168607032183b37cc50ede"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-09-20-org-control-plane.md",
+      "state": "present",
+      "git_blob": "16515d1da47d833bd4844511d383cce7fe8c1ea3",
+      "sha256": "sha256:ac816fe16faad8ed27143ba006b011a89f53831e9d9693329bfd7070d9004a1a"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git ls-remote --tags <action> refs/tags/<tag> refs/tags/<tag>^{} (peeled SHAs recorded in the commit message)",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check e8e87906da2364a6704bc1b938b33439de2d368b 2d035518c5641cae2e1dc6dcba80e09d68875be7",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T12:53:36Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:cba2aeb30a8beb83ebba93a8f6da6d5bcb8dcadb10c33801ea572f1f3c3305a4"
+}
