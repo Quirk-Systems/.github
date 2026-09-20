@@ -1,0 +1,82 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.topology-fixture-schema-ids.867988aaa747",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "5e2428a72ae857c468df129409c310f308501c1f",
+    "commit": "867988aaa747b79e78790276d827446e47d34bd8",
+    "changed_paths": [
+      ".quirk/repository-topology.inventory.json",
+      ".quirk/schemas/manual-pr-ledger.schema.json",
+      ".quirk/schemas/repository-inventory.schema.json",
+      "tests/test_topology_contracts.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.topology-fixture-schema-ids.867988aaa747",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Adds the committed repository-topology inventory fixture, restores the schema identifiers the topology and manual-PR contracts expect, and points the topology tests at the stable fixture. Hosted policy enforcement, merge approval, and runtime effects are not established.",
+      "evidence_paths": [
+        ".quirk/repository-topology.inventory.json",
+        ".quirk/schemas/manual-pr-ledger.schema.json",
+        ".quirk/schemas/repository-inventory.schema.json",
+        "tests/test_topology_contracts.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".quirk/repository-topology.inventory.json",
+      "state": "present",
+      "git_blob": "ec692dee96f9e7387c303199a5b4890a54e5a644",
+      "sha256": "sha256:f8478b2279381225155c93bc09f586c8989f7fc0555f6bdcde7abc90865fd0a9"
+    },
+    {
+      "path": ".quirk/schemas/manual-pr-ledger.schema.json",
+      "state": "present",
+      "git_blob": "8524606b2dcf9fe4f2d86c907210c5ddf1ce3c82",
+      "sha256": "sha256:caba22514a2c081dc55ab70b824eae9d6dfb3491eeedb2471688e11af9d0f167"
+    },
+    {
+      "path": ".quirk/schemas/repository-inventory.schema.json",
+      "state": "present",
+      "git_blob": "d379e83f7c1e0af471b13a12cf673a15fa86220b",
+      "sha256": "sha256:3599735fb6191b7168ebf8d69f8e94446cb3847b5a7d5f8fed01ce78b24ce66e"
+    },
+    {
+      "path": "tests/test_topology_contracts.py",
+      "state": "present",
+      "git_blob": "eda7ff838ae5631bfc7869ada1f5049b9fcbaf74",
+      "sha256": "sha256:652392e6fb8cb4e3ca72b30739cd0b3924a587d860e43a38d6f45b4771621378"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python -m unittest tests.test_topology_contracts -v",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python -m unittest discover -s tests -v",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python scripts/validate_governed_decisions.py --repository Quirk-Systems/.github --root . --decisions .quirk/decisions",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T19:49:24Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:ed867a7ec20ff946e01f430b8a569e6a93c02dbb1c146ec64a841f56ea968908"
+}

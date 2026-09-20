@@ -1,5 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Quirk-Systems/.github/blob/main/.quirk/schemas/manual-pr-ledger.schema.json",
   "title": "Truthful topology manual pull-request ledger",
   "type": "object",
   "additionalProperties": false,
