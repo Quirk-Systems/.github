@@ -135,6 +135,60 @@ class SchemaSubsetTests(unittest.TestCase):
         self.assertRejects({"x-a": 1}, schema, "expected type ['string']")
         self.assertRejects({"y": "no"}, schema, "unknown keys ['y']")
 
+    # --- a branch must not hide an unusable schema -----------------------
+
+    def test_unsupported_keyword_in_an_untaken_branch_still_fails(self):
+        """A passing sibling branch must not launder an unapplied keyword.
+
+        `_matches` reads a failure as "this branch did not match", so without a
+        separate schema-error channel an unsupported keyword in one anyOf branch
+        was hidden by any other branch that matched.
+        """
+        support = self.module.SchemaSupportError
+        for name, schema in (
+            ("anyOf", {"anyOf": [{"multipleOf": 2}, {"type": "integer"}]}),
+            ("oneOf", {"oneOf": [{"multipleOf": 2}, {"type": "integer"}]}),
+            ("not", {"not": {"multipleOf": 2}}),
+            ("if", {"if": {"multipleOf": 2}, "then": {}}),
+            ("allOf", {"allOf": [{"type": "integer"}, {"multipleOf": 2}]}),
+            ("$defs", {"type": "integer", "$defs": {"d": {"propertyNames": {}}}}),
+            ("properties", {"type": "object", "properties": {"a": {"multipleOf": 2}}}),
+        ):
+            with self.subTest(keyword=name):
+                with self.assertRaises(support):
+                    self.check(3, schema, "x")
+
+    def test_schema_support_error_is_catchable_as_manifest_error(self):
+        self.assertTrue(issubclass(self.module.SchemaSupportError, self.error))
+
+    def test_circular_ref_through_a_boolean_keyword_does_not_recurse(self):
+        """The $ref chain must cross into a boolean branch, not restart empty."""
+        support = self.module.SchemaSupportError
+        for name, schema in (
+            ("anyOf", {"$ref": "#/$defs/loop",
+                       "$defs": {"loop": {"anyOf": [{"$ref": "#/$defs/loop"}]}}}),
+            ("oneOf", {"$ref": "#/$defs/loop",
+                       "$defs": {"loop": {"oneOf": [{"$ref": "#/$defs/loop"}]}}}),
+            ("not", {"$ref": "#/$defs/loop",
+                     "$defs": {"loop": {"not": {"$ref": "#/$defs/loop"}}}}),
+            ("if", {"$ref": "#/$defs/loop",
+                    "$defs": {"loop": {"if": {"$ref": "#/$defs/loop"}, "then": {}}}}),
+            ("contains", {"$ref": "#/$defs/loop",
+                          "$defs": {"loop": {"type": "array",
+                                             "contains": {"$ref": "#/$defs/loop"}}}}),
+        ):
+            with self.subTest(keyword=name):
+                value = [1] if name == "contains" else {}
+                try:
+                    with self.assertRaises(support):
+                        self.check(value, schema, "x")
+                except RecursionError:
+                    self.fail(f"circular $ref through {name} exhausted the stack")
+
+    def test_unresolvable_ref_in_a_branch_is_not_read_as_a_non_match(self):
+        with self.assertRaises(self.module.SchemaSupportError):
+            self.check(1, {"anyOf": [{"$ref": "#/$defs/nope"}, {"type": "integer"}]}, "x")
+
     # --- the reported bug, end to end ------------------------------------
 
     def test_real_inventory_rejects_malformed_fields_behind_ref(self):

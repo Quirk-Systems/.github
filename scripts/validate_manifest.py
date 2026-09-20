@@ -23,6 +23,15 @@ class ManifestError(ValueError):
     pass
 
 
+class SchemaSupportError(ManifestError):
+    """The schema itself cannot be applied, as opposed to the value not matching.
+
+    It subclasses ManifestError so existing callers still catch it, but the
+    boolean keywords re-raise it instead of reading it as a non-match: a branch
+    the validator cannot apply must never be reported as simply unsatisfied.
+    """
+
+
 def _fail(message):
     raise ManifestError(message)
 
@@ -58,10 +67,45 @@ def _is_number(value):
     return isinstance(value, (int, float)) and not isinstance(value, bool)
 
 
+# Where a schema nests other schemas, by shape. Everything not listed holds
+# data (enum members, const values, required names, bounds) and is not walked.
+_SCHEMA_VALUED = ("items", "contains", "not", "if", "then", "else", "additionalProperties")
+_SCHEMA_LIST_VALUED = ("allOf", "anyOf", "oneOf")
+_SCHEMA_MAP_VALUED = ("properties", "patternProperties", "$defs", "definitions")
+
+
+def _assert_supported(schema, label):
+    """Reject any unsupported keyword anywhere in the document, before matching.
+
+    Checking only the branches a value happens to reach would let an unapplied
+    keyword hide behind a sibling branch that matches, which is the silent-skip
+    failure this validator exists to prevent.
+    """
+    if isinstance(schema, bool) or schema is None:
+        return
+    if not isinstance(schema, dict):
+        _fail(f"{label}: invalid schema {schema!r}")
+    unknown = sorted(set(schema) - _KNOWN_KEYWORDS)
+    if unknown:
+        raise SchemaSupportError(
+            f"{label}: unsupported schema keywords {unknown}; this validator "
+            "fails closed rather than accepting data it cannot check"
+        )
+    for keyword in _SCHEMA_VALUED:
+        if keyword in schema:
+            _assert_supported(schema[keyword], f"{label}/{keyword}")
+    for keyword in _SCHEMA_LIST_VALUED:
+        for index, branch in enumerate(schema.get(keyword, []) or []):
+            _assert_supported(branch, f"{label}/{keyword}[{index}]")
+    for keyword in _SCHEMA_MAP_VALUED:
+        for name, branch in (schema.get(keyword) or {}).items():
+            _assert_supported(branch, f"{label}/{keyword}.{name}")
+
+
 def _resolve_ref(ref, root, label):
     """Resolve a local JSON Pointer ($ref) against the root schema."""
     if not isinstance(ref, str) or not ref.startswith("#"):
-        _fail(f"{label}: only local $ref is supported, got {ref!r}")
+        raise SchemaSupportError(f"{label}: only local $ref is supported, got {ref!r}")
     pointer = ref[1:]
     if pointer.startswith("/"):
         pointer = pointer[1:]
@@ -72,21 +116,30 @@ def _resolve_ref(ref, root, label):
             if isinstance(target, list):
                 try:
                     target = target[int(token)]
-                except (ValueError, IndexError):
-                    _fail(f"{label}: $ref {ref} does not resolve")
+                except (ValueError, IndexError) as error:
+                    raise SchemaSupportError(
+                        f"{label}: $ref {ref} does not resolve"
+                    ) from error
             elif isinstance(target, dict) and token in target:
                 target = target[token]
             else:
-                _fail(f"{label}: $ref {ref} does not resolve")
+                raise SchemaSupportError(f"{label}: $ref {ref} does not resolve")
     if not isinstance(target, dict):
-        _fail(f"{label}: $ref {ref} does not point at a schema object")
+        raise SchemaSupportError(f"{label}: $ref {ref} does not point at a schema object")
     return target
 
 
-def _matches(value, schema, root):
-    """True when value validates against schema. Used by the boolean keywords."""
+def _matches(value, schema, root, refs=frozenset()):
+    """True when value validates against schema. Used by the boolean keywords.
+
+    `refs` carries the caller's active $ref chain so a cycle reached through a
+    boolean keyword is reported as a circular reference rather than recursing
+    until the interpreter runs out of stack.
+    """
     try:
-        _check(value, schema, "?", root)
+        _check(value, schema, "?", root, refs)
+    except SchemaSupportError:
+        raise
     except ManifestError:
         return False
     return True
@@ -95,6 +148,7 @@ def _matches(value, schema, root):
 def _check(value, schema, label, root=None, _refs=frozenset()):
     if root is None:
         root = schema
+        _assert_supported(schema, label)
     if schema is True:
         return
     if schema is False:
@@ -110,7 +164,7 @@ def _check(value, schema, label, root=None, _refs=frozenset()):
     if "$ref" in schema:
         ref = schema["$ref"]
         if ref in _refs:
-            _fail(f"{label}: circular $ref {ref}")
+            raise SchemaSupportError(f"{label}: circular $ref {ref}")
         _check(value, _resolve_ref(ref, root, label), label, root, _refs | {ref})
 
     if "const" in schema and value != schema["const"]:
@@ -125,7 +179,7 @@ def _check(value, schema, label, root=None, _refs=frozenset()):
         ok = False
         for name in types:
             if name not in _TYPES:
-                _fail(f"{label}: unsupported type {name!r}")
+                raise SchemaSupportError(f"{label}: unsupported type {name!r}")
             if name in ("integer", "number") and isinstance(value, bool):
                 continue
             if name == "integer" and isinstance(value, float):
@@ -145,17 +199,17 @@ def _check(value, schema, label, root=None, _refs=frozenset()):
             for index, branch in enumerate(branches):
                 _check(value, branch, f"{label}/allOf[{index}]", root, _refs)
         else:
-            hits = sum(1 for branch in branches if _matches(value, branch, root))
+            hits = sum(1 for branch in branches if _matches(value, branch, root, _refs))
             if keyword == "anyOf" and hits == 0:
                 _fail(f"{label}: does not match any anyOf branch")
             if keyword == "oneOf" and hits != 1:
                 _fail(f"{label}: matches {hits} oneOf branches, expected exactly 1")
 
-    if "not" in schema and _matches(value, schema["not"], root):
+    if "not" in schema and _matches(value, schema["not"], root, _refs):
         _fail(f"{label}: must not match the 'not' schema")
 
     if "if" in schema:
-        branch = "then" if _matches(value, schema["if"], root) else "else"
+        branch = "then" if _matches(value, schema["if"], root, _refs) else "else"
         if branch in schema:
             _check(value, schema[branch], f"{label}/{branch}", root, _refs)
 
@@ -191,7 +245,7 @@ def _check(value, schema, label, root=None, _refs=frozenset()):
             for index, item in enumerate(value):
                 _check(item, schema["items"], f"{label}[{index}]", root, _refs)
         if "contains" in schema:
-            hits = sum(1 for item in value if _matches(item, schema["contains"], root))
+            hits = sum(1 for item in value if _matches(item, schema["contains"], root, _refs))
             minimum = schema.get("minContains", 1)
             if hits < minimum:
                 _fail(f"{label}: needs at least {minimum} item(s) matching 'contains', found {hits}")
