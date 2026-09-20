@@ -1,0 +1,53 @@
+name: Reusable CodeQL
+
+on:
+  workflow_call:
+    inputs:
+      languages:
+        description: "Comma-separated CodeQL languages, e.g. javascript-typescript,python"
+        required: true
+        type: string
+      build-mode:
+        description: "CodeQL build mode: none | autobuild | manual"
+        required: false
+        type: string
+        default: none
+      queries:
+        description: "Query suite"
+        required: false
+        type: string
+        default: security-and-quality
+
+# Read-only by default; the analyze job adds security-events write for SARIF upload.
+permissions:
+  contents: read
+
+concurrency:
+  group: reusable-codeql-${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    name: analyze
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    # SARIF upload needs security-events write; actions read lets CodeQL see the run.
+    permissions:
+      contents: read # checks out the source
+      actions: read # lets the analysis read this workflow run's metadata
+      security-events: write # uploads SARIF to code scanning
+    steps:
+      - name: Checkout caller repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@c23de5a82f64bb08c6d9f28844551440ca298e76 # v4.38.1
+        with:
+          languages: ${{ inputs.languages }}
+          build-mode: ${{ inputs.build-mode }}
+          queries: ${{ inputs.queries }}
+
+      - name: Analyze
+        uses: github/codeql-action/analyze@c23de5a82f64bb08c6d9f28844551440ca298e76 # v4.38.1

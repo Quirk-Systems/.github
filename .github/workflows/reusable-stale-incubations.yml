@@ -1,0 +1,54 @@
+name: Reusable Stale Incubations
+
+on:
+  workflow_call:
+    inputs:
+      days-before-stale:
+        description: "Days of inactivity before an incubation or proposal is labeled stale"
+        required: false
+        type: number
+        default: 30
+      only-labels:
+        description: "Comma-separated labels that mark incubations and proposals"
+        required: false
+        type: string
+        default: "incubating,proposal"
+
+# Labeling and commenting need write on issues and pull requests; nothing is closed.
+permissions:
+  contents: read
+
+concurrency:
+  group: reusable-stale-incubations-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  mark:
+    name: mark
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    # Only labels and comments are written; days-before-close is disabled below.
+    permissions:
+      issues: write # adds the stale label and comment; nothing is closed
+      pull-requests: write # adds the stale label and comment; nothing is closed
+    steps:
+      - name: Label stale incubations
+        uses: actions/stale@4391f3da665fdf50b6810c1a66712fb9ba21aa93 # v11.0.0
+        with:
+          days-before-stale: ${{ inputs.days-before-stale }}
+          days-before-close: -1
+          only-labels: ${{ inputs.only-labels }}
+          stale-issue-label: stale-incubation
+          stale-pr-label: stale-incubation
+          remove-stale-when-updated: true
+          operations-per-run: 100
+          stale-issue-message: >-
+            This incubation or proposal has had no activity for the configured window.
+            Per the Quirk repository lifecycle (docs/REPOSITORY_STRATEGY.md §7), no
+            work may remain indefinitely in an unnamed experimental state. Name an
+            owner and a next bounded proof, or record a retirement decision. This
+            label is a signal, not a decision; nothing is closed automatically.
+          stale-pr-message: >-
+            This pull request has had no activity for the configured window. Re-read
+            the head, refresh its evidence, or record why it should remain open. This
+            label is a signal, not a decision; nothing is closed automatically.
