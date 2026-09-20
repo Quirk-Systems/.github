@@ -20,6 +20,7 @@ def load(name):
 class PortfolioRegistryTests(unittest.TestCase):
     def setUp(self):
         self.validator = load("validate_portfolio")
+        self.topology = load("validate_topology")
         self.report = load("portfolio_report")
         self.schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
         self.data = json.loads(REGISTRY.read_text(encoding="utf-8"))
@@ -55,11 +56,13 @@ class PortfolioRegistryTests(unittest.TestCase):
             self.assertEqual(self.report.main(["--output", str(output)]), 0)
             self.assertEqual(self.report.main(["--check", "--output", str(output)]), 0)
 
-    def test_scope_counts_match_snapshot(self):
+    def test_scope_counts_and_sets_match_snapshot(self):
         organization = {entry["repository"] for entry in self.data["repositories"] if entry["scope"] == "organization"}
         adjacent = {entry["repository"] for entry in self.data["repositories"] if entry["scope"] == "adjacent"}
         self.assertEqual(len(organization), self.data["scope"]["expected_organization_repository_count"])
         self.assertEqual(len(adjacent), self.data["scope"]["expected_adjacent_repository_count"])
+        self.assertSetEqual(organization, self.topology.EXPECTED_ORGANIZATION_REPOSITORIES)
+        self.assertSetEqual(adjacent, self.topology.EXPECTED_ADJACENT_REPOSITORIES)
 
     def test_unknown_key_fails_closed(self):
         data = self.valid()
@@ -73,7 +76,7 @@ class PortfolioRegistryTests(unittest.TestCase):
 
     def test_missing_required_repository_fails(self):
         data = self.valid()
-        data["repositories"] = [entry for entry in data["repositories"] if entry["repository"] != "Quirk-Systems/.github-private"]
+        data["repositories"][1]["repository"] = "Quirk-Systems/.github"
         self.assert_rejected(data, "missing organization repositories: Quirk-Systems/.github-private")
 
     def test_scope_partition_drift_fails(self):

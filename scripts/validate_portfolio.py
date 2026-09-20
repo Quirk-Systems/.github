@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Validate the truthful topology inventory used for the portfolio projection.
 
-Standard library only. Applies the same closed inventory rules as the topology
-validator, then checks the cross-entry invariants needed by docs/PORTFOLIO.md.
+Standard library only. Applies the loaded inventory schema, then checks the
+cross-entry invariants needed by docs/PORTFOLIO.md.
 """
 
 import argparse
@@ -15,6 +15,7 @@ SCHEMA = ROOT / ".quirk" / "schemas" / "repository-inventory.schema.json"
 REGISTRY = ROOT / ".quirk" / "repositories.json"
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from validate_manifest import ManifestError, _check  # noqa: E402
 import validate_topology  # noqa: E402
 
 
@@ -23,7 +24,11 @@ class PortfolioError(ValueError):
 
 
 def validate_portfolio(data, schema):
-    del schema  # TopologyContractsTest already keeps schema and validator in parity.
+    try:
+        _check(data, schema, "portfolio")
+    except ManifestError as error:
+        raise PortfolioError(str(error)) from error
+
     errors = []
     root_fields = {"registry_version", "authority", "snapshot", "scope", "repositories"}
     validate_topology.validate_object(data, root_fields, root_fields, "portfolio", errors)
@@ -47,6 +52,8 @@ def validate_portfolio(data, schema):
     repository_ids = []
     organization = set()
     adjacent = set()
+    organization_entries = 0
+    adjacent_entries = 0
     for item in repositories:
         if not validate_topology.validate_object(
             item,
@@ -60,8 +67,10 @@ def validate_portfolio(data, schema):
         repository_ids.append(repository)
         if item["scope"] == "organization":
             organization.add(repository)
+            organization_entries += 1
         elif item["scope"] == "adjacent":
             adjacent.add(repository)
+            adjacent_entries += 1
         else:
             errors.append("invalid repository scope: " + str(item["scope"]))
 
@@ -79,9 +88,9 @@ def validate_portfolio(data, schema):
         "adjacent repositories",
         errors,
     )
-    if len(organization) != data.get("scope", {}).get("expected_organization_repository_count"):
+    if organization_entries != data.get("scope", {}).get("expected_organization_repository_count"):
         errors.append("organization repository count does not match scope")
-    if len(adjacent) != data.get("scope", {}).get("expected_adjacent_repository_count"):
+    if adjacent_entries != data.get("scope", {}).get("expected_adjacent_repository_count"):
         errors.append("adjacent repository count does not match scope")
 
     if errors:
