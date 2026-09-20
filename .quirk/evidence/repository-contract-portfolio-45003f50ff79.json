@@ -1,0 +1,153 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.repository-contract-portfolio.45003f50ff79",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "a0ca76db9f366c0f4208b6e7bb0a0b2a67eb82bd",
+    "commit": "45003f50ff799770b720c0c8e4c748c0c561494c",
+    "changed_paths": [
+      ".quirk/manifest.json",
+      ".quirk/repositories.json",
+      ".quirk/schemas/portfolio-registry.schema.json",
+      ".quirk/schemas/repository-manifest.schema.json",
+      "docs/PORTFOLIO.md",
+      "profile/README.md",
+      "scripts/portfolio_report.py",
+      "scripts/validate_manifest.py",
+      "scripts/validate_portfolio.py",
+      "tests/test_manifest.py",
+      "tests/test_portfolio.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.repository-contract-portfolio.45003f50ff79",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The cited bytes add closed JSON Schemas and standard-library validators for the repository manifest and portfolio registry, extend this repository's manifest, record 35 observed-unclassified organization repositories with observed facts only, generate docs/PORTFOLIO.md as a drift-checked projection, and repair the public profile's stale cutover claim. 91 unit tests, all validators, ruff, actionlint, and zizmor passed locally on this subject. No repository is classified, renamed, archived, or admitted by this change; the observation reflects one listing on 2026-09-19 and is not a topology decision.",
+      "evidence_paths": [
+        ".quirk/manifest.json",
+        ".quirk/repositories.json",
+        ".quirk/schemas/portfolio-registry.schema.json",
+        ".quirk/schemas/repository-manifest.schema.json",
+        "docs/PORTFOLIO.md",
+        "profile/README.md",
+        "scripts/portfolio_report.py",
+        "scripts/validate_manifest.py",
+        "scripts/validate_portfolio.py",
+        "tests/test_manifest.py",
+        "tests/test_portfolio.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".quirk/manifest.json",
+      "state": "present",
+      "git_blob": "9ad1b54017e11102b4818e4097b94c0fb170b17e",
+      "sha256": "sha256:264ae2633a148ff7d5749f59d1f5ebd4fd52a01ebfa131949a022f7b86b7f74f"
+    },
+    {
+      "path": ".quirk/repositories.json",
+      "state": "present",
+      "git_blob": "30ed18b40db57f4eda0e7f14ef941405281f341b",
+      "sha256": "sha256:4ea61b99e22d62d2752c94e1cf448d096ca2f93ecac745e3e76b300879ccedcd"
+    },
+    {
+      "path": ".quirk/schemas/portfolio-registry.schema.json",
+      "state": "present",
+      "git_blob": "77ffd762765a6a7b3af1bd5a2bdc39dd674636a1",
+      "sha256": "sha256:fe83d5c91ccd0960e7924667a84c9e3026e08cabb79b20b64956f9a7e41929e7"
+    },
+    {
+      "path": ".quirk/schemas/repository-manifest.schema.json",
+      "state": "present",
+      "git_blob": "729139fc3650cb3f7e7ba0c41182352edff442d8",
+      "sha256": "sha256:8f8f55c0cea377e483e573256f99d1c23ff195e6b0576578f00b63aab0d8f3e9"
+    },
+    {
+      "path": "docs/PORTFOLIO.md",
+      "state": "present",
+      "git_blob": "adf65a5342f7be6d462ce1d0cfc9483051e27c2d",
+      "sha256": "sha256:e9ef0b5a68b2934d0ce9f16854266bc6fe0e85983937b9144a99fb37a2dec0cd"
+    },
+    {
+      "path": "profile/README.md",
+      "state": "present",
+      "git_blob": "4ddb0294864cd19e1618d967ecc6be7b30f4f4d2",
+      "sha256": "sha256:f8de0ac26e0ae2b544d0b65279082f3f30a67d7420b8d34ada2a3acc23057b26"
+    },
+    {
+      "path": "scripts/portfolio_report.py",
+      "state": "present",
+      "git_blob": "52f6e59df81fb0cda8c88fa190fd584827dcc53f",
+      "sha256": "sha256:76d4bce2c798552d9de026f5f37c2896efefe15c0e0eb4ecad761b70c84c2cdf"
+    },
+    {
+      "path": "scripts/validate_manifest.py",
+      "state": "present",
+      "git_blob": "1efeb4aa65ed9daad643383ad4930c79ce09c0be",
+      "sha256": "sha256:d8b4b6bf4f9371f601b6aaa0fac72d59b908476626e7695f777c76fc5165f739"
+    },
+    {
+      "path": "scripts/validate_portfolio.py",
+      "state": "present",
+      "git_blob": "c1ddb7005c3ea937b5f8969a8881238b6b7b2a2c",
+      "sha256": "sha256:fef30380a86572bb215b45f0ef7d7e4436e5705589ca29e5b532973ebfb7e003"
+    },
+    {
+      "path": "tests/test_manifest.py",
+      "state": "present",
+      "git_blob": "bb96509e110b355ef08291927529776ba2416ef9",
+      "sha256": "sha256:dbbcfa87048a6ffe64377ae5705eb4823eae232a204c1089803c178868cb0763"
+    },
+    {
+      "path": "tests/test_portfolio.py",
+      "state": "present",
+      "git_blob": "3f384069d06f70a326a2f7cdc2b105e7a8fa543c",
+      "sha256": "sha256:321b67c1062b7e3ddb741af47fcd86eac174452fa29ae4dd599cd5d497dedc28"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_manifest.py .quirk/manifest.json",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_portfolio.py",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/portfolio_report.py --check",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check a0ca76db9f366c0f4208b6e7bb0a0b2a67eb82bd 45003f50ff799770b720c0c8e4c748c0c561494c",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T12:24:24Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:54c45303fb5eb127ec6d1bd9c26f5fe0cccb477e6d7d4e20dc6ac3c34bf8c240"
+}
