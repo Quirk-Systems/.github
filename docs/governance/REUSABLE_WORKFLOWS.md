@@ -49,10 +49,11 @@ through `with:`; no reusable workflow interpolates caller input inside a
 `governance-contracts.yml` (tests, validators, exact-range receipts),
 `codeql.yml`, `scorecard.yml` (publishes to the OpenSSF Scorecard API after
 merge to `main`), `workflow-lint.yml`, `agent-task-dispatch.yml`, and
-`dependency-review.yml`, which is **dispatch-only** for now: the action fails
-unless the repository's **Dependency graph** is enabled, an owner-only
-setting. Once an owner enables it (Settings → Code security) and reads it
-back, restore its `pull_request:` trigger in a receipted change. Self-applied jobs run
+`dependency-review.yml` on pull requests. Dependency review depends on the
+repository's **Dependency graph** (Settings → Code security), an owner-only
+setting; the action fails at startup without it, so a red `Dependency Review`
+check that names the graph is a settings problem, not a dependency finding.
+Self-applied jobs run
 `step-security/harden-runner` in egress **audit** mode; switch to `block`
 only after the observed egress allowlist is recorded in a governed change.
 
