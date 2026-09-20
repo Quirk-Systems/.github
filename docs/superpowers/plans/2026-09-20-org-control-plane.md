@@ -74,13 +74,13 @@ own policy at `job.workflow_sha`.
 
 - [x] `README.md`, `CONTRIBUTING.md` (evidence protocol, forms, casing), `SUPPORT.md`, `GOVERNANCE.md`, `NOTICE`
 - [x] `.editorconfig`, `.gitattributes`, `.gitignore`, issue `config.yml`, this plan
-- [ ] Receipt (issued after this wave's subject commit)
+- [x] Receipt `qreceipt.docs-and-hygiene.dfdc61eaf39f`
 
 ### `.github-private`
 
-- [ ] Pinned callers, CODEOWNERS, dependabot, hygiene files, manifest repair, `extensions.json`
-- [ ] README, members-only profile, `AGENTS.md`, `CLAUDE.md`, templates, internal runbooks
-- [ ] Receipt
+- [x] Pinned callers, CODEOWNERS, dependabot, hygiene files, manifest repair, `extensions.json`
+- [x] README, members-only profile, `AGENTS.md`, `CLAUDE.md`, templates, internal runbooks
+- [x] Receipt `qreceipt.private-governance-buildout.b6bf5aab6639` (in `Quirk-Systems/.github-private`)
 
 ## Verification (end to end)
 
