@@ -34,9 +34,9 @@ automated, and states what is deliberately not.
 - **Evidence gate.** `governance-contracts.yml` (here) and
   `reusable-evidence-binding.yml` (callers) reject any pull request whose
   changed paths lack a fresh verified receipt.
-- **Hygiene.** CodeQL, Scorecard, zizmor, and the pin policy test run without
-  human action; dependency review is dispatch-only here until an owner
-  enables the Dependency graph. Stale incubations are labeled, never
+- **Hygiene.** CodeQL, Scorecard, dependency review, zizmor, and the pin
+  policy test run without human action (dependency review needs the
+  owner-enabled Dependency graph). Stale incubations are labeled, never
   closed.
 
 ## What is deliberately not automated

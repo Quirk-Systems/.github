@@ -1,10 +1,14 @@
 name: Dependency Review
 
-# Dispatch-only until an owner enables the repository's Dependency graph
-# (Settings -> Code security). The action fails at startup without it
-# (hosted run 35511456263). Re-enable `pull_request:` in a receipted change
-# once the setting is read back; the reusable workflow is unaffected.
+# Requires the repository's Dependency graph (Settings -> Code security), an
+# owner-only setting that repository content cannot enable; the action fails
+# at startup without it ("Dependency review is not supported on this
+# repository"). The pull_request trigger is restored at the owner's request so
+# the check runs as soon as that setting is on; until then a red check here is
+# the settings gap, not a dependency finding. workflow_dispatch stays so the
+# check can be exercised on demand.
 on:
+  pull_request:
   workflow_dispatch:
 
 # Reads the dependency graph diff only; no comment is posted, so no PR write scope.
@@ -12,7 +16,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: dependency-review-${{ github.workflow }}-${{ github.sha }}
+  group: dependency-review-${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.sha }}
   cancel-in-progress: true
 
 jobs:
