@@ -6,7 +6,6 @@ import re
 from pathlib import Path
 from urllib.parse import urlparse
 
-
 REPOSITORY_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 PULL_REQUEST_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+#[1-9][0-9]*$")
 EXPECTED_ORGANIZATION_REPOSITORIES = {
