@@ -1,0 +1,56 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.required-check-rollout-admission.e0f6cfc75cf6",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "a114fb54e372e2e80505cd167a6e643eb7febfff",
+    "commit": "e0f6cfc75cf6a9bd99b3ff1fc27fe21efd1627cb",
+    "changed_paths": [
+      "docs/governance/REQUIRED_CHECKS_ROLLOUT.md",
+      "tests/test_required_checks_rollout.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.required-check-rollout-admission.e0f6cfc75cf6",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Clarifies owner-only Evaluate-to-Active rollout prerequisites and required receipt fields for exact-range governance checks in documentation and tests; ruleset activation and owner policy enforcement remain unproven and owner-authorized.",
+      "evidence_paths": [
+        "docs/governance/REQUIRED_CHECKS_ROLLOUT.md",
+        "tests/test_required_checks_rollout.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/governance/REQUIRED_CHECKS_ROLLOUT.md",
+      "state": "present",
+      "git_blob": "fabf5aa4b2b0f37b4a78a0a7abdbfb46750e31b9",
+      "sha256": "sha256:25836671106f90b179fee5700e0ce43f3b9573c1fa6eea5d1386ee1803da15a1"
+    },
+    {
+      "path": "tests/test_required_checks_rollout.py",
+      "state": "present",
+      "git_blob": "11ddc820f1504181169cfe6660457339f08304cb",
+      "sha256": "sha256:f3105ea8640706812e319b02956ff0845193763a421c3ac3864f2ffa36228de5"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python -m unittest tests.test_required_checks_rollout tests.test_maintenance_index -v",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T13:07:38Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:1d705b451c8b57955a33d33996346a0b580e7973a629bc55eb820d0fa3ac0331"
+}
