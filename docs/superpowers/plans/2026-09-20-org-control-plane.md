@@ -44,7 +44,8 @@ own policy at `job.workflow_sha`.
 
 ### Wave 2 — Security and supply-chain spine
 
-- [x] `codeql.yml`, `scorecard.yml`, `dependency-review.yml` (pull-request trigger restored in a follow-up once the owner enabled the Dependency graph), `workflow-lint.yml`
+- [x] `codeql.yml`, `scorecard.yml`, `dependency-review.yml` (pull-request trigger restored in a follow-up at the owner's request), `workflow-lint.yml`
+- [ ] Owner-only: enable the Dependency graph (Settings → Code security and analysis); the `Dependency Review / review` check fails at startup until then
 - [x] `reusable-codeql.yml`, `reusable-dependency-review.yml`, `reusable-workflow-lint.yml`, `reusable-sbom-provenance.yml`, `reusable-stale-incubations.yml`
 - [x] `tests/test_workflow_pins.py`, `docs/governance/REUSABLE_WORKFLOWS.md`
 - [x] Receipt `qreceipt.security-workflow-spine.6883b4a8baf2`
