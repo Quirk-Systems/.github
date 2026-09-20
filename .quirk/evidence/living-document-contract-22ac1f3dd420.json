@@ -1,0 +1,202 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.living-document-contract.22ac1f3dd420",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "d8ced0d0dbc7e297aab7e52af687511330c7d5e0",
+    "commit": "22ac1f3dd420fe9eafc71738b1dfbc1e68a51378",
+    "changed_paths": [
+      ".claude/skills/quirk-living-doc/SKILL.md",
+      ".github/skills/quirk-living-doc/SKILL.md",
+      ".quirk/schemas/living-document.schema.json",
+      "AGENTS.md",
+      "README.md",
+      "docs/goals/2026-09-20-living-documents-validated.md",
+      "docs/intentions/2026-09-20-evidence-first-planning.md",
+      "docs/roadmaps/2026-09-20-org-control-plane.md",
+      "docs/todos/2026-09-20-living-document-rollout.md",
+      "scripts/validate.sh",
+      "scripts/validate_living_docs.py",
+      "scripts/validate_templates.py",
+      "templates/GOAL.md",
+      "templates/INTENTION.md",
+      "templates/README.md",
+      "templates/ROADMAP.md",
+      "templates/TODO.md",
+      "tests/test_living_docs.py",
+      "tests/test_templates.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.living-document-contract.22ac1f3dd420",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The cited bytes add the living-document header contract (closed draft 2020-12 schema), a standard-library validator that checks header shape, per-kind sections, checkbox discipline, lineage, and freshness, its unit tests, four templates, one active instance of each kind (intention, goal, roadmap, todo) observed at head 62218674c00d6a9d4c81db13000d25c5f37afc6d, the quirk-living-doc skill with its Claude shim, and wiring into validate_templates.py, validate.sh, the template index, README.md, and AGENTS.md. scripts/validate.sh passed locally on this subject (unit tests including tests/test_living_docs.py, all validators, ruff, actionlint, zizmor offline pedantic); python scripts/validate_living_docs.py --strict reported 4 documents and 0 stale. This proves shape, lineage, and freshness of the documents, not that their intentions, goals, or task states are true.",
+      "evidence_paths": [
+        ".claude/skills/quirk-living-doc/SKILL.md",
+        ".github/skills/quirk-living-doc/SKILL.md",
+        ".quirk/schemas/living-document.schema.json",
+        "AGENTS.md",
+        "README.md",
+        "docs/goals/2026-09-20-living-documents-validated.md",
+        "docs/intentions/2026-09-20-evidence-first-planning.md",
+        "docs/roadmaps/2026-09-20-org-control-plane.md",
+        "docs/todos/2026-09-20-living-document-rollout.md",
+        "scripts/validate.sh",
+        "scripts/validate_living_docs.py",
+        "scripts/validate_templates.py",
+        "templates/GOAL.md",
+        "templates/INTENTION.md",
+        "templates/README.md",
+        "templates/ROADMAP.md",
+        "templates/TODO.md",
+        "tests/test_living_docs.py",
+        "tests/test_templates.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".claude/skills/quirk-living-doc/SKILL.md",
+      "state": "present",
+      "git_blob": "52ad110a6ce7e90befcd284ed1a4401e06bf3981",
+      "sha256": "sha256:21faef00e6ddf734c1506f3926e4a2c3dfd1a55974952c036902deb10255a91d"
+    },
+    {
+      "path": ".github/skills/quirk-living-doc/SKILL.md",
+      "state": "present",
+      "git_blob": "48227bd358364139c4a1d9d7bb5c0f5cd925f11d",
+      "sha256": "sha256:055b5b6b6b79b1f43b803644eed75af60d99a301d6d688f8770e854807db396f"
+    },
+    {
+      "path": ".quirk/schemas/living-document.schema.json",
+      "state": "present",
+      "git_blob": "49668806f3c9f816aaf15ae41fd92185a64e69c1",
+      "sha256": "sha256:493194340894f94360354da0f6f14f0b68a4e1bfd64990b3353fac3136907746"
+    },
+    {
+      "path": "AGENTS.md",
+      "state": "present",
+      "git_blob": "a197d1a22aff64eda9d84805fdfd62b8271e5f31",
+      "sha256": "sha256:9d5d97ae4f609ef220fbdc38637a6594b3454d949a0a184a26a9b5e22fa7e5ae"
+    },
+    {
+      "path": "README.md",
+      "state": "present",
+      "git_blob": "f46e0c9a34063d5f041fc995f6c3be86aac5e63a",
+      "sha256": "sha256:add098a0c7951fbf294dd57e63f2500e0e2334c0d5426e24fc93c2b7f4275eb5"
+    },
+    {
+      "path": "docs/goals/2026-09-20-living-documents-validated.md",
+      "state": "present",
+      "git_blob": "364dced1221e4167fc99dc0d2265e0f924270928",
+      "sha256": "sha256:32f2e471b5bc3044a464475fe21be52e08cd92d9f12886bf3ef26ec01ecc4511"
+    },
+    {
+      "path": "docs/intentions/2026-09-20-evidence-first-planning.md",
+      "state": "present",
+      "git_blob": "b568c1a617b2a3734a308ec6cd7a764e616e2750",
+      "sha256": "sha256:f42d504a41940416644b43ac0a6d37135ca7024725ed664171d51200015e784a"
+    },
+    {
+      "path": "docs/roadmaps/2026-09-20-org-control-plane.md",
+      "state": "present",
+      "git_blob": "f0bb5869885ef73b8032859b09c07a32a65e8244",
+      "sha256": "sha256:aa7252fbae9d1bca81e0d401c224760a9b50dc67bd45e3499e425d09c47f6e59"
+    },
+    {
+      "path": "docs/todos/2026-09-20-living-document-rollout.md",
+      "state": "present",
+      "git_blob": "5f90db882c9321a4da496440318af6dfdde21ab5",
+      "sha256": "sha256:dc5c64ce860dbe8dffddac71d2ea3b7d36fabc16c9b2dd5ba2d605fe40b714a8"
+    },
+    {
+      "path": "scripts/validate.sh",
+      "state": "present",
+      "git_blob": "da766bb13094c74cda6e7bea3686a2ff6bdb0ce9",
+      "sha256": "sha256:a091f1393a0db25cdc6689aeec67791a839054fda595c0b6c1e33a4f7e9f5ec8"
+    },
+    {
+      "path": "scripts/validate_living_docs.py",
+      "state": "present",
+      "git_blob": "06de1d3a85c6cec16ccfffd36119526b64bb889d",
+      "sha256": "sha256:c33a79fb1592267872952b893f8a4219d147ca1dacc759d1b021c05390757df2"
+    },
+    {
+      "path": "scripts/validate_templates.py",
+      "state": "present",
+      "git_blob": "d0ce1c320942e90e049a322722361205885cbed5",
+      "sha256": "sha256:1255aaa5287c42cdc3ad22840262eb801150895a61f23be18bab0124526ac52b"
+    },
+    {
+      "path": "templates/GOAL.md",
+      "state": "present",
+      "git_blob": "3729aa75acb5b4aa67647a423c06bd81f950d8dc",
+      "sha256": "sha256:3ecad0467fcce903b3ef49adcd0afec864faabdb27ae9b51693353f82d90e9dc"
+    },
+    {
+      "path": "templates/INTENTION.md",
+      "state": "present",
+      "git_blob": "ab149456701f8ebea825fc5af9ae61e28b32e82d",
+      "sha256": "sha256:19895f07b9557abd6f49a08ec1c4f565e3a926f98205d814592bad21683d19df"
+    },
+    {
+      "path": "templates/README.md",
+      "state": "present",
+      "git_blob": "7d07a1902ea58f6ff438502a731f2f0feb965c10",
+      "sha256": "sha256:488dc160cb6db257a1d1190d7b728cdfd5db439b0f5e61f2535396f6e2263cd3"
+    },
+    {
+      "path": "templates/ROADMAP.md",
+      "state": "present",
+      "git_blob": "4a95246e9b804d6250c4634db06796e093eb4290",
+      "sha256": "sha256:6ca0bb578c328dbc1928c6afba900d128392dfe315696e88332494055d6b4c7d"
+    },
+    {
+      "path": "templates/TODO.md",
+      "state": "present",
+      "git_blob": "1d5e00984f97fc5026681bf5709a044ad317e9a3",
+      "sha256": "sha256:d10e30db57b4ef2bed287808d8b21c57311418a9c9b963b6e6e89b52f80676d4"
+    },
+    {
+      "path": "tests/test_living_docs.py",
+      "state": "present",
+      "git_blob": "9906d437eb41fb32450838a860e6beee2ca0f85b",
+      "sha256": "sha256:02dae352f81d66c3b6a446b7015effe7dd81fbf4284541bbdb26fc669edc5945"
+    },
+    {
+      "path": "tests/test_templates.py",
+      "state": "present",
+      "git_blob": "6de53f621b667ca96e5c84f7065db05bb09b3132",
+      "sha256": "sha256:8d0202afa96fcebb9a216e7d7894e4c45e76759c9729734273212a32f2085cbc"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_living_docs.py --strict",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check d8ced0d0dbc7e297aab7e52af687511330c7d5e0 22ac1f3dd420fe9eafc71738b1dfbc1e68a51378",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T22:54:41Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:b4ff7d6ce63780a2c7fb0264713d75b6477484ed1b97ed51ddded65cbeca34d8"
+}
