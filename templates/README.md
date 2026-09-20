@@ -25,9 +25,12 @@ every JSON example validates against its schema.
 
 The four living-document templates share one header (kind, status, owner,
 observed head, reviewed, review by, derived from, authority effect) that
-`scripts/validate_living_docs.py` parses and checks for every document under
-`docs/` that carries a `Kind:` line, including briefs and plans that adopt it.
-A document past its review date is reported stale; `--strict` fails on it.
+`scripts/validate_living_docs.py` parses and checks. Every Markdown file under
+`docs/intentions/`, `docs/goals/`, `docs/roadmaps/`, and `docs/todos/` must
+carry it; any other file under `docs/` that carries a `Kind:` line opts in
+(briefs and plans). Lineage needs at least one entry and every
+repository-relative path must exist inside the checkout. A document past its
+review date is reported stale; `--strict` fails on it.
 
 Design tokens have no template; the seed source is `.quirk/design/tokens.json`
 and the contract is `.quirk/schemas/design-tokens.schema.json` (see

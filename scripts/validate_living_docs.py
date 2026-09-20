@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
 """Validate living documents: intentions, goals, roadmaps, todos, plans, briefs.
 
-Standard library only. A living document is a Markdown file under docs/ whose
-header block carries a `Kind:` line. The header is parsed into an object and
-checked against .quirk/schemas/living-document.schema.json; the body is
-checked for the sections that kind requires, for checkbox discipline in
-roadmap and todo lists, and for lineage (every repository-relative `Derived
-from` path exists). A document whose `Review by` date has passed while it is
-still candidate, active, or paused is stale: stale is always reported and
-fails the run only with --strict. Passing proves shape, lineage, and
-freshness, not that an intention is wise, a goal is met, or a task is done.
+Standard library only. Every Markdown file under docs/intentions, docs/goals,
+docs/roadmaps, and docs/todos is a living document and must validate; any
+other file under docs/ that carries a `Kind:` line in its header opts in
+(briefs and plans). The header is parsed into an object and checked against
+.quirk/schemas/living-document.schema.json; the body is checked for the
+sections that kind requires, for checkbox discipline on every list item in
+roadmap and todo sections, and for lineage (at least one `Derived from`
+entry; every repository-relative path resolves inside the checkout and
+exists). A document whose `Review by` date has passed while it is still
+candidate, active, or paused is stale: stale is always reported and fails
+the run only with --strict. Passing proves shape, lineage, and freshness,
+not that an intention is wise, a goal is met, or a task is done.
 """
 
 import argparse
@@ -50,7 +53,10 @@ HEADER_KEYS = {
     "Authority effect": "authority_effect",
 }
 OPEN_STATUSES = {"candidate", "active", "paused"}
+# Every Markdown file in these docs/ subdirectories must be a living document.
+CONTRACT_DIRS = ("intentions", "goals", "roadmaps", "todos")
 KIND_LINE = re.compile(r"^Kind:\s*\S", re.M)
+LIST_ITEM = re.compile(r"^\s*[-*+]\s")
 HEADER_SCAN_LINES = 15
 
 
@@ -98,7 +104,6 @@ def parse_header(path, text):
         else:
             data[field] = strip_markup(value)
         i += 1
-    data.setdefault("derived_from", [])
     return data, "\n".join(lines[i:])
 
 
@@ -118,16 +123,20 @@ def check_sections(path, kind, body):
         require(re.search("^" + re.escape(section) + r"\s*$", body, re.M), f"{path}: missing section {section!r}")
     for heading, mark in CHECKBOX_SECTIONS.get(kind, {}).items():
         for line in section_lines(body, heading):
-            if line.startswith("- "):
-                require(line.startswith(f"- {mark} "),
-                        f"{path}: every item under {heading!r} must start with '- {mark} ': {line.strip()!r}")
+            if LIST_ITEM.match(line):
+                require(line.lstrip().startswith(f"- {mark} "),
+                        f"{path}: every list item under {heading!r} must start with '- {mark} ': {line.strip()!r}")
 
 
 def check_lineage(path, root, data):
+    root = root.resolve()
     for item in data["derived_from"]:
         if item.startswith(("http://", "https://")):
             continue
-        require((root / item).exists(), f"{path}: derived-from path does not exist: {item}")
+        require(not Path(item).is_absolute(), f"{path}: derived-from path must be repository-relative: {item}")
+        candidate = (root / item).resolve()
+        require(candidate.is_relative_to(root), f"{path}: derived-from path escapes the repository: {item}")
+        require(candidate.exists(), f"{path}: derived-from path does not exist: {item}")
 
 
 def staleness(data, today):
@@ -144,7 +153,8 @@ def validate_document(path, root=ROOT, today=None, schema=None):
     path = Path(path)
     today = today or dt.date.today()
     text = path.read_text(encoding="utf-8")
-    require(is_living_document(text), f"{path}: no 'Kind:' line in the first {HEADER_SCAN_LINES} lines")
+    require(is_living_document(text), f"{path}: no 'Kind:' line in the first {HEADER_SCAN_LINES} lines "
+            "(every file under docs/intentions, goals, roadmaps, and todos must carry the living-document header)")
     data, body = parse_header(path, text)
     _check(data, schema or load_schema(root), str(path))
     check_sections(path, data["kind"], body)
@@ -153,10 +163,17 @@ def validate_document(path, root=ROOT, today=None, schema=None):
 
 
 def discover(root):
+    """Every Markdown file in the contract directories, plus any other docs/ file that opts in with `Kind:`."""
     docs = root / "docs"
     if not docs.is_dir():
         return []
-    return [p for p in sorted(docs.rglob("*.md")) if is_living_document(p.read_text(encoding="utf-8"))]
+    contract = {docs / name for name in CONTRACT_DIRS}
+    found = []
+    for path in sorted(docs.rglob("*.md")):
+        mandatory = any(parent in contract for parent in path.parents)
+        if mandatory or is_living_document(path.read_text(encoding="utf-8")):
+            found.append(path)
+    return found
 
 
 def main(argv=None):

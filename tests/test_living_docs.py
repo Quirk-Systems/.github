@@ -1,5 +1,6 @@
 import datetime as dt
 import importlib.util
+import os
 import shutil
 import tempfile
 import unittest
@@ -104,6 +105,36 @@ class LivingDocumentTests(unittest.TestCase):
     def test_rejects_missing_lineage_and_reversed_dates(self):
         self.assert_rejects(GOOD_TODO.replace("docs/upstream.md", "docs/missing.md"), "derived-from")
         self.assert_rejects(GOOD_TODO.replace("Reviewed: 2026-09-20", "Reviewed: 2026-12-01"), "after Review by")
+
+    def test_rejects_omitted_or_empty_lineage(self):
+        self.assert_rejects(GOOD_TODO.replace("Derived from: `docs/upstream.md`\n", ""), "derived_from")
+        self.assert_rejects(GOOD_TODO.replace("Derived from: `docs/upstream.md`", "Derived from:"), "derived_from")
+
+    def test_rejects_lineage_outside_the_checkout_even_when_it_exists(self):
+        outside = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, outside)
+        external = outside / "external-evidence.md"
+        external.write_text("# outside\n", encoding="utf-8")
+        traversal = os.path.relpath(external, self.tmp)
+        self.assertTrue(traversal.startswith(".."))
+        self.assert_rejects(GOOD_TODO.replace("docs/upstream.md", traversal), "escapes the repository")
+        self.assert_rejects(GOOD_TODO.replace("docs/upstream.md", str(external)), "must be repository-relative")
+
+    def test_every_list_marker_needs_a_checkbox(self):
+        self.assert_rejects(GOOD_TODO.replace("- [ ] first task", "* first task"), "## Open")
+        self.assert_rejects(GOOD_TODO.replace("- [ ] first task", "+ first task"), "## Open")
+        self.assert_rejects(GOOD_TODO.replace("- [ ] first task", "- [ ] first task\n  - nested task"), "## Open")
+        data, _ = self.module.validate_document(
+            self.write(GOOD_TODO.replace("- [ ] first task", "- [ ] first task\n  - [ ] nested task")), self.tmp, TODAY)
+        self.assertEqual(data["kind"], "todo")
+
+    def test_contract_directories_are_validated_unconditionally(self):
+        (self.tmp / "docs" / "todos").mkdir()
+        self.write("# Todo: no header\n\nProse only, no Kind line.\n", name="todos/late.md")
+        self.assertEqual([p.name for p in self.module.discover(self.tmp)], ["late.md"])
+        with self.assertRaises(ValueError) as ctx:
+            self.module.main(["--root", str(self.tmp), "--today", TODAY.isoformat()])
+        self.assertIn("Kind", str(ctx.exception))
 
     def test_urls_in_lineage_are_not_resolved_locally(self):
         text = GOOD_TODO.replace("`docs/upstream.md`", "`https://github.com/Quirk-Systems/.github/pull/30`")

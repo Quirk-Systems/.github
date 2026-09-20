@@ -58,8 +58,11 @@ strength → intention → goal → tasks (todo, plan) → roadmap. Each arrow i
 
 ## Do
 
-- Keep every document under `docs/` so the validator finds it; group by kind
-  (`docs/intentions/`, `docs/goals/`, `docs/roadmaps/`, `docs/todos/`).
+- Put each document in its kind's directory (`docs/intentions/`, `docs/goals/`,
+  `docs/roadmaps/`, `docs/todos/`); every Markdown file there must validate.
+  A brief or plan elsewhere under `docs/` opts in by carrying the header.
+- Give every document at least one `Derived from` entry that lives inside the
+  repository (or a URL); the validator rejects absolute paths and traversal.
 - Use `Status: candidate` until the owner has read it; only the owner moves it
   to `active`.
 - Cite receipts and commits, not branch names or "recent work".
