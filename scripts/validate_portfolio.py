@@ -94,13 +94,21 @@ def validate_portfolio(data, schema):
     expected_organization_count = scope.get("expected_organization_repository_count")
     expected_adjacent_count = scope.get("expected_adjacent_repository_count")
     if len(organization) != expected_organization_count:
-        errors.append("organization repository count does not match scope")
+        errors.append(
+            f"organization repository count does not match scope: expected {expected_organization_count}, got {len(organization)}"
+        )
     if len(adjacent) != expected_adjacent_count:
-        errors.append("adjacent repository count does not match scope")
+        errors.append(
+            f"adjacent repository count does not match scope: expected {expected_adjacent_count}, got {len(adjacent)}"
+        )
     if organization_entries != expected_organization_count:
-        errors.append("organization repository entry count does not match scope")
+        errors.append(
+            f"organization repository entry count does not match scope: expected {expected_organization_count}, got {organization_entries}"
+        )
     if adjacent_entries != expected_adjacent_count:
-        errors.append("adjacent repository entry count does not match scope")
+        errors.append(
+            f"adjacent repository entry count does not match scope: expected {expected_adjacent_count}, got {adjacent_entries}"
+        )
 
     if errors:
         raise PortfolioError("; ".join(errors))
