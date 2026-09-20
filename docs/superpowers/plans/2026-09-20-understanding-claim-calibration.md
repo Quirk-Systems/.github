@@ -16,7 +16,7 @@ Do **not** create a new repository yet.
 - Suite: `suite.understanding_claim_integrity.v1`
 - Implementing personal skill: `verify-understanding-claims`
 - Lifecycle: `candidate`
-- Activation eligibility: blocked for `live`, `current`, `active`, `chooseable`, and `useable`
+- Activation eligibility: blocked for `live`, `current`, `active`, `chooseable` (`choosable`), and `useable` (`usable`)
 - Repository decision: **HOLD extraction pending proof**
 
 This capability evaluates observable claims and behavior. It does not claim access to an agent's internal mental state.
