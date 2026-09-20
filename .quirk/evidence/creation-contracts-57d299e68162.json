@@ -1,0 +1,321 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.creation-contracts.57d299e68162",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "896d9aa7505582535ba9e18758f5a017d8da69d7",
+    "commit": "57d299e68162fe5a297ce23da51d4e65490ae8cd",
+    "changed_paths": [
+      ".claude/skills/quirk-artifact-forge/SKILL.md",
+      ".claude/skills/quirk-brief/SKILL.md",
+      ".claude/skills/quirk-dataset-card/SKILL.md",
+      ".claude/skills/quirk-design-tokens/SKILL.md",
+      ".claude/skills/quirk-plan/SKILL.md",
+      ".github/ISSUE_TEMPLATE/brief.yml",
+      ".github/ISSUE_TEMPLATE/decision.yml",
+      ".github/skills/quirk-artifact-forge/SKILL.md",
+      ".github/skills/quirk-brief/SKILL.md",
+      ".github/skills/quirk-dataset-card/SKILL.md",
+      ".github/skills/quirk-design-tokens/SKILL.md",
+      ".github/skills/quirk-plan/SKILL.md",
+      ".quirk/design/tokens.json",
+      ".quirk/schemas/artifact-manifest.schema.json",
+      ".quirk/schemas/dataset-card.schema.json",
+      ".quirk/schemas/design-tokens.schema.json",
+      "datasets/README.md",
+      "datasets/quirk-governance-corpus/README.md",
+      "datasets/quirk-governance-corpus/dataset-card.json",
+      "docs/design/DESIGN_SYSTEM.md",
+      "scripts/design_tokens.py",
+      "scripts/validate_manifest.py",
+      "scripts/validate_templates.py",
+      "templates/ADR.md",
+      "templates/BRIEF.md",
+      "templates/MOVE_RECEIPT.md",
+      "templates/PLAN.md",
+      "templates/README.md",
+      "templates/artifact-manifest.json",
+      "templates/dataset-card.json",
+      "tests/test_design_tokens.py",
+      "tests/test_templates.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.creation-contracts.57d299e68162",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The cited bytes add creation templates, closed schemas for artifact manifests, dataset cards, and design tokens, a candidate design-token source with a stdlib validator and projections, a validated governance-corpus dataset card, five canonical skills with Claude shims, brief and decision issue forms, and structural validators with tests. 116 unit tests, all validators, ruff, actionlint, and zizmor passed locally on this subject. No asset is published, no dataset is admitted, no design value is final, and no authority is granted.",
+      "evidence_paths": [
+        ".claude/skills/quirk-artifact-forge/SKILL.md",
+        ".claude/skills/quirk-brief/SKILL.md",
+        ".claude/skills/quirk-dataset-card/SKILL.md",
+        ".claude/skills/quirk-design-tokens/SKILL.md",
+        ".claude/skills/quirk-plan/SKILL.md",
+        ".github/ISSUE_TEMPLATE/brief.yml",
+        ".github/ISSUE_TEMPLATE/decision.yml",
+        ".github/skills/quirk-artifact-forge/SKILL.md",
+        ".github/skills/quirk-brief/SKILL.md",
+        ".github/skills/quirk-dataset-card/SKILL.md",
+        ".github/skills/quirk-design-tokens/SKILL.md",
+        ".github/skills/quirk-plan/SKILL.md",
+        ".quirk/design/tokens.json",
+        ".quirk/schemas/artifact-manifest.schema.json",
+        ".quirk/schemas/dataset-card.schema.json",
+        ".quirk/schemas/design-tokens.schema.json",
+        "datasets/README.md",
+        "datasets/quirk-governance-corpus/README.md",
+        "datasets/quirk-governance-corpus/dataset-card.json",
+        "docs/design/DESIGN_SYSTEM.md",
+        "scripts/design_tokens.py",
+        "scripts/validate_manifest.py",
+        "scripts/validate_templates.py",
+        "templates/ADR.md",
+        "templates/BRIEF.md",
+        "templates/MOVE_RECEIPT.md",
+        "templates/PLAN.md",
+        "templates/README.md",
+        "templates/artifact-manifest.json",
+        "templates/dataset-card.json",
+        "tests/test_design_tokens.py",
+        "tests/test_templates.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".claude/skills/quirk-artifact-forge/SKILL.md",
+      "state": "present",
+      "git_blob": "a9403de7e93e3e3a3faf78bbba29b5bf090fcc90",
+      "sha256": "sha256:614401a13a34055b0dedd2d786f6d3d6882a940b01883ee0ec8573584f9dd899"
+    },
+    {
+      "path": ".claude/skills/quirk-brief/SKILL.md",
+      "state": "present",
+      "git_blob": "5e6e1ebc838d77657c71f2890ccde6d188621155",
+      "sha256": "sha256:4d0a942ca2684fba92bdaf0460acc5044954b2a5030dc3f28d52f83ae1419381"
+    },
+    {
+      "path": ".claude/skills/quirk-dataset-card/SKILL.md",
+      "state": "present",
+      "git_blob": "5f3114b4c941a896ebf6e81e9755e2361f232c61",
+      "sha256": "sha256:3a30c2efc79af01f862a4905a3a04a6a82f0cb5dad80603e48b54cc4c09a946d"
+    },
+    {
+      "path": ".claude/skills/quirk-design-tokens/SKILL.md",
+      "state": "present",
+      "git_blob": "5103ddb212b2d725bd7e284d51d3efbff183f535",
+      "sha256": "sha256:8406746596d3bac496f280f3732d23400d6b3c0669a8676be3ad08873e61422e"
+    },
+    {
+      "path": ".claude/skills/quirk-plan/SKILL.md",
+      "state": "present",
+      "git_blob": "8a9494070086f68b1dd73bf96b29784cca9e921d",
+      "sha256": "sha256:10bb0dae68a591caa38d0fc0db3decc2379bdb09f9d1347e32158fa4cdbf53ea"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/brief.yml",
+      "state": "present",
+      "git_blob": "c9895825be17ddea692d5e4d4193006197facc29",
+      "sha256": "sha256:3f1c528ef833f55551f447cfbd93d3ce74426ad2d38cdcb14ce28216e5fc7fc2"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/decision.yml",
+      "state": "present",
+      "git_blob": "227dc22c0a825abca0ed72b96e37ee77a61c26be",
+      "sha256": "sha256:7b066bdb758671fa928dfc2299bb7c644d74343dc47aebaef7375f2318040af2"
+    },
+    {
+      "path": ".github/skills/quirk-artifact-forge/SKILL.md",
+      "state": "present",
+      "git_blob": "b3b9d64c8c0f60dc34783869893029b8c64dd577",
+      "sha256": "sha256:3da30146f380cab98221c053cb457a61ae9b76aee1061ce12771804960116723"
+    },
+    {
+      "path": ".github/skills/quirk-brief/SKILL.md",
+      "state": "present",
+      "git_blob": "1010a0bfb057a828809bcbd33f6d68c196432ee4",
+      "sha256": "sha256:f132b185c46700d5b71d82daa8f6daeef7759dfdf9eccd576b27e62addc1425a"
+    },
+    {
+      "path": ".github/skills/quirk-dataset-card/SKILL.md",
+      "state": "present",
+      "git_blob": "1e57127602356d8be8d539cde443392a84e99ae6",
+      "sha256": "sha256:dd3b7958b268f4384f2c7672f1bc74766cc78ecb63e3954bbb777e67398e1377"
+    },
+    {
+      "path": ".github/skills/quirk-design-tokens/SKILL.md",
+      "state": "present",
+      "git_blob": "c81c91d9c5a3b92a0ee6b1fe453612c157675642",
+      "sha256": "sha256:64bab7cdaa626bbf2475c4e8b32590fbd2c858475bfd157b6807dd4adb1bb030"
+    },
+    {
+      "path": ".github/skills/quirk-plan/SKILL.md",
+      "state": "present",
+      "git_blob": "d815687178487975e493543b4519f862a7cd0cd8",
+      "sha256": "sha256:d32c892dcc7ad875ecf32ef6a2026db8562d3174d74799b340276ba7441d6afc"
+    },
+    {
+      "path": ".quirk/design/tokens.json",
+      "state": "present",
+      "git_blob": "c8687e2c04f5f799168c9c9d538f5d838b50578a",
+      "sha256": "sha256:f5fc31765eb9b4cb2142007883ac459da0f895042ec02076d5447d5801a42d69"
+    },
+    {
+      "path": ".quirk/schemas/artifact-manifest.schema.json",
+      "state": "present",
+      "git_blob": "ae9d588f8e693fa48e79ebb4fd0135041ec9ddfa",
+      "sha256": "sha256:c97acda955c9a884d10d60b06ac6896a8e04c808433ed4d8b56bb34810ac5b1d"
+    },
+    {
+      "path": ".quirk/schemas/dataset-card.schema.json",
+      "state": "present",
+      "git_blob": "e5e2857198f5484daf78abf2cf326eb03de7d3b7",
+      "sha256": "sha256:5634d15097eb54bd6f67f8a0a2ecc7567051650a68d1d1e1cfbc9b08baacf5d7"
+    },
+    {
+      "path": ".quirk/schemas/design-tokens.schema.json",
+      "state": "present",
+      "git_blob": "0f17f67d4f9de05c28405f797f687804461f1460",
+      "sha256": "sha256:0557349e5c90df8f1212563a0b8720fd761eb009f964f3e97691f7f651ceba12"
+    },
+    {
+      "path": "datasets/README.md",
+      "state": "present",
+      "git_blob": "9efda3b990b5bc5aa7e7690d272ef17f345ba802",
+      "sha256": "sha256:3729d0ba6764d7670bdfe5e9d14c4abf0b90b9a0e43fffdb82126a1c2d555d86"
+    },
+    {
+      "path": "datasets/quirk-governance-corpus/README.md",
+      "state": "present",
+      "git_blob": "51dac6f5d7243e762a72f870c35b5aa268b667cc",
+      "sha256": "sha256:e466a0d1447ed539c30ce54d9ef03915d3da7e7cca02631d424be1cb42dddad8"
+    },
+    {
+      "path": "datasets/quirk-governance-corpus/dataset-card.json",
+      "state": "present",
+      "git_blob": "f23b9882bc326bd9860660349f3e02ed7a06d77d",
+      "sha256": "sha256:e620c84f6e5c649988afa6b931d8a7ab9c6a0a8cf0e7ba41a7658b1c0b84494a"
+    },
+    {
+      "path": "docs/design/DESIGN_SYSTEM.md",
+      "state": "present",
+      "git_blob": "37e6c1315d7e343da7767fa1ba95c277e7e75fc1",
+      "sha256": "sha256:6cd88f44ab8a193ab214014cb77f5ae622e5c156934d465c7548d6ffe17c0674"
+    },
+    {
+      "path": "scripts/design_tokens.py",
+      "state": "present",
+      "git_blob": "8374c13a719f1c43656d8cd6b21557c9f709a64b",
+      "sha256": "sha256:c30dbfbe8ac6709424237e833fd995a6c7e0bfe5a052265cebe80291b49973aa"
+    },
+    {
+      "path": "scripts/validate_manifest.py",
+      "state": "present",
+      "git_blob": "bbb9db2767d034a006430d1a2cf60f3e13eee20e",
+      "sha256": "sha256:63417b0990b0251d6ec6adb8ad97f4fca94bf4948dd8214b11691ad858c7e378"
+    },
+    {
+      "path": "scripts/validate_templates.py",
+      "state": "present",
+      "git_blob": "4566f3f13d13c62d381f1327316af8e4694ba95a",
+      "sha256": "sha256:2e85bb143a6ff8e79047129e2fb840411126a3c54262e5b506fc6dcde80cefc9"
+    },
+    {
+      "path": "templates/ADR.md",
+      "state": "present",
+      "git_blob": "65ed15da23228e9b88f42424765e2bdaeb09a41f",
+      "sha256": "sha256:374fb2cdb5e70b66250feb390bf8acc61a28dd5958362533f2e795a5be21f1b2"
+    },
+    {
+      "path": "templates/BRIEF.md",
+      "state": "present",
+      "git_blob": "4e1cda36c1e43a3f27334eff4c6b4e45f50dcebb",
+      "sha256": "sha256:c1524cfefc5fe419e20a5e9f237b44ba2e1f2ad9242decaf673abff8d55b8e61"
+    },
+    {
+      "path": "templates/MOVE_RECEIPT.md",
+      "state": "present",
+      "git_blob": "f81afb1e72a538ba1e6bec8146b1dda28218d1a8",
+      "sha256": "sha256:4588685f9d74a07a82e4d92f39d83e7b416fee4aa2a0d15b93ce235dec3ce00e"
+    },
+    {
+      "path": "templates/PLAN.md",
+      "state": "present",
+      "git_blob": "593b3bbfdbb1439821b6e00169ca936431fa8b56",
+      "sha256": "sha256:a99b0e0e81e441d7e617192eefe962c7271eb9d00917f9136c594f7d5b9fa64e"
+    },
+    {
+      "path": "templates/README.md",
+      "state": "present",
+      "git_blob": "9568f18d7a22f2844852182386f70e92ca881d02",
+      "sha256": "sha256:63fe95daa51d792b6423e3d54d1914058e31ad65ecdcfa38a5263cd8814d000c"
+    },
+    {
+      "path": "templates/artifact-manifest.json",
+      "state": "present",
+      "git_blob": "7cbe4aafab890f07f9bc92041360c245d701948f",
+      "sha256": "sha256:8ab23726ec60ad4194a4f2effc9b713fa405436bb2b5ac7514a5368b3c8a8c63"
+    },
+    {
+      "path": "templates/dataset-card.json",
+      "state": "present",
+      "git_blob": "1af7dfa4d98cc0867d4a963926bebd723e5f39f7",
+      "sha256": "sha256:a5828bdde82cd7db334da79d86b5a49af57c1b32ad5bb1b42ec5a15d964f471f"
+    },
+    {
+      "path": "tests/test_design_tokens.py",
+      "state": "present",
+      "git_blob": "6b561487de59ff9683a64acce6aed8c7fb04de04",
+      "sha256": "sha256:35aada475f03de06aa31d2e03cd2ab8648e0870a24ee73752e82cc2a2681c23d"
+    },
+    {
+      "path": "tests/test_templates.py",
+      "state": "present",
+      "git_blob": "80e6d3df63bae760ca09bec09c9e627c9ad0f173",
+      "sha256": "sha256:a2ee62bce97eedd996de7e92fe8aedf582d15183f6741b0fe5dca85f9e8098a0"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_templates.py",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/design_tokens.py validate .quirk/design/tokens.json",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_agent_assets.py",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check 896d9aa7505582535ba9e18758f5a017d8da69d7 57d299e68162fe5a297ce23da51d4e65490ae8cd",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T12:32:39Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:fa61f92ad05f318e9169c5afc458584a2022d494ecc3e88e73b800194e6bee9c"
+}

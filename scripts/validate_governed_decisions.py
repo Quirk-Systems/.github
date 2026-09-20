@@ -6,7 +6,7 @@ import hashlib
 import json
 import re
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path, PurePosixPath
 
 FULL_SHA_PATTERN = re.compile(r"^[0-9a-f]{40}$")
@@ -165,7 +165,7 @@ def _validate_actor(actor):
         parsed = datetime.fromisoformat(decided_at[:-1] + "+00:00")
     except ValueError as error:
         raise DecisionError("actor.decided_at must be a valid calendar timestamp") from error
-    if parsed.tzinfo != timezone.utc:
+    if parsed.tzinfo != UTC:
         raise DecisionError("actor.decided_at must be UTC")
 
 

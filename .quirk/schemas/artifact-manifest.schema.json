@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Quirk-Systems/.github/blob/main/.quirk/schemas/artifact-manifest.schema.json",
+  "title": "Quirk artifact manifest",
+  "description": "Provenance contract for any generated asset (image, audio, video, document, dataset slice, model output, generated code). An Asset is the canonical reusable-output term; Artifact is retained as the alias for legacy compatibility. The manifest binds the asset bytes to their generator, inputs, source revision, license, and classification. It grants no publication, canon, or release authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_id",
+    "asset_concept",
+    "title",
+    "kind",
+    "status",
+    "produced_at",
+    "producer",
+    "source",
+    "inputs",
+    "outputs",
+    "license",
+    "data_classification",
+    "authority",
+    "residue"
+  ],
+  "properties": {
+    "schema_version": {"const": "artifact-manifest.v1"},
+    "artifact_id": {"type": "string", "pattern": "^qasset\\.[a-z0-9][a-z0-9._-]*$"},
+    "asset_concept": {"const": "entity.asset"},
+    "title": {"type": "string", "minLength": 1, "maxLength": 200},
+    "kind": {"enum": ["image", "audio", "video", "document", "dataset", "model-output", "code", "design", "other"]},
+    "status": {"enum": ["draft", "candidate", "reviewed", "retracted"]},
+    "produced_at": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"},
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor", "tool", "model"],
+      "properties": {
+        "actor": {"type": "string", "pattern": "^(@[A-Za-z0-9-]+|agent:[a-z0-9][a-z0-9-]*)$"},
+        "tool": {"type": "string", "minLength": 1},
+        "model": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["provider", "identifier"],
+          "properties": {
+            "provider": {"type": "string", "minLength": 1},
+            "identifier": {"type": "string", "minLength": 1},
+            "version": {"type": ["string", "null"], "minLength": 1}
+          }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit", "paths"],
+      "properties": {
+        "repository": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},
+        "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "paths": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "kind", "reference"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "kind": {"enum": ["prompt", "file", "dataset", "url", "parameter", "seed", "asset"]},
+          "reference": {"type": "string", "minLength": 1},
+          "sha256": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"}
+        }
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "media_type", "sha256", "bytes"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "media_type": {"type": "string", "pattern": "^[a-z]+/[A-Za-z0-9!#$&^_.+-]+$"},
+          "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+          "bytes": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "license": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["spdx", "rights_holder", "third_party_material"],
+      "properties": {
+        "spdx": {"type": "string", "minLength": 1},
+        "rights_holder": {"type": "string", "minLength": 1},
+        "third_party_material": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "data_classification": {"enum": ["public", "internal", "confidential", "restricted"]},
+    "semantic_impact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["change_class", "concepts"],
+      "properties": {
+        "change_class": {"enum": ["reuse-canon", "domain-extension", "canonical-change", "projection-change", "migration"]},
+        "concepts": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:\\.[a-z][a-z0-9-]*)+$"}}
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["effect", "required_next"],
+      "properties": {
+        "effect": {"const": "none"},
+        "required_next": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"enum": ["review", "canon", "release", "publish", "license-clearance", "none"]}
+        }
+      }
+    },
+    "residue": {"type": "array", "items": {"type": "string", "minLength": 1}}
+  }
+}

@@ -1,0 +1,15 @@
+# Lint configuration only. This repository is not a Python package: the
+# validators in scripts/ are standard-library scripts run directly, and CI has
+# no dependency install step. Keep it that way.
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+extend-exclude = [".quirk-core", ".quirk-policy", ".quirk-subject"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S102", "S307"]
+# E501: long strings in receipts/claims and doc tables are intentional.
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["validate_evidence_receipts"]

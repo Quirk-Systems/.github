@@ -139,5 +139,330 @@
       "retirement_condition": "Archive when no unique GitHub feature test depends on it"
     }
   ],
-  "unclassified_policy": "Repositories observed outside this registry remain OBSERVED_UNCLASSIFIED until an owner-approved classification is merged. Existence or naming alone does not establish purpose, lifecycle, authority, or canon."
+  "unclassified_policy": "Repositories observed outside this registry remain OBSERVED_UNCLASSIFIED until an owner-approved classification is merged. Existence or naming alone does not establish purpose, lifecycle, authority, or canon.",
+  "observation": {
+    "observed_at": "2026-09-19",
+    "source": "GitHub repository search `org:Quirk-Systems` (49 results, incomplete_results=false)",
+    "total_observed": 49,
+    "registered_not_observed": [
+      "Quirk-Systems/demo-repository"
+    ]
+  },
+  "observed_unclassified": [
+    {
+      "repository": "Quirk-Systems/Quirk",
+      "visibility": "private",
+      "created_at": "2026-07-29T14:25:58Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": "HTML",
+      "observed_description": "Quirkverse monorepo — skills, pipeline, creative, vault"
+    },
+    {
+      "repository": "Quirk-Systems/quirk-agents",
+      "visibility": "private",
+      "created_at": "2026-08-21T16:45:46Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-arcade",
+      "visibility": "private",
+      "created_at": "2026-08-21T16:48:27Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-arena",
+      "visibility": "private",
+      "created_at": "2026-08-21T17:30:49Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-art",
+      "visibility": "private",
+      "created_at": "2026-08-21T16:20:18Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-bio",
+      "visibility": "private",
+      "created_at": "2026-08-21T16:41:59Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-city",
+      "visibility": "private",
+      "created_at": "2026-08-21T16:37:44Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-club",
+      "visibility": "private",
+      "created_at": "2026-08-21T16:49:33Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-code",
+      "visibility": "private",
+      "created_at": "2026-08-21T16:41:37Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-design",
+      "visibility": "private",
+      "created_at": "2026-08-21T17:29:37Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-directory",
+      "visibility": "private",
+      "created_at": "2026-08-21T17:30:22Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-dog",
+      "visibility": "private",
+      "created_at": "2026-08-11T10:28:32Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-feedback",
+      "visibility": "private",
+      "created_at": "2026-08-21T16:38:59Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-fitness",
+      "visibility": "private",
+      "created_at": "2026-08-21T16:38:27Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-flirt",
+      "visibility": "private",
+      "created_at": "2026-08-21T17:26:00Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-format",
+      "visibility": "private",
+      "created_at": "2026-08-21T17:27:10Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-health",
+      "visibility": "private",
+      "created_at": "2026-08-21T16:42:18Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-home",
+      "visibility": "private",
+      "created_at": "2026-08-21T16:43:42Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-house",
+      "visibility": "private",
+      "created_at": "2026-08-21T16:48:55Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-hygiene",
+      "visibility": "private",
+      "created_at": "2026-08-21T17:29:16Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-intelligence",
+      "visibility": "private",
+      "created_at": "2026-08-21T16:40:13Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-lab",
+      "visibility": "private",
+      "created_at": "2026-08-21T16:46:18Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-local",
+      "visibility": "private",
+      "created_at": "2026-08-21T17:30:00Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-market",
+      "visibility": "private",
+      "created_at": "2026-08-21T17:32:11Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-memory",
+      "visibility": "private",
+      "created_at": "2026-08-21T16:47:40Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-merchant",
+      "visibility": "private",
+      "created_at": "2026-08-21T16:48:01Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-money",
+      "visibility": "private",
+      "created_at": "2026-08-21T17:26:35Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-music",
+      "visibility": "private",
+      "created_at": "2026-08-11T10:28:49Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-ops",
+      "visibility": "private",
+      "created_at": "2026-08-21T16:45:18Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-preference",
+      "visibility": "private",
+      "created_at": "2026-08-11T10:47:36Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-press",
+      "visibility": "private",
+      "created_at": "2026-08-21T16:39:19Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-prompt",
+      "visibility": "private",
+      "created_at": "2026-08-21T16:44:16Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-style",
+      "visibility": "private",
+      "created_at": "2026-08-21T16:38:06Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-word",
+      "visibility": "private",
+      "created_at": "2026-08-21T17:31:21Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    },
+    {
+      "repository": "Quirk-Systems/quirk-work",
+      "visibility": "private",
+      "created_at": "2026-08-21T16:39:41Z",
+      "observed_at": "2026-09-19",
+      "status": "OBSERVED_UNCLASSIFIED",
+      "observed_language": null,
+      "observed_description": null
+    }
+  ]
 }

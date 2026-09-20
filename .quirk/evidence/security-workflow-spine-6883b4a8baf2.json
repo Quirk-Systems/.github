@@ -1,0 +1,153 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.security-workflow-spine.6883b4a8baf2",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "ab00df253ff3b10c86d6af7b7778b8f2494c2702",
+    "commit": "6883b4a8baf240d3eb48105da639afc435416e9e",
+    "changed_paths": [
+      ".github/workflows/codeql.yml",
+      ".github/workflows/dependency-review.yml",
+      ".github/workflows/reusable-codeql.yml",
+      ".github/workflows/reusable-dependency-review.yml",
+      ".github/workflows/reusable-sbom-provenance.yml",
+      ".github/workflows/reusable-stale-incubations.yml",
+      ".github/workflows/reusable-workflow-lint.yml",
+      ".github/workflows/scorecard.yml",
+      ".github/workflows/workflow-lint.yml",
+      "docs/governance/REUSABLE_WORKFLOWS.md",
+      "tests/test_workflow_pins.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.security-workflow-spine.6883b4a8baf2",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The cited bytes add four self-applied and five reusable GitHub Actions workflows with full-SHA pins, read-only default permissions, commented job-level grants, timeouts, and no expressions in run bodies; a pin-policy unit test; and a reusable-workflow catalog. 66 unit tests, all validators, ruff, actionlint, and zizmor (offline, pedantic; zero findings outside the scoped legacy exemptions) passed locally on this subject. No hosted workflow run, code-scanning enablement, Scorecard publication, required-check activation, or merge approval is established.",
+      "evidence_paths": [
+        ".github/workflows/codeql.yml",
+        ".github/workflows/dependency-review.yml",
+        ".github/workflows/reusable-codeql.yml",
+        ".github/workflows/reusable-dependency-review.yml",
+        ".github/workflows/reusable-sbom-provenance.yml",
+        ".github/workflows/reusable-stale-incubations.yml",
+        ".github/workflows/reusable-workflow-lint.yml",
+        ".github/workflows/scorecard.yml",
+        ".github/workflows/workflow-lint.yml",
+        "docs/governance/REUSABLE_WORKFLOWS.md",
+        "tests/test_workflow_pins.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/workflows/codeql.yml",
+      "state": "present",
+      "git_blob": "fc09aa609585e2c601eac4ba60e80ee2e3af53f1",
+      "sha256": "sha256:d25cdbcc01559b3e42619ef2821989b301744d2f3bfed9be84f906c5fe5e39d8"
+    },
+    {
+      "path": ".github/workflows/dependency-review.yml",
+      "state": "present",
+      "git_blob": "5cf0d5418b656f57187f84de1de96f9ba57a487c",
+      "sha256": "sha256:c8ea8e5dbf7ed539bd503ca3990a0e2b9e336577a1863246c61966d62890246b"
+    },
+    {
+      "path": ".github/workflows/reusable-codeql.yml",
+      "state": "present",
+      "git_blob": "ab3464a428eefd61cad690b494d0047a39723183",
+      "sha256": "sha256:32ef32f08f1621867ac17d2e768a88363e76f0c3715344e5aecd466a4fc149c1"
+    },
+    {
+      "path": ".github/workflows/reusable-dependency-review.yml",
+      "state": "present",
+      "git_blob": "8db1b1db3b0925bf107601e51d6b2132e8c31e8a",
+      "sha256": "sha256:cd961f875600bf75e3fb793f465ab4a22414eb6a67b8e1e4e103b20dfb496cbc"
+    },
+    {
+      "path": ".github/workflows/reusable-sbom-provenance.yml",
+      "state": "present",
+      "git_blob": "5c7910683cc52805ff4f87f15f0abfe589153c28",
+      "sha256": "sha256:c3ad6bbaaf52403a752c687b3ca34d903fa763bb4bf98641041a959904c879e3"
+    },
+    {
+      "path": ".github/workflows/reusable-stale-incubations.yml",
+      "state": "present",
+      "git_blob": "28dc12514c48282991bbedf52b89e6623a057499",
+      "sha256": "sha256:76036449cbdc72c6e81833bfcfd1ba0149da72499a3d4903183d5b72f3f78786"
+    },
+    {
+      "path": ".github/workflows/reusable-workflow-lint.yml",
+      "state": "present",
+      "git_blob": "ad7059c74b94d852e0933a1e540c6aa4f17f69ad",
+      "sha256": "sha256:4a9d061c5a15ef1258b09d3ba72c83e3aa9783d8a17cd1344dacede3d6130c6a"
+    },
+    {
+      "path": ".github/workflows/scorecard.yml",
+      "state": "present",
+      "git_blob": "68f7751c05234fdd2dbf73d5dccd00bc1218d257",
+      "sha256": "sha256:ba6b08ef442980ba3488855fa4c55239b5061c3b219bf72c380c4651f908e35e"
+    },
+    {
+      "path": ".github/workflows/workflow-lint.yml",
+      "state": "present",
+      "git_blob": "f5e733cb0703b9bf696c610b2ee0776988fc0d7e",
+      "sha256": "sha256:beee79920dc59e08781e2078cfd3132fec9faf4702ef29ebe80eace00489dcf1"
+    },
+    {
+      "path": "docs/governance/REUSABLE_WORKFLOWS.md",
+      "state": "present",
+      "git_blob": "6f4cbf2adbded5e0b827c3f3fd6488bc7a554bfd",
+      "sha256": "sha256:c4269c8bb57d8333b8d4957cf7cc7bea69e0f7a3f21b1827deeb16fdb7e34149"
+    },
+    {
+      "path": "tests/test_workflow_pins.py",
+      "state": "present",
+      "git_blob": "587177bf50adc969839eeff721c9fe13c3435952",
+      "sha256": "sha256:f374197e1bae09ca312b876d0f2117d71c0ba2711fe0b2cbb285f39eb534bdda"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 -m unittest tests.test_workflow_pins -v",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "actionlint -ignore 'property \"workflow_(repository|sha)\" is not defined'",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "uv tool run --quiet zizmor --offline --persona pedantic .github/workflows",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check ab00df253ff3b10c86d6af7b7778b8f2494c2702 6883b4a8baf240d3eb48105da639afc435416e9e",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T12:20:35Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:613d8f31887330fb237a97a05cc042c855c80dd0a826493a09e7be3a418651f3"
+}

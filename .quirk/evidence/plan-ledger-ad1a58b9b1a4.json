@@ -1,0 +1,53 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.plan-ledger.ad1a58b9b1a4",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "5c3837af71e6b3d37c46763718424b6684fa2ba8",
+    "commit": "ad1a58b9b1a43fd626690fb0dd70005d9ed1ce33",
+    "changed_paths": [
+      "docs/superpowers/plans/2026-09-20-org-control-plane.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.plan-ledger.ad1a58b9b1a4",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The cited bytes tick the completed wave and private-repository boxes in the control-plane plan ledger and cite their receipts. The full local gate passed on this subject. A ticked ledger records delivery of bytes, not review, merge, or any authority effect.",
+      "evidence_paths": [
+        "docs/superpowers/plans/2026-09-20-org-control-plane.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/superpowers/plans/2026-09-20-org-control-plane.md",
+      "state": "present",
+      "git_blob": "16cd753dbe7b3ac4850f0deca8c104190b8b1412",
+      "sha256": "sha256:514acf537ff1d16f9f983697c8ba45e65c4af5b1d5e296959b89cfabe6db631e"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check 5c3837af71e6b3d37c46763718424b6684fa2ba8 ad1a58b9b1a43fd626690fb0dd70005d9ed1ce33",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T12:42:47Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:7354b5cb64cb2241aa10ebd1cb2726fd0113cd46158871a8399319764b4a6ff5"
+}
