@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Quirk-Systems/.github/blob/main/.quirk/schemas/repository-manifest.schema.json",
+  "title": "Quirk repository manifest",
+  "description": "The .quirk/manifest.json contract every active Quirk Systems repository declares. Combines the semantic-governance keys the reusable workflow checks with the repository-contract fields from docs/REPOSITORY_STRATEGY.md section 6. Closed object: unknown keys fail.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "repository",
+    "domain",
+    "registry",
+    "policy",
+    "semantic_impact",
+    "primary_class",
+    "lifecycle",
+    "owner",
+    "data_classification"
+  ],
+  "properties": {
+    "schema_version": {"const": "repository-manifest.v1"},
+    "repository": {"type": "string", "pattern": "^Quirk-Systems/[A-Za-z0-9_.-]+$"},
+    "domain": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "registry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authority", "path", "version"],
+      "properties": {
+        "authority": {"const": "Quirk-Systems/.github"},
+        "path": {"const": ".quirk/registry.json"},
+        "version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[a-z0-9.-]+)?$"}
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": {"enum": ["warn", "required"]}
+      }
+    },
+    "semantic_impact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default_change_class", "local_extensions", "projections"],
+      "properties": {
+        "default_change_class": {"enum": ["canonical-change", "domain-extension", "projection-change", "migration"]},
+        "local_extensions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^\\.quirk/[A-Za-z0-9_./-]+\\.json$"}
+        },
+        "projections": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"}
+        }
+      }
+    },
+    "primary_class": {
+      "enum": ["canon", "kernel", "registry", "interface", "connector", "instrument", "realm", "reference", "lab", "sandbox"]
+    },
+    "lifecycle": {
+      "enum": ["proposed", "incubating", "active", "maintained", "frozen", "deprecated", "archived", "reserved", "proposed_archive"]
+    },
+    "owner": {"type": "string", "pattern": "^@[A-Za-z0-9-]+$"},
+    "data_classification": {"enum": ["public", "internal", "confidential", "restricted"]},
+    "canonical_inputs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "extraction_trigger": {"type": ["string", "null"], "minLength": 1},
+    "retirement_condition": {"type": ["string", "null"], "minLength": 1}
+  }
+}
