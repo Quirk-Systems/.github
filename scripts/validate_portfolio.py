@@ -15,8 +15,8 @@ SCHEMA = ROOT / ".quirk" / "schemas" / "repository-inventory.schema.json"
 REGISTRY = ROOT / ".quirk" / "repositories.json"
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from validate_manifest import ManifestError, _check  # noqa: E402
 import validate_topology  # noqa: E402
+from validate_manifest import ManifestError, _check  # noqa: E402
 
 
 class PortfolioError(ValueError):
@@ -24,11 +24,6 @@ class PortfolioError(ValueError):
 
 
 def validate_portfolio(data, schema):
-    try:
-        _check(data, schema, "portfolio")
-    except ManifestError as error:
-        raise PortfolioError(str(error)) from error
-
     if not isinstance(data, dict):
         raise PortfolioError("portfolio must be an object")
 
@@ -112,6 +107,15 @@ def validate_portfolio(data, schema):
 
     if errors:
         raise PortfolioError("; ".join(errors))
+
+    # Schema backstop. The cross-entry checks above carry the better operator
+    # diagnostics, so they report first; the schema then catches everything
+    # they do not model, including every field beneath repositories[] that is
+    # only reachable through a $ref.
+    try:
+        _check(data, schema, "portfolio")
+    except ManifestError as error:
+        raise PortfolioError(str(error)) from error
     return data
 
 

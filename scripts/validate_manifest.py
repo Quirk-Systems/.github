@@ -27,31 +27,141 @@ def _fail(message):
     raise ManifestError(message)
 
 
-def _check(value, schema, label):
-    if "const" in schema:
-        if value != schema["const"]:
-            _fail(f"{label}: must equal {schema['const']!r}")
+_ANNOTATION_KEYWORDS = frozenset({
+    "$schema", "$id", "$anchor", "$comment", "$defs", "definitions",
+    "title", "description", "examples", "default", "deprecated",
+    "readOnly", "writeOnly",
+})
+
+# Keywords this subset validator actually applies. Anything outside the union
+# of these two sets makes _check fail closed: a schema keyword that is silently
+# ignored is worse than an absent one, because the schema reads as enforced.
+_APPLIED_KEYWORDS = frozenset({
+    "$ref", "type", "enum", "const",
+    "properties", "patternProperties", "additionalProperties", "required",
+    "items", "minItems", "maxItems", "uniqueItems",
+    "contains", "minContains", "maxContains",
+    "pattern", "minLength", "maxLength",
+    "minimum", "maximum", "exclusiveMinimum", "exclusiveMaximum",
+    "allOf", "anyOf", "oneOf", "not", "if", "then", "else",
+})
+
+_KNOWN_KEYWORDS = _ANNOTATION_KEYWORDS | _APPLIED_KEYWORDS
+
+_TYPES = {
+    "object": dict, "array": list, "string": str, "boolean": bool,
+    "integer": int, "number": (int, float), "null": type(None),
+}
+
+
+def _is_number(value):
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
+
+
+def _resolve_ref(ref, root, label):
+    """Resolve a local JSON Pointer ($ref) against the root schema."""
+    if not isinstance(ref, str) or not ref.startswith("#"):
+        _fail(f"{label}: only local $ref is supported, got {ref!r}")
+    pointer = ref[1:]
+    if pointer.startswith("/"):
+        pointer = pointer[1:]
+    target = root
+    if pointer:
+        for raw in pointer.split("/"):
+            token = raw.replace("~1", "/").replace("~0", "~")
+            if isinstance(target, list):
+                try:
+                    target = target[int(token)]
+                except (ValueError, IndexError):
+                    _fail(f"{label}: $ref {ref} does not resolve")
+            elif isinstance(target, dict) and token in target:
+                target = target[token]
+            else:
+                _fail(f"{label}: $ref {ref} does not resolve")
+    if not isinstance(target, dict):
+        _fail(f"{label}: $ref {ref} does not point at a schema object")
+    return target
+
+
+def _matches(value, schema, root):
+    """True when value validates against schema. Used by the boolean keywords."""
+    try:
+        _check(value, schema, "?", root)
+    except ManifestError:
+        return False
+    return True
+
+
+def _check(value, schema, label, root=None, _refs=frozenset()):
+    if root is None:
+        root = schema
+    if schema is True:
         return
-    if "enum" in schema:
-        if value not in schema["enum"]:
-            _fail(f"{label}: {value!r} not in {schema['enum']}")
-        return
+    if schema is False:
+        _fail(f"{label}: schema forbids any value")
+    if not isinstance(schema, dict):
+        _fail(f"{label}: invalid schema {schema!r}")
+
+    unknown = sorted(set(schema) - _KNOWN_KEYWORDS)
+    if unknown:
+        _fail(f"{label}: unsupported schema keywords {unknown}; this validator "
+              "fails closed rather than accepting data it cannot check")
+
+    if "$ref" in schema:
+        ref = schema["$ref"]
+        if ref in _refs:
+            _fail(f"{label}: circular $ref {ref}")
+        _check(value, _resolve_ref(ref, root, label), label, root, _refs | {ref})
+
+    if "const" in schema and value != schema["const"]:
+        _fail(f"{label}: must equal {schema['const']!r}")
+    if "enum" in schema and value not in schema["enum"]:
+        _fail(f"{label}: {value!r} not in {schema['enum']}")
+
     types = schema.get("type")
     if isinstance(types, str):
         types = [types]
     if types:
-        allowed = {"object": dict, "array": list, "string": str, "boolean": bool, "integer": int, "null": type(None)}
         ok = False
         for name in types:
-            expected = allowed[name]
-            if name == "integer" and isinstance(value, bool):
+            if name not in _TYPES:
+                _fail(f"{label}: unsupported type {name!r}")
+            if name in ("integer", "number") and isinstance(value, bool):
                 continue
-            if isinstance(value, expected):
+            if name == "integer" and isinstance(value, float):
+                continue
+            if isinstance(value, _TYPES[name]):
                 ok = True
         if not ok:
             _fail(f"{label}: expected type {types}, got {type(value).__name__}")
+
+    for keyword in ("allOf", "anyOf", "oneOf"):
+        if keyword not in schema:
+            continue
+        branches = schema[keyword]
+        if not isinstance(branches, list):
+            _fail(f"{label}: {keyword} must be a list")
+        if keyword == "allOf":
+            for index, branch in enumerate(branches):
+                _check(value, branch, f"{label}/allOf[{index}]", root, _refs)
+        else:
+            hits = sum(1 for branch in branches if _matches(value, branch, root))
+            if keyword == "anyOf" and hits == 0:
+                _fail(f"{label}: does not match any anyOf branch")
+            if keyword == "oneOf" and hits != 1:
+                _fail(f"{label}: matches {hits} oneOf branches, expected exactly 1")
+
+    if "not" in schema and _matches(value, schema["not"], root):
+        _fail(f"{label}: must not match the 'not' schema")
+
+    if "if" in schema:
+        branch = "then" if _matches(value, schema["if"], root) else "else"
+        if branch in schema:
+            _check(value, schema[branch], f"{label}/{branch}", root, _refs)
+
     if value is None:
         return
+
     if isinstance(value, str):
         if "pattern" in schema and not re.search(schema["pattern"], value):
             _fail(f"{label}: {value!r} does not match {schema['pattern']}")
@@ -59,29 +169,65 @@ def _check(value, schema, label):
             _fail(f"{label}: shorter than {schema['minLength']}")
         if "maxLength" in schema and len(value) > schema["maxLength"]:
             _fail(f"{label}: longer than {schema['maxLength']}")
-    if isinstance(value, int) and not isinstance(value, bool):
+
+    if _is_number(value):
         if "minimum" in schema and value < schema["minimum"]:
             _fail(f"{label}: below minimum {schema['minimum']}")
+        if "maximum" in schema and value > schema["maximum"]:
+            _fail(f"{label}: above maximum {schema['maximum']}")
+        if "exclusiveMinimum" in schema and value <= schema["exclusiveMinimum"]:
+            _fail(f"{label}: not above exclusiveMinimum {schema['exclusiveMinimum']}")
+        if "exclusiveMaximum" in schema and value >= schema["exclusiveMaximum"]:
+            _fail(f"{label}: not below exclusiveMaximum {schema['exclusiveMaximum']}")
+
     if isinstance(value, list):
         if schema.get("uniqueItems") and len({json.dumps(v, sort_keys=True) for v in value}) != len(value):
             _fail(f"{label}: items must be unique")
         if "minItems" in schema and len(value) < schema["minItems"]:
             _fail(f"{label}: needs at least {schema['minItems']} items")
-        for index, item in enumerate(value):
-            _check(item, schema.get("items", {}), f"{label}[{index}]")
+        if "maxItems" in schema and len(value) > schema["maxItems"]:
+            _fail(f"{label}: allows at most {schema['maxItems']} items")
+        if "items" in schema:
+            for index, item in enumerate(value):
+                _check(item, schema["items"], f"{label}[{index}]", root, _refs)
+        if "contains" in schema:
+            hits = sum(1 for item in value if _matches(item, schema["contains"], root))
+            minimum = schema.get("minContains", 1)
+            if hits < minimum:
+                _fail(f"{label}: needs at least {minimum} item(s) matching 'contains', found {hits}")
+            if "maxContains" in schema and hits > schema["maxContains"]:
+                _fail(f"{label}: allows at most {schema['maxContains']} matching item(s), found {hits}")
+
     if isinstance(value, dict):
         properties = schema.get("properties", {})
-        if schema.get("additionalProperties") is False:
-            unknown = sorted(set(value) - set(properties))
-            if unknown:
-                _fail(f"{label}: unknown keys {unknown}")
+        pattern_properties = schema.get("patternProperties", {})
+        additional = schema.get("additionalProperties", True)
+
         missing = [key for key in schema.get("required", []) if key not in value]
         if missing:
             _fail(f"{label}: missing required keys {missing}")
-        for key, item in value.items():
-            if key in properties:
-                _check(item, properties[key], f"{label}.{key}")
 
+        def _is_declared(key):
+            if key in properties:
+                return True
+            return any(re.search(expression, key) for expression in pattern_properties)
+
+        if additional is False:
+            unknown = sorted(key for key in value if not _is_declared(key))
+            if unknown:
+                _fail(f"{label}: unknown keys {unknown}")
+
+        for key, item in value.items():
+            matched = False
+            if key in properties:
+                _check(item, properties[key], f"{label}.{key}", root, _refs)
+                matched = True
+            for expression, subschema in pattern_properties.items():
+                if re.search(expression, key):
+                    _check(item, subschema, f"{label}.{key}", root, _refs)
+                    matched = True
+            if not matched and isinstance(additional, dict):
+                _check(item, additional, f"{label}.{key}", root, _refs)
 
 def validate_manifest(data, schema, root=None):
     _check(data, schema, "manifest")
