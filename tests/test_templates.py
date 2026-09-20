@@ -31,7 +31,8 @@ class TemplateContractTests(unittest.TestCase):
 
     def test_every_skill_referenced_by_templates_index_exists(self):
         index = (ROOT / "templates" / "README.md").read_text(encoding="utf-8")
-        for skill in ("quirk-brief", "quirk-plan", "quirk-evidence-receipt", "quirk-artifact-forge", "quirk-dataset-card"):
+        for skill in ("quirk-brief", "quirk-plan", "quirk-evidence-receipt", "quirk-artifact-forge", "quirk-dataset-card",
+                      "quirk-living-doc"):
             self.assertIn(f"`{skill}`", index)
             self.assertTrue((ROOT / ".github" / "skills" / skill / "SKILL.md").is_file(), skill)
             self.assertTrue((ROOT / ".claude" / "skills" / skill / "SKILL.md").is_file(), skill)

@@ -24,8 +24,9 @@ revision, nothing more.
 | `.quirk/design/tokens.json` | Candidate design-token source (contract owned here; visuals owned by `quirk-design`) |
 | `.github/workflows/` | Self-applied checks and `reusable-*` workflows for consumer repositories |
 | `scripts/`, `tests/` | Standard-library validators and their unit tests |
-| `templates/`, `datasets/` | Brief, plan, ADR, move-receipt, artifact, dataset-card, and agent-task templates; dataset cards |
+| `templates/`, `datasets/` | Brief, plan, ADR, move-receipt, intention, goal, roadmap, todo, artifact, dataset-card, and agent-task templates; dataset cards |
 | `docs/` | Strategy, semantic governance, evidence binding, interoperability, reusable workflows, agent operating model, autonomous operations, design system |
+| `docs/intentions/`, `docs/goals/`, `docs/roadmaps/`, `docs/todos/` | Living documents: each names the head it observed, its owner, and its review dates; `scripts/validate_living_docs.py` reports the ones that lapse |
 | `profile/` | The public organization profile |
 
 ## Consume a reusable workflow

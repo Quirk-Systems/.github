@@ -92,3 +92,6 @@ python scripts/validate_evidence_receipts.py --repository Quirk-Systems/.github 
   and run `python scripts/quirk_concept.py inspect <name>` to avoid collisions.
 - Adding or consuming a workflow: read `docs/governance/REUSABLE_WORKFLOWS.md`.
 - Driving an agent task end to end: read `docs/governance/AUTONOMOUS_OPERATIONS.md`.
+- Writing or editing an intention, goal, roadmap, or todo: use the
+  `quirk-living-doc` skill and run `python scripts/validate_living_docs.py --strict`;
+  a planning document names the head it observed and the date it goes stale.

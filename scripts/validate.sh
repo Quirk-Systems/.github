@@ -23,7 +23,7 @@ run "$PY" scripts/quirk_concept.py lint
 run "$PY" scripts/validate-copilot-maintenance.py
 run "$PY" scripts/validate_agent_assets.py
 for script in scripts/validate_manifest.py scripts/validate_portfolio.py scripts/validate_templates.py \
-              scripts/validate_agent_tasks.py scripts/design_tokens.py; do
+              scripts/validate_agent_tasks.py scripts/design_tokens.py scripts/validate_living_docs.py; do
   if [[ -f "$script" ]]; then
     case "$script" in
       scripts/validate_manifest.py) run "$PY" "$script" .quirk/manifest.json ;;
