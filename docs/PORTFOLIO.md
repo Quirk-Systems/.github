@@ -4,14 +4,14 @@
 
 Registry version: `0.1.1-candidate`  
 Registry status: `candidate_truth_repair_pending_independent_merge_gate`  
-Registry updated: 2026-08-28  
+Registry updated: 2026-09-20  
 Authority effect: **none**. This page projects the registry; it classifies nothing by itself.
 
 ## Summary
 
 | Measure | Count |
 | --- | --- |
-| Classified repositories | 15 |
+| Classified repositories | 16 |
 | Canonical (authority-bearing) | 3 |
 | Observed, unclassified | 35 |
 | Observed in organization on 2026-09-19 | 49 |
@@ -31,6 +31,7 @@ Authority effect: **none**. This page projects the registry; it classifies nothi
 | Repository | Visibility | Lifecycle | Canonical | Purpose |
 | --- | --- | --- | --- | --- |
 | [`Quirk-Systems/quirk-generator`](https://github.com/Quirk-Systems/quirk-generator) | public | `active` | no | Bounded multi-model visual-generation instrument |
+| [`Quirk-Systems/quirk-kitworks`](https://github.com/Quirk-Systems/quirk-kitworks) | public | `proposed` | no | Governed construction catalog and deterministic compiler for reusable Quirk repositories, apps, agents, and cross-platform skills. |
 | [`Quirk-Systems/quirk-skills`](https://github.com/Quirk-Systems/quirk-skills) | private | `incubating` | no | Portable Quirk Skill candidate source packages and attributable package-local evaluation evidence |
 
 ### `interface`
@@ -74,6 +75,7 @@ Authority effect: **none**. This page projects the registry; it classifies nothi
 | --- | --- |
 | `active` | 7 |
 | `incubating` | 4 |
+| `proposed` | 1 |
 | `proposed_archive` | 1 |
 | `reserved` | 3 |
 
@@ -83,6 +85,7 @@ Authority effect: **none**. This page projects the registry; it classifies nothi
 | --- | --- | --- |
 | [`Quirk-Systems/project-scaffold`](https://github.com/Quirk-Systems/project-scaffold) | `topology_status` | `REQUIRES_OWNER_DECISION` |
 | [`Quirk-Systems/quirk-core`](https://github.com/Quirk-Systems/quirk-core) | `classification_status` | `PROPOSED_PENDING_REVIEW` |
+| [`Quirk-Systems/quirk-kitworks`](https://github.com/Quirk-Systems/quirk-kitworks) | `classification_status` | `PROVISION_APPROVED_PENDING_REPOSITORY_CREATION` |
 | [`Quirk-Systems/quirk-os`](https://github.com/Quirk-Systems/quirk-os) | `topology_status` | `ACTIVE_OBSERVED_REQUIRES_OWNER_RECONCILIATION` |
 | [`Quirk-Systems/quirk-skills`](https://github.com/Quirk-Systems/quirk-skills) | `classification_status` | `PROPOSED_PENDING_REVIEW` |
 
@@ -102,7 +105,7 @@ Authority effect: **none**. This page projects the registry; it classifies nothi
 
 Observed on 2026-09-19 via GitHub repository search `org:Quirk-Systems` (49 results, incomplete_results=false). These rows record existence, visibility, and creation date only. Purpose, owner, lifecycle, class, authority, and canonical status are **not** inferred from names; each stays `OBSERVED_UNCLASSIFIED` until an owner-approved classification is merged.
 
-Registered but not observed in the listing on that date: `Quirk-Systems/demo-repository`. Absence from a listing is an observation, not an archive or deletion decision.
+Registered but not observed in the listing on that date: `Quirk-Systems/demo-repository`, `Quirk-Systems/quirk-kitworks`. Absence from a listing is an observation, not an archive or deletion decision.
 
 | Repository | Visibility | Created | Observed | Status |
 | --- | --- | --- | --- | --- |

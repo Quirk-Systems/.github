@@ -1,7 +1,7 @@
 {
   "registry_version": "0.1.1-candidate",
   "authority": "Quirk-Systems/.github",
-  "updated_at": "2026-08-28",
+  "updated_at": "2026-09-20",
   "status": "candidate_truth_repair_pending_independent_merge_gate",
   "repositories": [
     {
@@ -103,6 +103,17 @@
       "purpose": "Bounded multi-model visual-generation instrument"
     },
     {
+      "repository": "Quirk-Systems/quirk-kitworks",
+      "visibility": "public",
+      "primary_class": "instrument",
+      "lifecycle": "proposed",
+      "canonical": false,
+      "purpose": "Governed construction catalog and deterministic compiler for reusable Quirk repositories, apps, agents, and cross-platform skills.",
+      "authority_boundary": "Candidate repository capability only; no approval, admission, merge, publish, or deploy authority",
+      "classification_status": "PROVISION_APPROVED_PENDING_REPOSITORY_CREATION",
+      "historical_note": "Provisioning handoff: issue .github#7 records validated seed evidence and the current environment blocker (no repository-creation operation)."
+    },
+    {
       "repository": "Quirk-Systems/quirk-beauty",
       "visibility": "private",
       "primary_class": "realm",
@@ -145,7 +156,8 @@
     "source": "GitHub repository search `org:Quirk-Systems` (49 results, incomplete_results=false)",
     "total_observed": 49,
     "registered_not_observed": [
-      "Quirk-Systems/demo-repository"
+      "Quirk-Systems/demo-repository",
+      "Quirk-Systems/quirk-kitworks"
     ]
   },
   "observed_unclassified": [
