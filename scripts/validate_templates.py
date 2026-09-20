@@ -37,6 +37,7 @@ REQUIRED_SECTIONS = {
 JSON_EXAMPLES = {
     "artifact-manifest.json": "artifact-manifest.schema.json",
     "dataset-card.json": "dataset-card.schema.json",
+    "agent-task.json": "agent-task.schema.json",
 }
 ID_PREFIX = "https://github.com/Quirk-Systems/.github/blob/main/.quirk/schemas/"
 

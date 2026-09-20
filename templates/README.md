@@ -17,6 +17,7 @@ every JSON example validates against its schema.
 | [`MOVE_RECEIPT.md`](./MOVE_RECEIPT.md) | Recording one bounded consequential action, its authority, and the resulting state change | pairs with an evidence receipt | `quirk-evidence-receipt` |
 | [`artifact-manifest.json`](./artifact-manifest.json) | Publishing any generated asset (image, audio, document, dataset slice, model output) with provenance | `.quirk/schemas/artifact-manifest.schema.json` | `quirk-artifact-forge` |
 | [`dataset-card.json`](./dataset-card.json) | Describing a dataset's origin, schema, license, and intended use before it is consumed | `.quirk/schemas/dataset-card.schema.json` | `quirk-dataset-card` |
+| [`agent-task.json`](./agent-task.json) | Proposing a bounded agent task with tools, paths, limits, owner, shutdown authority, evidence, and rollback | `.quirk/schemas/agent-task.schema.json` | `agent-task` issue form |
 
 Design tokens have no template; the seed source is `.quirk/design/tokens.json`
 and the contract is `.quirk/schemas/design-tokens.schema.json` (see

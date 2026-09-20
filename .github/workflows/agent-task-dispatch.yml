@@ -1,0 +1,71 @@
+name: Agent Task Intake
+
+on:
+  issues:
+    types: [opened, edited, labeled]
+
+# Read-only by default; the intake job adds issues write only to post its report.
+permissions:
+  contents: read
+
+concurrency:
+  group: agent-task-intake-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
+jobs:
+  intake:
+    name: intake
+    if: contains(github.event.issue.labels.*.name, 'agent-task')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read # checks out the validator from this repository's default branch
+      issues: write # posts one comment with the structural check result; nothing else is written
+    steps:
+      - name: Harden runner (egress audit)
+        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+
+      - name: Checkout validator
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            scripts/validate_agent_tasks.py
+            scripts/validate_manifest.py
+            .quirk/schemas/agent-task.schema.json
+            .quirk/schemas/repository-manifest.schema.json
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Write issue body to a file
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: printf '%s' "$ISSUE_BODY" > issue-body.md
+
+      - name: Check the agent-task form
+        id: check
+        continue-on-error: true
+        run: python3 -I scripts/validate_agent_tasks.py --issue-body issue-body.md --report report.md
+
+      - name: Post the check result
+        uses: actions/github-script@d746ffe35508b1917358783b479e04febd2b8f71 # v9.0.0
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('report.md', 'utf8');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body,
+            });
+
+      - name: Fail when the form is incomplete
+        if: steps.check.outcome == 'failure'
+        run: exit 1
