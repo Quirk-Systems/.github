@@ -4,7 +4,7 @@ Status: **Proposed foundation**
 Authority: `Quirk-Systems/.github`
 Applies to: every repository in the Quirk Systems organization
 
-> **Portfolio correction:** The naming decision, portfolio table, target topology, and Phase 0 cutover below are historical proposal text. Their empty/private `quirk-os` premise is stale: `project-scaffold` and `quirk-os` are distinct, public, non-empty repositories. See [the portfolio drift record](PORTFOLIO-DRIFT-2026-08-28.md) and the [candidate registry](../.quirk/repositories.json). Do not execute rename, archive, migration, or classification actions from these historical sections; a successor topology decision is required.
+> **Portfolio correction:** The naming decision, portfolio table, target topology, and Phase 0 cutover below are historical proposal text. Their empty/private `quirk-os` premise is stale: `project-scaffold` and `quirk-os` are distinct, public, non-empty repositories. See [the portfolio drift record](PORTFOLIO-DRIFT-2026-08-28.md) and the [truthful topology inventory](../.quirk/repositories.json). Do not execute rename, archive, migration, or classification actions from these historical sections; a successor topology decision is required.
 
 `Quirk-Systems/quirk-skills` is recorded as a private candidate Skill source repository. That source ownership grants no Skill admission, activation, runtime, Canon, deployment, or publication authority. Repository existence and observed development activity do not settle portfolio classification or operational admission.
 
@@ -35,9 +35,9 @@ Every repository must clearly declare which part of this loop it serves and whic
 
 ## 2. Historical naming proposal — stale premises
 
-The implemented kernel is currently `Quirk-Systems/project-scaffold`. The private `Quirk-Systems/quirk-os` repository is an empty placeholder.
+Historical proposal assumption (now stale): the implemented kernel was `Quirk-Systems/project-scaffold`, and `Quirk-Systems/quirk-os` was a private empty placeholder.
 
-The intended cutover is:
+Historical proposed cutover sequence (non-operative):
 
 1. Rename the empty `quirk-os` placeholder to `quirk-os-reserved`.
 2. Archive the renamed placeholder after confirming it contains no unique settings, secrets, environments, releases, packages, or branch rules.

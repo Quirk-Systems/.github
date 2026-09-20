@@ -1,0 +1,103 @@
+name: Decision
+description: Record a decision that needs an owner or a designated reviewer to dispose of an exact subject
+title: "decision: "
+labels:
+  - decision
+  - needs-owner
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this when work is blocked on a human disposition: topology, canon, classification, authority, or release.
+        An issue records the request; only the owner's review, a governed decision record, or a ruleset acts on it.
+
+  - type: dropdown
+    id: level
+    attributes:
+      label: Decision level
+      options:
+        - Organization ADR (topology, governance, classes, security posture, shared contracts)
+        - Repository ADR (one repository's architecture or operational behavior)
+        - Move receipt (one bounded consequential action)
+    validations:
+      required: true
+
+  - type: input
+    id: subject
+    attributes:
+      label: Exact subject
+      description: repository, base SHA, head SHA (40 characters each), and paths or artifact digests
+      placeholder: Quirk-Systems/example @ base…/head…, paths …
+    validations:
+      required: true
+
+  - type: textarea
+    id: decision
+    attributes:
+      label: Decision requested
+      description: One paragraph. What is decided and what it replaces.
+    validations:
+      required: true
+
+  - type: textarea
+    id: options
+    attributes:
+      label: Options and scores
+      description: Each option scored 1–5 for correctness, simplicity, operational burden, security, observability, migration risk, future compatibility, solo-operator maintainability. Recommend one.
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Receipt locators (receipt_id, source_repository, source_commit, source_path, receipt_sha256), commits, benchmarks. VERIFIED / INFERRED / UNKNOWN.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: classification
+    attributes:
+      label: Proposed classification
+      options:
+        - NO_DELTA
+        - IMPLEMENTATION_DETAIL
+        - MATERIAL_SCOPE_CHANGE
+        - AUTHORITY_CHANGE
+        - BOUNDARY_ONLY
+        - INSUFFICIENT_EVIDENCE
+    validations:
+      required: true
+
+  - type: dropdown
+    id: required_next
+    attributes:
+      label: Authority gate this decision feeds
+      options:
+        - merge
+        - canon
+        - runtime
+        - release
+        - deploy
+        - publish
+        - reauthorize
+    validations:
+      required: true
+
+  - type: textarea
+    id: consequences
+    attributes:
+      label: Consequences and rollback
+      description: Operational, migration, and compatibility consequences; affected consumers; how it is reversed.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Boundaries
+      options:
+        - label: This issue records a request. It is not itself a governed decision, an approval, or an authority action.
+          required: true
+        - label: If accepted, the canonical files or registries that must change are named above.
+          required: true

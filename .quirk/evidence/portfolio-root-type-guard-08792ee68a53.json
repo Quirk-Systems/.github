@@ -1,0 +1,48 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.portfolio-root-type-guard.08792ee68a53",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "9d6c7585b7b81347fd2d4d9863748a2c0c5d375d",
+    "commit": "08792ee68a530a3ec396d1444741d93630f249d3",
+    "changed_paths": [
+      "scripts/validate_portfolio.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.portfolio-root-type-guard.08792ee68a53",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Reorders the portfolio validator root-type guard so non-object JSON fails with the intended validator error before structural helper checks run; hosted GitHub execution, merge approval, and owner decisions remain unproven.",
+      "evidence_paths": [
+        "scripts/validate_portfolio.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "scripts/validate_portfolio.py",
+      "state": "present",
+      "git_blob": "739516e1dae3ab4eb5cce7892a29530955ac8cba",
+      "sha256": "sha256:4edf8482d0b8bdc7c49325efca146b2a68d36132556677a22e43b718ede6fe33"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T20:03:22Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:53aca3267834457920c9a431763e58f260ec1974c3865509a4380846f699a5ba"
+}

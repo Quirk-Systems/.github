@@ -1,0 +1,43 @@
+name: Dependency Review
+
+# Requires the repository's Dependency graph (Settings -> Code security), an
+# owner-only setting that repository content cannot enable; the action fails
+# at startup without it ("Dependency review is not supported on this
+# repository"). The pull_request trigger is restored at the owner's request so
+# the check runs as soon as that setting is on; until then a red check here is
+# the settings gap, not a dependency finding. workflow_dispatch stays so the
+# check can be exercised on demand.
+on:
+  pull_request:
+  workflow_dispatch:
+
+# Reads the dependency graph diff only; no comment is posted, so no PR write scope.
+permissions:
+  contents: read
+
+concurrency:
+  group: dependency-review-${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    name: review
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Harden runner (egress audit)
+        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Review dependency changes
+        uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          fail-on-severity: high
+          deny-licenses: AGPL-1.0-only, AGPL-1.0-or-later, AGPL-3.0-only, AGPL-3.0-or-later, SSPL-1.0
+          comment-summary-in-pr: never

@@ -1,143 +1,452 @@
 {
-  "registry_version": "0.1.1-candidate",
+  "registry_version": "0.3.0",
   "authority": "Quirk-Systems/.github",
-  "updated_at": "2026-08-28",
-  "status": "candidate_truth_repair_pending_independent_merge_gate",
+  "snapshot": "2026-08-21",
+  "scope": {
+    "organization": "Quirk-Systems",
+    "expected_organization_repository_count": 17,
+    "expected_adjacent_repository_count": 2,
+    "adjacent_repository_selection_rule": "Track exactly the two personal Quirk commerce candidates whose names and product surfaces create a material boundary question; neither is organization canon until an owner selects and governs one."
+  },
   "repositories": [
     {
       "repository": "Quirk-Systems/.github",
+      "scope": "organization",
       "visibility": "public",
       "primary_class": "canon",
       "lifecycle": "active",
-      "canonical": true,
-      "purpose": "Public organization governance, semantic authority, repository contracts, portfolio truth, and reusable workflows"
+      "owner": {
+        "state": "open"
+      },
+      "canonical_responsibility": "Public organization canon, shared governance contracts, reusable workflows, and truthful topology/evidence validation.",
+      "consumers_and_dependencies": [
+        "Every Quirk repository that inherits organization governance or evidence policy.",
+        "Human reviewers and operators who evaluate canonical governance files in Git."
+      ],
+      "extraction_or_retirement_rule": "Retain as the public governance source unless a reviewed organization-level successor replaces it.",
+      "deployment_security_boundary": "Publishes Git-based governance and workflow definitions only; inclusion here grants no runtime, deployment, or merge authority.",
+      "evidence_anchors": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/Quirk-Systems/.github"
+        },
+        {
+          "label": "Repository strategy",
+          "url": "https://github.com/Quirk-Systems/.github/blob/main/docs/REPOSITORY_STRATEGY.md"
+        }
+      ]
     },
     {
       "repository": "Quirk-Systems/.github-private",
+      "scope": "organization",
       "visibility": "private",
       "primary_class": "canon",
       "lifecycle": "active",
-      "canonical": true,
-      "purpose": "Internal policy, sensitive organization templates, and private operational governance"
+      "owner": {
+        "state": "open"
+      },
+      "canonical_responsibility": "Private governance boundary for sensitive organization policy, internal templates, and owner-only operational controls.",
+      "consumers_and_dependencies": [
+        "Organization owners maintaining private governance material."
+      ],
+      "extraction_or_retirement_rule": "Keep separate while sensitive organization governance requires a private repository boundary.",
+      "deployment_security_boundary": "Private GitHub governance boundary for sensitive policy and templates; inclusion here grants no runtime or deployment authority.",
+      "evidence_anchors": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/Quirk-Systems/.github-private"
+        }
+      ]
     },
     {
       "repository": "Quirk-Systems/project-scaffold",
+      "scope": "organization",
       "visibility": "public",
-      "primary_class": "kernel",
+      "primary_class": "reference",
       "lifecycle": "active",
-      "canonical": true,
-      "purpose": "Implemented Quirk kernel/operator codebase retained as a distinct current repository",
-      "topology_status": "REQUIRES_OWNER_DECISION",
-      "historical_note": "Earlier strategy proposed renaming this repository to quirk-os; current observed topology contains both repositories and does not prove that cutover occurred."
+      "owner": {
+        "state": "open"
+      },
+      "canonical_responsibility": "Public reference application scaffold and comparison point; it is not the admitted Quirk OS kernel at this cut.",
+      "consumers_and_dependencies": [
+        "Reference implementations and product slices that need a public reusable scaffold.",
+        "Topology review that distinguishes scaffold/reference work from kernel authority."
+      ],
+      "extraction_or_retirement_rule": "Keep as a reference repository until an owner-approved topology decision merges, renames, or retires it.",
+      "deployment_security_boundary": "Public reference code may run independently, but inclusion here grants no kernel admission, production deployment, or canonical authority.",
+      "evidence_anchors": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/Quirk-Systems/project-scaffold"
+        }
+      ]
     },
     {
       "repository": "Quirk-Systems/quirk-os",
+      "scope": "organization",
       "visibility": "public",
       "primary_class": "kernel",
-      "lifecycle": "active",
-      "canonical": false,
-      "purpose": "Candidate Quirk OS runtime, Skill runtime/projection architecture, and bounded system candidates",
-      "topology_status": "ACTIVE_OBSERVED_REQUIRES_OWNER_RECONCILIATION",
-      "historical_note": "This repository is no longer accurately described as a private empty placeholder."
+      "lifecycle": "candidate",
+      "owner": {
+        "state": "open"
+      },
+      "canonical_responsibility": "Candidate kernel/runtime boundary for Quirk OS and Skill runtime/projection architecture; not admitted or canonical at this cut.",
+      "consumers_and_dependencies": [
+        "Candidate runtime and control-plane work evaluated against organization canon.",
+        "Human review of kernel-boundary proposals and admission evidence."
+      ],
+      "extraction_or_retirement_rule": "Promote only through owner-approved admission evidence; otherwise retain or reclassify it as a candidate boundary.",
+      "deployment_security_boundary": "Candidate public runtime boundary; no admission, deployment, or production proof is granted by this inventory alone.",
+      "evidence_anchors": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/Quirk-Systems/quirk-os"
+        }
+      ]
     },
     {
       "repository": "Quirk-Systems/quirk-core",
+      "scope": "organization",
       "visibility": "public",
-      "primary_class": "canon",
-      "lifecycle": "active",
-      "canonical": false,
-      "purpose": "Shared Quirk contracts, governance documentation, schemas, validators, and canonical-candidate definitions",
-      "classification_status": "PROPOSED_PENDING_REVIEW"
-    },
-    {
-      "repository": "Quirk-Systems/quirk-skills",
-      "visibility": "private",
-      "primary_class": "instrument",
-      "lifecycle": "incubating",
-      "canonical": false,
-      "purpose": "Portable Quirk Skill candidate source packages and attributable package-local evaluation evidence",
-      "authority_boundary": "Candidate source only; no admission, activation, runtime, canon, deployment, or publication authority",
-      "classification_status": "PROPOSED_PENDING_REVIEW"
-    },
-    {
-      "repository": "Quirk-Systems/quirk-data",
-      "visibility": "private",
-      "primary_class": "registry",
-      "lifecycle": "reserved",
-      "canonical": false,
-      "purpose": "Potential persistent world-state, evidence, provenance, graph, and data projection boundary",
-      "extraction_trigger": "A second independent consumer, separate security boundary, or independent release/runtime requirement"
-    },
-    {
-      "repository": "Quirk-Systems/quirk-me",
-      "visibility": "private",
-      "primary_class": "interface",
-      "lifecycle": "reserved",
-      "canonical": false,
-      "purpose": "Potential identity, preference, consent, memory, and human-authority boundary",
-      "extraction_trigger": "Independent product surface, privacy boundary, or second consumer of identity and preference contracts"
-    },
-    {
-      "repository": "Quirk-Systems/quirk-run",
-      "visibility": "private",
-      "primary_class": "kernel",
-      "lifecycle": "reserved",
-      "canonical": false,
-      "purpose": "Potential execution, containment, durable workflow, receipt, retry, and agent-run boundary",
-      "extraction_trigger": "Workers, CLI, scheduled agents, or another runtime become real independent consumers"
+      "primary_class": "doctrine",
+      "lifecycle": "candidate",
+      "owner": {
+        "state": "open"
+      },
+      "canonical_responsibility": "Candidate doctrine boundary for shared contracts, schemas, validators, and canonical-candidate definitions.",
+      "consumers_and_dependencies": [
+        "Repositories evaluating shared contracts before kernel admission.",
+        "Human review deciding whether this doctrine remains separate or folds into admitted kernel canon."
+      ],
+      "extraction_or_retirement_rule": "Keep separate only while it has a distinct owned contract and consumer set; otherwise fold doctrine into the admitted kernel canon.",
+      "deployment_security_boundary": "Public contract/doctrine repository; inclusion here grants no runtime or canonical authority by itself.",
+      "evidence_anchors": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/Quirk-Systems/quirk-core"
+        }
+      ]
     },
     {
       "repository": "Quirk-Systems/quirk-feed",
+      "scope": "organization",
       "visibility": "public",
       "primary_class": "interface",
       "lifecycle": "active",
-      "canonical": false,
-      "purpose": "Preparation, ingestion, discovery, source taxonomy, research registry, and derived-knowledge surface"
+      "owner": {
+        "state": "open"
+      },
+      "canonical_responsibility": "Preparation, ingestion, discovery, and derived-knowledge interface surface.",
+      "consumers_and_dependencies": [
+        "Humans and agents using discovery/preparation surfaces over Quirk state.",
+        "Any future kernels or registries that project into a feed interface."
+      ],
+      "extraction_or_retirement_rule": "Retain while it serves a distinct interface surface; merge back only if that surface stops being an independent consumer.",
+      "deployment_security_boundary": "Public interface boundary over projected state; no underlying canonical or runtime authority is granted here.",
+      "evidence_anchors": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/Quirk-Systems/quirk-feed"
+        }
+      ]
     },
     {
       "repository": "Quirk-Systems/quirk-generator",
+      "scope": "organization",
       "visibility": "public",
       "primary_class": "instrument",
       "lifecycle": "active",
-      "canonical": false,
-      "purpose": "Bounded multi-model visual-generation instrument"
+      "owner": {
+        "state": "open"
+      },
+      "canonical_responsibility": "Bounded multi-model visual-generation instrument with explicit inputs and outputs.",
+      "consumers_and_dependencies": [
+        "Humans and agents invoking a bounded image-generation capability."
+      ],
+      "extraction_or_retirement_rule": "Retain while it remains a distinct executable instrument rather than shared kernel or canon infrastructure.",
+      "deployment_security_boundary": "Public instrument boundary; inclusion here grants no shared-kernel, admission, or production authority.",
+      "evidence_anchors": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/Quirk-Systems/quirk-generator"
+        }
+      ]
     },
     {
       "repository": "Quirk-Systems/quirk-beauty",
+      "scope": "organization",
       "visibility": "private",
       "primary_class": "realm",
-      "lifecycle": "incubating",
-      "canonical": false,
-      "purpose": "Realm proof for deterministic aesthetic interpretation and persisted palette generation",
-      "retirement_condition": "Archive or merge patterns back into Quirk OS after reusable contracts are extracted"
+      "lifecycle": "candidate",
+      "owner": {
+        "state": "open"
+      },
+      "canonical_responsibility": "Realm proof for deterministic aesthetic interpretation and persisted palette generation.",
+      "consumers_and_dependencies": [
+        "Realm-specific proof work testing reusable aesthetic-transformation patterns."
+      ],
+      "extraction_or_retirement_rule": "Archive or merge patterns back into Quirk OS after reusable contracts are extracted.",
+      "deployment_security_boundary": "Private realm proof boundary; inclusion here grants no canon, runtime, or deployment authority.",
+      "evidence_anchors": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/Quirk-Systems/quirk-beauty"
+        }
+      ]
     },
     {
       "repository": "Quirk-Systems/quirk-pet",
+      "scope": "organization",
       "visibility": "private",
       "primary_class": "realm",
-      "lifecycle": "incubating",
-      "canonical": false,
-      "purpose": "Realm proof for persistent state, time decay, bounded actions, consequences, and derived mood",
-      "retirement_condition": "Archive or convert to a maintained reference after state-machine patterns are captured"
+      "lifecycle": "candidate",
+      "owner": {
+        "state": "open"
+      },
+      "canonical_responsibility": "Realm proof for persistent state, time decay, bounded actions, consequences, and derived mood.",
+      "consumers_and_dependencies": [
+        "Realm-specific proof work testing reusable state-machine and consequence patterns."
+      ],
+      "extraction_or_retirement_rule": "Archive or convert to a maintained reference after state-machine patterns are captured.",
+      "deployment_security_boundary": "Private realm proof boundary; inclusion here grants no canon, runtime, or deployment authority.",
+      "evidence_anchors": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/Quirk-Systems/quirk-pet"
+        }
+      ]
     },
     {
       "repository": "Quirk-Systems/quirk-town",
+      "scope": "organization",
       "visibility": "private",
       "primary_class": "realm",
-      "lifecycle": "incubating",
-      "canonical": false,
-      "purpose": "Realm proof for directory identity, residency, listings, and claimable space",
-      "retirement_condition": "Archive or evolve only after a real Quirk ecosystem directory requirement is validated"
+      "lifecycle": "candidate",
+      "owner": {
+        "state": "open"
+      },
+      "canonical_responsibility": "Realm proof for directory identity, residency, listings, and claimable space.",
+      "consumers_and_dependencies": [
+        "Realm-specific proof work testing reusable directory and residency patterns."
+      ],
+      "extraction_or_retirement_rule": "Archive or evolve only after a real Quirk ecosystem directory requirement is validated.",
+      "deployment_security_boundary": "Private realm proof boundary; inclusion here grants no canon, runtime, or deployment authority.",
+      "evidence_anchors": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/Quirk-Systems/quirk-town"
+        }
+      ]
     },
     {
-      "repository": "Quirk-Systems/demo-repository",
+      "repository": "Quirk-Systems/Quirk",
+      "scope": "organization",
       "visibility": "private",
-      "primary_class": "sandbox",
-      "lifecycle": "proposed_archive",
-      "canonical": false,
-      "purpose": "GitHub feature demonstration and disposable workflow testing",
-      "retirement_condition": "Archive when no unique GitHub feature test depends on it"
+      "primary_class": "reservation",
+      "lifecycle": "reserved",
+      "owner": {
+        "state": "open"
+      },
+      "canonical_responsibility": "Reserved repository slot and lineage reference; no current canonical, runtime, or product authority is established by the name alone.",
+      "consumers_and_dependencies": [
+        "Maintenance records that reference historical Quirk source material or lineage."
+      ],
+      "extraction_or_retirement_rule": "Keep reserved until an owner-approved classification or retirement decision replaces name-only lineage handling.",
+      "deployment_security_boundary": "Private reserved boundary; inclusion here does not establish canon, runtime, or deployment scope.",
+      "evidence_anchors": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/Quirk-Systems/Quirk"
+        },
+        {
+          "label": "Maintenance index",
+          "url": "https://github.com/Quirk-Systems/.github/blob/main/docs/governance/MAINTENANCE_INDEX.md"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/quirk-data",
+      "scope": "organization",
+      "visibility": "private",
+      "primary_class": "reservation",
+      "lifecycle": "reserved",
+      "owner": {
+        "state": "open"
+      },
+      "canonical_responsibility": "Reserved candidate boundary for persistent world-state, evidence, provenance, graph, and data projections.",
+      "consumers_and_dependencies": [
+        "No verified independent consumer at the cut; retained only as a reserved boundary candidate."
+      ],
+      "extraction_or_retirement_rule": "Activate only if a second independent consumer, separate security boundary, or independent release/runtime requirement becomes real.",
+      "deployment_security_boundary": "Private reserved data-boundary candidate; inclusion here grants no storage, runtime, or production authority.",
+      "evidence_anchors": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/Quirk-Systems/quirk-data"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/quirk-me",
+      "scope": "organization",
+      "visibility": "private",
+      "primary_class": "reservation",
+      "lifecycle": "reserved",
+      "owner": {
+        "state": "open"
+      },
+      "canonical_responsibility": "Reserved candidate boundary for identity, preference, consent, memory, and human-authority surfaces.",
+      "consumers_and_dependencies": [
+        "No verified independent consumer at the cut; retained only as a reserved boundary candidate."
+      ],
+      "extraction_or_retirement_rule": "Activate only if an independent product surface, privacy boundary, or second consumer of identity and preference contracts becomes real.",
+      "deployment_security_boundary": "Private reserved identity-boundary candidate; inclusion here grants no live preference, memory, or runtime authority.",
+      "evidence_anchors": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/Quirk-Systems/quirk-me"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/quirk-run",
+      "scope": "organization",
+      "visibility": "private",
+      "primary_class": "reservation",
+      "lifecycle": "reserved",
+      "owner": {
+        "state": "open"
+      },
+      "canonical_responsibility": "Reserved candidate boundary for execution, containment, durable workflow, receipt, retry, and agent-run concerns.",
+      "consumers_and_dependencies": [
+        "No verified independent consumer at the cut; retained only as a reserved boundary candidate."
+      ],
+      "extraction_or_retirement_rule": "Activate only if workers, a CLI, scheduled agents, or another runtime become real independent consumers.",
+      "deployment_security_boundary": "Private reserved execution-boundary candidate; inclusion here grants no worker, scheduler, or deployment authority.",
+      "evidence_anchors": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/Quirk-Systems/quirk-run"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/quirk-dog",
+      "scope": "organization",
+      "visibility": "private",
+      "primary_class": "reservation",
+      "lifecycle": "reserved",
+      "owner": {
+        "state": "open"
+      },
+      "canonical_responsibility": "Reserved repository slot with no approved standalone responsibility recorded at the cut.",
+      "consumers_and_dependencies": [
+        "No verified independent consumer at the cut; retained only as a reserved repository slot."
+      ],
+      "extraction_or_retirement_rule": "Keep reserved until an owner-approved product boundary, merge-back, or retirement decision exists.",
+      "deployment_security_boundary": "Private reserved boundary; inclusion here grants no product, runtime, or deployment authority.",
+      "evidence_anchors": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/Quirk-Systems/quirk-dog"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/quirk-music",
+      "scope": "organization",
+      "visibility": "private",
+      "primary_class": "reservation",
+      "lifecycle": "reserved",
+      "owner": {
+        "state": "open"
+      },
+      "canonical_responsibility": "Reserved repository slot with no approved standalone responsibility recorded at the cut.",
+      "consumers_and_dependencies": [
+        "No verified independent consumer at the cut; retained only as a reserved repository slot."
+      ],
+      "extraction_or_retirement_rule": "Keep reserved until an owner-approved product boundary, merge-back, or retirement decision exists.",
+      "deployment_security_boundary": "Private reserved boundary; inclusion here grants no product, runtime, or deployment authority.",
+      "evidence_anchors": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/Quirk-Systems/quirk-music"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/quirk-preference",
+      "scope": "organization",
+      "visibility": "private",
+      "primary_class": "reservation",
+      "lifecycle": "reserved",
+      "owner": {
+        "state": "open"
+      },
+      "canonical_responsibility": "Reserved repository slot with no approved standalone responsibility recorded at the cut.",
+      "consumers_and_dependencies": [
+        "No verified independent consumer at the cut; retained only as a reserved repository slot."
+      ],
+      "extraction_or_retirement_rule": "Keep reserved until an owner-approved product boundary, merge-back, or retirement decision exists.",
+      "deployment_security_boundary": "Private reserved boundary; inclusion here grants no product, runtime, or deployment authority.",
+      "evidence_anchors": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/Quirk-Systems/quirk-preference"
+        }
+      ]
+    },
+    {
+      "repository": "bryansayler/quirk-commerce",
+      "scope": "adjacent",
+      "visibility": "private",
+      "primary_class": "commerce",
+      "lifecycle": "candidate",
+      "owner": {
+        "state": "open"
+      },
+      "canonical_responsibility": "Adjacent personal commerce candidate with a potential payment/PII boundary; it is not organization canon.",
+      "consumers_and_dependencies": [
+        "Potential future commerce surface pending owner selection and explicit payment/PII ownership."
+      ],
+      "extraction_or_retirement_rule": "Remain adjacent until an owner selects a governed commerce boundary; otherwise never treat it as organization canon.",
+      "deployment_security_boundary": "Adjacent personal repository outside the organization; inclusion here grants no organization runtime, deployment, or canonical authority.",
+      "evidence_anchors": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/bryansayler/quirk-commerce"
+        },
+        {
+          "label": "Truthful topology cut spec",
+          "url": "https://github.com/Quirk-Systems/.github/blob/main/docs/governance/TRUTHFUL_TOPOLOGY_CUT_SPEC.md"
+        }
+      ]
+    },
+    {
+      "repository": "bryansayler/quirk-beauty-store",
+      "scope": "adjacent",
+      "visibility": "private",
+      "primary_class": "commerce",
+      "lifecycle": "candidate",
+      "owner": {
+        "state": "open"
+      },
+      "canonical_responsibility": "Adjacent personal commerce candidate with a potential payment/PII boundary; it is not organization canon.",
+      "consumers_and_dependencies": [
+        "Potential future commerce surface pending owner selection and explicit payment/PII ownership."
+      ],
+      "extraction_or_retirement_rule": "Remain adjacent until an owner selects a governed commerce boundary; otherwise never treat it as organization canon.",
+      "deployment_security_boundary": "Adjacent personal repository outside the organization; inclusion here grants no organization runtime, deployment, or canonical authority.",
+      "evidence_anchors": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/bryansayler/quirk-beauty-store"
+        },
+        {
+          "label": "Truthful topology cut spec",
+          "url": "https://github.com/Quirk-Systems/.github/blob/main/docs/governance/TRUTHFUL_TOPOLOGY_CUT_SPEC.md"
+        }
+      ]
     }
-  ],
-  "unclassified_policy": "Repositories observed outside this registry remain OBSERVED_UNCLASSIFIED until an owner-approved classification is merged. Existence or naming alone does not establish purpose, lifecycle, authority, or canon."
+  ]
 }

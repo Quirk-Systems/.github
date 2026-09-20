@@ -1,0 +1,72 @@
+{
+  "schema_version": "dataset-card.v1",
+  "dataset_id": "qdataset.quirk-governance-corpus",
+  "title": "Quirk governance corpus",
+  "summary": "The machine-readable governance state of Quirk-Systems/.github: concept registry, portfolio registry, repository manifest, evidence receipts, JSON schemas, design-token source, and Copilot evaluation fixtures. One record is one JSON document.",
+  "status": "candidate",
+  "owner": "@bryansayler",
+  "source": {
+    "repository": "Quirk-Systems/.github",
+    "commit": "896d9aa7505582535ba9e18758f5a017d8da69d7",
+    "paths": [
+      ".quirk/",
+      "docs/copilot-maintenance/scenarios.json",
+      "docs/copilot-maintenance/rubric.json",
+      "docs/copilot-maintenance/evaluation-answers.json"
+    ]
+  },
+  "collection": {
+    "method": "Authored and generated in-repository through reviewed pull requests; receipts are produced by scripts/create_evidence_receipt.py from tested Git subjects.",
+    "period": "2026-07 to present",
+    "contains_personal_data": false,
+    "consent_basis": null
+  },
+  "structure": {
+    "format": "UTF-8 JSON documents",
+    "record_unit": "one JSON document (registry, manifest, receipt, schema, token file, or fixture)",
+    "schema_reference": ".quirk/schemas/ (receipts, decisions, manifests, portfolio, artifacts, dataset cards, design tokens)",
+    "splits": [],
+    "record_count": 20
+  },
+  "license": {
+    "spdx": "Apache-2.0",
+    "rights_holder": "Quirk Systems",
+    "attribution": null
+  },
+  "data_classification": "public",
+  "intended_use": [
+    "Fixtures for validator and schema tests in this repository",
+    "Dry evaluation of agent profiles and skills",
+    "Reference example of the Quirk dataset-card contract applied to real data"
+  ],
+  "out_of_scope_use": [
+    "Training or fine-tuning any model",
+    "Inferring repository purpose, ownership, or lifecycle from observed-unclassified entries",
+    "Treating any receipt or decision as authority for merge, canon, release, or deployment"
+  ],
+  "known_limitations": [
+    "Record count is pinned to the named commit and changes with every receipt",
+    "GitHub handles appear as authors and owners; no other personal data was observed in a full read on 2026-09-20",
+    "The evaluation fixtures are six synthetic cases, not a benchmark"
+  ],
+  "provenance": {
+    "created_at": "2026-09-20",
+    "produced_by": "agent:quirk-dataset-card",
+    "evidence_receipts": [
+      "qreceipt.repository-contract-portfolio.45003f50ff79"
+    ]
+  },
+  "semantic_impact": {
+    "change_class": "reuse-canon",
+    "concepts": [
+      "entity.asset",
+      "concept.provenance"
+    ]
+  },
+  "authority": {
+    "effect": "none",
+    "required_next": [
+      "review"
+    ]
+  }
+}

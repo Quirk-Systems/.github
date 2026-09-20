@@ -1,0 +1,153 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.autonomous-operations.b0fdb9ef36c3",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "d77433e35fb5186388c76360e8b000297dab8566",
+    "commit": "b0fdb9ef36c390329a107cbd8d3c378c5c513d28",
+    "changed_paths": [
+      ".github/ISSUE_TEMPLATE/agent-task.yml",
+      ".github/workflows/agent-task-dispatch.yml",
+      ".github/workflows/reusable-agent-task-contract.yml",
+      ".quirk/agent-tasks/README.md",
+      ".quirk/schemas/agent-task.schema.json",
+      "docs/governance/AUTONOMOUS_OPERATIONS.md",
+      "scripts/validate_agent_tasks.py",
+      "scripts/validate_templates.py",
+      "templates/README.md",
+      "templates/agent-task.json",
+      "tests/test_agent_tasks.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.autonomous-operations.b0fdb9ef36c3",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The cited bytes add the agent-task contract schema, validator, tests, example, issue form, a reusable contract-validation workflow, an issue-intake workflow whose only write is one comment, and the autonomous-operations document. Unit tests, all validators, ruff, actionlint, and zizmor passed locally on this subject. No agent is dispatched, authorized, or scheduled; no hosted workflow run, required check, or merge approval is established.",
+      "evidence_paths": [
+        ".github/ISSUE_TEMPLATE/agent-task.yml",
+        ".github/workflows/agent-task-dispatch.yml",
+        ".github/workflows/reusable-agent-task-contract.yml",
+        ".quirk/agent-tasks/README.md",
+        ".quirk/schemas/agent-task.schema.json",
+        "docs/governance/AUTONOMOUS_OPERATIONS.md",
+        "scripts/validate_agent_tasks.py",
+        "scripts/validate_templates.py",
+        "templates/README.md",
+        "templates/agent-task.json",
+        "tests/test_agent_tasks.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/ISSUE_TEMPLATE/agent-task.yml",
+      "state": "present",
+      "git_blob": "4836e07a23ea3d7b8944885a81d444bbd0f4d8c5",
+      "sha256": "sha256:4bc2801023138a30c9fd0d09d56c60dc0081ec2063da84bbdd32f8e76ceffe84"
+    },
+    {
+      "path": ".github/workflows/agent-task-dispatch.yml",
+      "state": "present",
+      "git_blob": "856d5a35455061d7088d8bf8be84d0063e8c0328",
+      "sha256": "sha256:efc5f5e88cfd0f5d5bf6b4f6b8283dd60184a160c8ed0b295a993137349fdb11"
+    },
+    {
+      "path": ".github/workflows/reusable-agent-task-contract.yml",
+      "state": "present",
+      "git_blob": "631adbd608f1546806a8bc5fb2211a003f1ecf40",
+      "sha256": "sha256:0879a72bc149059a08ad76099b4adefc398e273e5c683982acf4cb4d27d350fc"
+    },
+    {
+      "path": ".quirk/agent-tasks/README.md",
+      "state": "present",
+      "git_blob": "781f927a6c1b2f5603adc4e63415d0c93afeade3",
+      "sha256": "sha256:23c04ec174837a01b1c6c422edd2135e2dc8bc4f10642da3c237a6b7d50434cc"
+    },
+    {
+      "path": ".quirk/schemas/agent-task.schema.json",
+      "state": "present",
+      "git_blob": "7a06f2c53bfb62a5cc6f91b38904bacbbc42f9aa",
+      "sha256": "sha256:e51049f301d7ed37c74ec5137a277eaf7988396964371404e6e066b89abd6de0"
+    },
+    {
+      "path": "docs/governance/AUTONOMOUS_OPERATIONS.md",
+      "state": "present",
+      "git_blob": "a24188862fb28bbf82637885fa4cb50630e9fa89",
+      "sha256": "sha256:7b44b802b03f2cdded1ed85d1b00fb4377d0ec1233c445cbd0a05b90046b7892"
+    },
+    {
+      "path": "scripts/validate_agent_tasks.py",
+      "state": "present",
+      "git_blob": "89d82004655bcbfed4cd73cf4dc9f13e65396931",
+      "sha256": "sha256:f1923121d592e99ed1c437686ee28c26cc0485d43da73acff5d2faa8770b1ba2"
+    },
+    {
+      "path": "scripts/validate_templates.py",
+      "state": "present",
+      "git_blob": "91e97727dca88fb7063171d714f1785c97a8f63b",
+      "sha256": "sha256:701a3dba279aa7d38ae5a0364d920937347b132b46f93fb56aa82c37038af8b3"
+    },
+    {
+      "path": "templates/README.md",
+      "state": "present",
+      "git_blob": "2d3f30aa64a8742974d54be8b101a1dd08715aad",
+      "sha256": "sha256:efb46b273cfca0bcb761c4b2c44ed8be272c6e819daecff0fa1ec46bf3dc4ded"
+    },
+    {
+      "path": "templates/agent-task.json",
+      "state": "present",
+      "git_blob": "8dae6aa81261dabd67031c09087da0be3e4626f7",
+      "sha256": "sha256:06987d251247ecea0fdd1f185c361376c03dc27490f0dc07bc634ab7a9907f49"
+    },
+    {
+      "path": "tests/test_agent_tasks.py",
+      "state": "present",
+      "git_blob": "f5a626ec0b24a9e8e282d893f83c0a5118969fe3",
+      "sha256": "sha256:cddf52f772789770473a30e6fdddbf8c79fce05ddf542d2c4d06675a3455db02"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_agent_tasks.py",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_templates.py",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "uv tool run --quiet zizmor --offline --persona pedantic .github/workflows",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check d77433e35fb5186388c76360e8b000297dab8566 b0fdb9ef36c390329a107cbd8d3c378c5c513d28",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T12:36:37Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:8552e38cad734fa6e6393a023ba458c4a8f47de2f3cba163a458e7558830f4d8"
+}

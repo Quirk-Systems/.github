@@ -1,0 +1,112 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.governance-contracts-topology-repair.2f9e74dad035",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "e1782a1775cd0688c147e92e8ae7d5335bac7e67",
+    "commit": "2f9e74dad0355219ed811bc345b696a296c7921a",
+    "changed_paths": [
+      ".quirk/repositories.json",
+      ".quirk/schemas/manual-pr-ledger.schema.json",
+      ".quirk/schemas/repository-inventory.schema.json",
+      "docs/PORTFOLIO.md",
+      "docs/REPOSITORY_STRATEGY.md",
+      "profile/README.md",
+      "scripts/portfolio_report.py",
+      "scripts/validate_portfolio.py",
+      "tests/test_portfolio.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.governance-contracts-topology-repair.2f9e74dad035",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Repairs the Governance Contracts topology, portfolio projection, and schema-id mismatches so the truthful 2026-08-21 inventory, generated portfolio, and template validation contracts align at this subject; hosted GitHub execution, merge approval, and owner decisions remain unproven.",
+      "evidence_paths": [
+        ".quirk/repositories.json",
+        ".quirk/schemas/manual-pr-ledger.schema.json",
+        ".quirk/schemas/repository-inventory.schema.json",
+        "docs/PORTFOLIO.md",
+        "docs/REPOSITORY_STRATEGY.md",
+        "profile/README.md",
+        "scripts/portfolio_report.py",
+        "scripts/validate_portfolio.py",
+        "tests/test_portfolio.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".quirk/repositories.json",
+      "state": "present",
+      "git_blob": "a54aedaca1c93e3c45056adb0f698c2f0fbf36c4",
+      "sha256": "sha256:c098d8c528f45e9d1764c5ff79d1cffbe56844c0ac2cd4c7cc4ca169e035cd89"
+    },
+    {
+      "path": ".quirk/schemas/manual-pr-ledger.schema.json",
+      "state": "present",
+      "git_blob": "8524606b2dcf9fe4f2d86c907210c5ddf1ce3c82",
+      "sha256": "sha256:caba22514a2c081dc55ab70b824eae9d6dfb3491eeedb2471688e11af9d0f167"
+    },
+    {
+      "path": ".quirk/schemas/repository-inventory.schema.json",
+      "state": "present",
+      "git_blob": "d379e83f7c1e0af471b13a12cf673a15fa86220b",
+      "sha256": "sha256:3599735fb6191b7168ebf8d69f8e94446cb3847b5a7d5f8fed01ce78b24ce66e"
+    },
+    {
+      "path": "docs/PORTFOLIO.md",
+      "state": "present",
+      "git_blob": "deb9a5899a464638ac3d2adb834a8cf4ae8b9a14",
+      "sha256": "sha256:e510d408fa1c09f0e7d91511a62d39822f53bad1db8bf300e07b3d3e14ca6383"
+    },
+    {
+      "path": "docs/REPOSITORY_STRATEGY.md",
+      "state": "present",
+      "git_blob": "495501eaf4d16d928dce47a7bef0c7d0ab0d7603",
+      "sha256": "sha256:505d73b65368475f288601163b81107d26147acd2d274ec7b86a9e462aa20929"
+    },
+    {
+      "path": "profile/README.md",
+      "state": "present",
+      "git_blob": "9834f42a445791a904fd42c09d4661d4426fae7a",
+      "sha256": "sha256:59a625a6adff5a03b17ab3ea0e37b2ef245c560e69152cfe9423c12f23b7ec98"
+    },
+    {
+      "path": "scripts/portfolio_report.py",
+      "state": "present",
+      "git_blob": "6fa2ff76c112ce9ff7d37b3c618f33cd9e571ab9",
+      "sha256": "sha256:979c568b3cf01a6d532925c1400480aa8d6ecf24d6a5d6b05c5aeb6b827180c0"
+    },
+    {
+      "path": "scripts/validate_portfolio.py",
+      "state": "present",
+      "git_blob": "6a96939107ec200f76dbc9412c70e2ce73cca418",
+      "sha256": "sha256:b660f7c4aa8c6340137d2af3ef3a22cc04e8c2d2b1951530cd1b9dab3c53b7c3"
+    },
+    {
+      "path": "tests/test_portfolio.py",
+      "state": "present",
+      "git_blob": "95c3b455c07829f11c4510009f24b094dc18bd94",
+      "sha256": "sha256:34168fc830773139ddac3c4e9fe309a9c5a5d4366cb72d69544735108eaa0aa1"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T19:59:08Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:fc616da8f18fdf5f0fcddec88d53220bb4b64fb50824a9c19581b1371ad7e7a3"
+}

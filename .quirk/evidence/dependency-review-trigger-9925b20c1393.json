@@ -1,0 +1,82 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.dependency-review-trigger.9925b20c1393",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "8eff422abb598bf3e4157ff3ae8e2e975acce62e",
+    "commit": "9925b20c13935a2839beb0cb44bd0c87f2afd838",
+    "changed_paths": [
+      ".github/workflows/dependency-review.yml",
+      "docs/governance/AUTONOMOUS_OPERATIONS.md",
+      "docs/governance/REUSABLE_WORKFLOWS.md",
+      "docs/superpowers/plans/2026-09-20-org-control-plane.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.dependency-review-trigger.9925b20c1393",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The cited bytes restore the pull_request trigger on the self-applied dependency-review workflow and update the catalog, operations doc, and plan ledger to match. 133 unit tests, all validators, ruff, actionlint, and zizmor (offline, pedantic) passed locally on this subject. Whether the hosted Dependency Review check passes depends on the owner-only Dependency graph setting, which repository content cannot enable and which was not readable as enabled at the time of this receipt.",
+      "evidence_paths": [
+        ".github/workflows/dependency-review.yml",
+        "docs/governance/AUTONOMOUS_OPERATIONS.md",
+        "docs/governance/REUSABLE_WORKFLOWS.md",
+        "docs/superpowers/plans/2026-09-20-org-control-plane.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/workflows/dependency-review.yml",
+      "state": "present",
+      "git_blob": "f112d3899ead93430e78aa4f122db1ad6ff05ccd",
+      "sha256": "sha256:d2998fcc5da65a7e39453ba6226476b2a9c91008fd8a09838a143750c9df89c8"
+    },
+    {
+      "path": "docs/governance/AUTONOMOUS_OPERATIONS.md",
+      "state": "present",
+      "git_blob": "631022881dd337233fcba0168a0ca2f20919082b",
+      "sha256": "sha256:830bbca113c89c64cd6688d00a2427c5935c2c3080c28eaa797766cb6a36b363"
+    },
+    {
+      "path": "docs/governance/REUSABLE_WORKFLOWS.md",
+      "state": "present",
+      "git_blob": "ba73f9d22d2b34b697947ce698c1d6b7a10a3898",
+      "sha256": "sha256:ae9f6e14b53ddd355075ae382c456ecbf9ef8d5c9ba136ce2175064750a80fea"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-09-20-org-control-plane.md",
+      "state": "present",
+      "git_blob": "0521cc4576bc86bec4a91adab2345ac8d0c3ac6d",
+      "sha256": "sha256:974742cb30c418144b9cf6e518a0329a2f046b0e014fa1b75730c331b47255a8"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check 8eff422abb598bf3e4157ff3ae8e2e975acce62e 9925b20c13935a2839beb0cb44bd0c87f2afd838",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T15:29:02Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:654a07b763744a52cede558d90f5c9129ee2204e69b9118ae9d9fcba3b9e29d9"
+}

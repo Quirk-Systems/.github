@@ -1,0 +1,108 @@
+name: Brief
+description: Turn an ask, idea, or spark into a bounded piece of work before anyone builds it
+title: "brief: "
+labels:
+  - brief
+  - needs-triage
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A brief is the smallest document that lets someone else decide whether the work should exist.
+        Fill every field. "Unknown" is a valid answer; a guess is not. Filing a brief grants no authority.
+        The `quirk-brief` skill in `.github/skills/quirk-brief/SKILL.md` walks through this form.
+
+  - type: input
+    id: repository
+    attributes:
+      label: Owning repository
+      placeholder: Quirk-Systems/example
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: What is true right now. Quote the original ask verbatim. Cite exact commits and paths.
+    validations:
+      required: true
+
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome
+      description: The observable condition that becomes true when this is done. One or two sentences.
+    validations:
+      required: true
+
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints
+      description: What must remain true while accomplishing the outcome (doctrine, security, budget, compatibility, authority).
+    validations:
+      required: true
+
+  - type: dropdown
+    id: change_class
+    attributes:
+      label: Semantic change class
+      options:
+        - Reuses existing canon
+        - Domain extension
+        - Canonical change
+        - Projection-only change
+        - Migration / deprecation
+    validations:
+      required: true
+
+  - type: textarea
+    id: concepts
+    attributes:
+      label: Concepts touched
+      description: Canonical IDs from `.quirk/registry.json`, proposed new concepts (kind, parent, boundary, provenance), and the collision check.
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Code, tests, logs, schemas, or documents supporting the claims above. Mark each VERIFIED / INFERRED / UNKNOWN.
+    validations:
+      required: true
+
+  - type: textarea
+    id: action
+    attributes:
+      label: Action
+      description: The smallest coherent intervention that produces the outcome.
+    validations:
+      required: true
+
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification
+      description: What proves the outcome works. Commands and expected results.
+    validations:
+      required: true
+
+  - type: textarea
+    id: risk
+    attributes:
+      label: Risk and residue
+      description: What can still fail and how it is contained; what stays unknown or excluded; which human decision is still required.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: gate
+    attributes:
+      label: Creation gate
+      options:
+        - label: This brief does not create a new repository, capability, framework, or named system, or it answers the creation-gate questions in `docs/REPOSITORY_STRATEGY.md` §5 above.
+          required: true
+        - label: This brief grants no authority; a plan, receipts, and review still follow.
+          required: true
