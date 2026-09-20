@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Truthful topology repository inventory",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["registry_version", "authority", "snapshot", "scope", "repositories"],
+  "properties": {
+    "registry_version": {"const": "0.3.0"},
+    "authority": {"const": "Quirk-Systems/.github"},
+    "snapshot": {"const": "2026-08-21"},
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["organization", "expected_organization_repository_count", "expected_adjacent_repository_count", "adjacent_repository_selection_rule"],
+      "properties": {
+        "organization": {"const": "Quirk-Systems"},
+        "expected_organization_repository_count": {"const": 17},
+        "expected_adjacent_repository_count": {"const": 2},
+        "adjacent_repository_selection_rule": {"$ref": "#/$defs/nonEmptyString"}
+      }
+    },
+    "repositories": {
+      "type": "array",
+      "minItems": 19,
+      "maxItems": 19,
+      "items": {"$ref": "#/$defs/repository"},
+      "allOf": [
+        {"contains":{"type":"object","properties":{"repository":{"const":"Quirk-Systems/.github"}},"required":["repository"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"repository":{"const":"Quirk-Systems/.github-private"}},"required":["repository"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"repository":{"const":"Quirk-Systems/project-scaffold"}},"required":["repository"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"repository":{"const":"Quirk-Systems/quirk-os"}},"required":["repository"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"repository":{"const":"Quirk-Systems/quirk-core"}},"required":["repository"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"repository":{"const":"Quirk-Systems/quirk-feed"}},"required":["repository"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"repository":{"const":"Quirk-Systems/quirk-generator"}},"required":["repository"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"repository":{"const":"Quirk-Systems/quirk-beauty"}},"required":["repository"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"repository":{"const":"Quirk-Systems/quirk-pet"}},"required":["repository"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"repository":{"const":"Quirk-Systems/quirk-town"}},"required":["repository"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"repository":{"const":"Quirk-Systems/Quirk"}},"required":["repository"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"repository":{"const":"Quirk-Systems/quirk-data"}},"required":["repository"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"repository":{"const":"Quirk-Systems/quirk-me"}},"required":["repository"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"repository":{"const":"Quirk-Systems/quirk-run"}},"required":["repository"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"repository":{"const":"Quirk-Systems/quirk-dog"}},"required":["repository"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"repository":{"const":"Quirk-Systems/quirk-music"}},"required":["repository"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"repository":{"const":"Quirk-Systems/quirk-preference"}},"required":["repository"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"repository":{"const":"bryansayler/quirk-commerce"}},"required":["repository"]},"minContains":1},
+        {"contains":{"type":"object","properties":{"repository":{"const":"bryansayler/quirk-beauty-store"}},"required":["repository"]},"minContains":1}
+      ]
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state"],
+      "properties": {
+        "state": {"enum": ["open", "identified"]},
+        "name": {"$ref": "#/$defs/nonEmptyString"}
+      },
+      "allOf": [{"if":{"properties":{"state":{"const":"identified"}},"required":["state"]},"then":{"required":["name"]}}]
+    },
+    "evidenceAnchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "url"],
+      "properties": {
+        "label": {"$ref": "#/$defs/nonEmptyString"},
+        "url": {"type": "string", "pattern": "^https://[^/]+"}
+      }
+    },
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "scope", "visibility", "primary_class", "lifecycle", "owner", "canonical_responsibility", "consumers_and_dependencies", "extraction_or_retirement_rule", "deployment_security_boundary", "evidence_anchors"],
+      "properties": {
+        "repository": {"pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$", "enum": ["Quirk-Systems/.github", "Quirk-Systems/.github-private", "Quirk-Systems/project-scaffold", "Quirk-Systems/quirk-os", "Quirk-Systems/quirk-core", "Quirk-Systems/quirk-feed", "Quirk-Systems/quirk-generator", "Quirk-Systems/quirk-beauty", "Quirk-Systems/quirk-pet", "Quirk-Systems/quirk-town", "Quirk-Systems/Quirk", "Quirk-Systems/quirk-data", "Quirk-Systems/quirk-me", "Quirk-Systems/quirk-run", "Quirk-Systems/quirk-dog", "Quirk-Systems/quirk-music", "Quirk-Systems/quirk-preference", "bryansayler/quirk-commerce", "bryansayler/quirk-beauty-store"]},
+        "scope": {"enum": ["organization", "adjacent"]},
+        "visibility": {"enum": ["public", "private"]},
+        "primary_class": {"enum": ["canon", "reference", "kernel", "doctrine", "interface", "instrument", "realm", "reservation", "commerce"]},
+        "lifecycle": {"enum": ["active", "candidate", "reserved"]},
+        "owner": {"$ref": "#/$defs/owner"},
+        "canonical_responsibility": {"$ref": "#/$defs/nonEmptyString"},
+        "consumers_and_dependencies": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/nonEmptyString"}},
+        "extraction_or_retirement_rule": {"$ref": "#/$defs/nonEmptyString"},
+        "deployment_security_boundary": {"$ref": "#/$defs/nonEmptyString"},
+        "evidence_anchors": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/evidenceAnchor"}}
+      },
+      "allOf": [{"if":{"properties":{"lifecycle":{"const":"reserved"}},"required":["lifecycle"]},"then":{"properties":{"primary_class":{"const":"reservation"}}}}]
+    }
+  }
+}
