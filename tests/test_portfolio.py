@@ -28,9 +28,9 @@ class PortfolioRegistryTests(unittest.TestCase):
     def valid(self):
         return copy.deepcopy(self.data)
 
-    def assert_rejected(self, data, fragment):
+    def assert_rejected(self, data, fragment, schema=None):
         with self.assertRaises(self.validator.PortfolioError) as caught:
-            self.validator.validate_portfolio(data, self.schema)
+            self.validator.validate_portfolio(data, schema or self.schema)
         self.assertIn(fragment, str(caught.exception))
 
     def test_registry_is_valid(self):
@@ -76,8 +76,11 @@ class PortfolioRegistryTests(unittest.TestCase):
 
     def test_missing_required_repository_fails(self):
         data = self.valid()
-        data["repositories"][1]["repository"] = "Quirk-Systems/.github"
-        self.assert_rejected(data, "missing organization repositories: Quirk-Systems/.github-private")
+        data["repositories"] = [entry for entry in data["repositories"] if entry["repository"] != "Quirk-Systems/.github-private"]
+        schema = copy.deepcopy(self.schema)
+        schema["properties"]["repositories"]["minItems"] = 18
+        schema["properties"]["repositories"]["maxItems"] = 18
+        self.assert_rejected(data, "missing organization repositories: Quirk-Systems/.github-private", schema=schema)
 
     def test_scope_partition_drift_fails(self):
         data = self.valid()

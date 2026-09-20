@@ -38,6 +38,8 @@ def validate_portfolio(data, schema):
 
     repositories = data.get("repositories", [])
     scope = data.get("scope", {})
+    if not isinstance(scope, dict):
+        scope = {}
     scope_fields = {
         "organization",
         "expected_organization_repository_count",
@@ -45,8 +47,6 @@ def validate_portfolio(data, schema):
         "adjacent_repository_selection_rule",
     }
     validate_topology.validate_object(scope, scope_fields, scope_fields, "portfolio scope", errors)
-    if not isinstance(scope, dict):
-        scope = {}
 
     if not isinstance(repositories, list):
         errors.append("repositories must be an array")
