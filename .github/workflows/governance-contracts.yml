@@ -33,6 +33,7 @@ jobs:
         run: >-
           python scripts/validate_governed_decisions.py
           --repository Quirk-Systems/.github
+          --repository Quirk-Systems/Quirk
           --root .
           --decisions .quirk/decisions
 
@@ -84,7 +85,7 @@ jobs:
             --claim "The exact-range evidence, governed-decision, documentation, and interoperability controls are bound to the cited subject bytes." \
             "${args[@]}" \
             --verification-command "python -m unittest discover -s tests -v" \
-            --verification-command "python scripts/validate_governed_decisions.py --repository Quirk-Systems/.github --root . --decisions .quirk/decisions" \
+            --verification-command "python scripts/validate_governed_decisions.py --repository Quirk-Systems/.github --repository Quirk-Systems/Quirk --root . --decisions .quirk/decisions" \
             --verified-at "$verified_at" \
             --output /tmp/exact-range-decision-spine.json
           echo '---BEGIN EXACT-RANGE RECEIPT CANDIDATE---'
