@@ -1,0 +1,74 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.portfolio-schema-enforcement.0f7ab2ed2ee9",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "4cecd673e26ca5bc5f6cda53c30b4ee0849bf57e",
+    "commit": "0f7ab2ed2ee96c33c26c38ed40b4674db5eb372c",
+    "changed_paths": [
+      "scripts/portfolio_report.py",
+      "scripts/validate_manifest.py",
+      "tests/test_portfolio.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.portfolio-schema-enforcement.0f7ab2ed2ee9",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The cited bytes extend scripts/validate_manifest.py's schema checker to resolve local $ref pointers and enforce allOf, if/then/else, contains/minContains/maxContains, and maxItems, so scripts/validate_portfolio.py now rejects inventory data violating referenced definitions such as an empty or whitespace-only scope.adjacent_repository_selection_rule; escape pipe characters and normalize CR/LF line breaks in every free-text Markdown table cell rendered by scripts/portfolio_report.py; and add regression tests for both behaviors. scripts/validate.sh and 145 unit tests passed locally on this subject. ruff, actionlint, and zizmor were not run (tools unavailable). No merge approval or canon change is established.",
+      "evidence_paths": [
+        "scripts/portfolio_report.py",
+        "scripts/validate_manifest.py",
+        "tests/test_portfolio.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "scripts/portfolio_report.py",
+      "state": "present",
+      "git_blob": "80faf76cda6d3d90b67508dc42a02df794f1e744",
+      "sha256": "sha256:96d4a19b2dfea2b8ec4575c57577c17425054231e6b9d41f7955ab0298fd1032"
+    },
+    {
+      "path": "scripts/validate_manifest.py",
+      "state": "present",
+      "git_blob": "88f5946d00de8c1f7c1f79c5770a43f645779cef",
+      "sha256": "sha256:bfeb848387b644285374f520f40a36342e1e1977b2384a11973bf1623889dd87"
+    },
+    {
+      "path": "tests/test_portfolio.py",
+      "state": "present",
+      "git_blob": "3db063486b1e2a31626ab36f99cb485c8506125f",
+      "sha256": "sha256:dde4cda8d02caaf46be86c31de074152fb5825329f50cd1221083035efaf1b42"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python -m unittest tests.test_portfolio tests.test_manifest -v",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T20:56:01Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:36c45ee457e5c62c9be6030b730f2786e4ba2c83d8e72e5aeff4f6d509697428"
+}
