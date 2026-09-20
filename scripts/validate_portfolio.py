@@ -29,11 +29,12 @@ def validate_portfolio(data, schema):
     except ManifestError as error:
         raise PortfolioError(str(error)) from error
 
+    if not isinstance(data, dict):
+        raise PortfolioError("portfolio must be an object")
+
     errors = []
     root_fields = {"registry_version", "authority", "snapshot", "scope", "repositories"}
     validate_topology.validate_object(data, root_fields, root_fields, "portfolio", errors)
-    if not isinstance(data, dict):
-        raise PortfolioError("portfolio must be an object")
 
     repositories = data.get("repositories", [])
     scope = data.get("scope", {})
