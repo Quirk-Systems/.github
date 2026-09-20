@@ -1,0 +1,44 @@
+# zizmor configuration for Quirk-Systems/.github.
+#
+# Every NEW workflow must pass `zizmor --persona pedantic` with zero findings.
+# The four files listed below predate the hygiene program and are being
+# hardened in a separate pull request (SHA pins, permissions, concurrency, and
+# removal of `${{ inputs.* }}` interpolation inside `run:`). Their known findings
+# are scoped here by exact filename so nothing else inherits the exemption.
+# Remove each entry when that file is repaired; the workflow-lint job then
+# enforces the full ruleset on it.
+rules:
+  template-injection:
+    ignore:
+      - reusable-validate.yml
+  unpinned-uses:
+    ignore:
+      - reusable-validate.yml
+      - reusable-pr-title-lint.yml
+  excessive-permissions:
+    ignore:
+      - reusable-validate.yml
+      - reusable-pr-title-lint.yml
+      - quirk-semantic-governance.yml
+  artipacked:
+    ignore:
+      - reusable-validate.yml
+      - quirk-semantic-governance.yml
+  anonymous-definition:
+    ignore:
+      - reusable-validate.yml
+      - reusable-pr-title-lint.yml
+      - quirk-semantic-governance.yml
+      - governance-contracts.yml
+  concurrency-limits:
+    ignore:
+      - reusable-validate.yml
+      - quirk-semantic-governance.yml
+      - governance-contracts.yml
+      - reusable-pr-title-lint.yml
+      - reusable-evidence-binding.yml
+  undocumented-permissions:
+    ignore:
+      - reusable-pr-title-lint.yml
+      - governance-contracts.yml
+      - reusable-evidence-binding.yml

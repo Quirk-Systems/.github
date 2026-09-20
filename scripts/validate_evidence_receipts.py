@@ -7,9 +7,8 @@ import json
 import re
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path, PurePosixPath
-
 
 FULL_SHA_PATTERN = re.compile(r"^[0-9a-f]{40}$")
 REPOSITORY_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
@@ -230,7 +229,7 @@ def _validate_artifacts(receipt, entries, root):
     if len(artifacts) != len(changed_paths):
         raise ReceiptError("artifact count must equal subject path count")
     artifact_paths = []
-    for index, (artifact, (path, state)) in enumerate(zip(artifacts, entries)):
+    for index, (artifact, (path, state)) in enumerate(zip(artifacts, entries, strict=True)):
         label = "artifacts[" + str(index) + "]"
         _require_object(artifact, {"path", "state", "git_blob", "sha256"}, label)
         validate_repository_path(artifact["path"])
@@ -253,7 +252,7 @@ def _validate_verification(receipt):
         parsed_time = datetime.fromisoformat(verification["verified_at"][:-1] + "+00:00")
     except ValueError as error:
         raise ReceiptError("verification.verified_at must be a valid calendar timestamp") from error
-    if parsed_time.tzinfo != timezone.utc:
+    if parsed_time.tzinfo != UTC:
         raise ReceiptError("verification.verified_at must be UTC")
     commands = verification["commands"]
     if not isinstance(commands, list):

@@ -9,7 +9,6 @@ import tempfile
 import unittest
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 GENERATOR = ROOT / "scripts" / "create_evidence_receipt.py"
 VALIDATOR = ROOT / "scripts" / "validate_evidence_receipts.py"
@@ -589,7 +588,7 @@ class EvidenceReceiptTest(unittest.TestCase):
 
     def test_nul_diff_parser_rejects_malformed_non_utf8_and_unsafe_paths(self):
         self.assertEqual(
-            validate_evidence_receipts.parse_name_status("A\0café/資料.txt\0".encode("utf-8")),
+            validate_evidence_receipts.parse_name_status("A\0café/資料.txt\0".encode()),
             [("café/資料.txt", "present")],
         )
         malformed_outputs = (
