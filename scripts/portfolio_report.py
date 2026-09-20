@@ -19,6 +19,12 @@ OUTPUT = ROOT / "docs" / "PORTFOLIO.md"
 GITHUB = "https://github.com/"
 
 
+def cell(value):
+    """Escape a value for use inside a pipe-delimited Markdown table cell."""
+    text = str(value).replace("\r\n", "\n").replace("\r", "\n")
+    return text.replace("|", "\\|").replace("\n", "<br>")
+
+
 def link(repository):
     return f"[`{repository}`]({GITHUB}{repository})"
 
@@ -70,8 +76,8 @@ def render(data):
         ]
         for entry in sorted(by_class[cls], key=lambda item: item["repository"].casefold()):
             lines.append(
-                f"| {link(entry['repository'])} | `{entry['scope']}` | {entry['visibility']} | `{entry['lifecycle']}` | "
-                f"`{owner_label(entry['owner'])}` | {entry['canonical_responsibility']} |"
+                f"| {link(entry['repository'])} | `{entry['scope']}` | {cell(entry['visibility'])} | `{entry['lifecycle']}` | "
+                f"`{cell(owner_label(entry['owner']))}` | {cell(entry['canonical_responsibility'])} |"
             )
         lines.append("")
 
@@ -84,7 +90,7 @@ def render(data):
         ]
         for entry in sorted(open_owner, key=lambda item: item["repository"].casefold()):
             lines.append(
-                f"| {link(entry['repository'])} | `{entry['scope']}` | `{entry['primary_class']}` | {entry['extraction_or_retirement_rule']} |"
+                f"| {link(entry['repository'])} | `{entry['scope']}` | `{entry['primary_class']}` | {cell(entry['extraction_or_retirement_rule'])} |"
             )
     else:
         lines.append("None recorded.")
@@ -96,10 +102,10 @@ def render(data):
         "| --- | --- | --- | --- |",
     ]
     for entry in sorted(repos, key=lambda item: (item["scope"], item["repository"].casefold())):
-        anchors = "; ".join(f"[{anchor['label']}]({anchor['url']})" for anchor in entry["evidence_anchors"])
-        consumers = "; ".join(entry["consumers_and_dependencies"])
+        anchors = "; ".join(f"[{cell(anchor['label'])}]({cell(anchor['url'])})" for anchor in entry["evidence_anchors"])
+        consumers = cell("; ".join(entry["consumers_and_dependencies"]))
         lines.append(
-            f"| {link(entry['repository'])} | {consumers} | {entry['deployment_security_boundary']} | {anchors} |"
+            f"| {link(entry['repository'])} | {consumers} | {cell(entry['deployment_security_boundary'])} | {anchors} |"
         )
     lines.append("")
     return "\n".join(lines)

@@ -67,12 +67,19 @@ class PortfolioRegistryTests(unittest.TestCase):
     def test_unknown_key_fails_closed(self):
         data = self.valid()
         data["repositories"][0]["health_score"] = 10
-        self.assert_rejected(data, "unexpected fields: health_score")
+        self.assert_rejected(data, "unknown keys ['health_score']")
 
     def test_duplicate_repository_fails(self):
         data = self.valid()
         data["repositories"].append(copy.deepcopy(data["repositories"][0]))
-        self.assert_rejected(data, "repositories must be unique")
+        schema = copy.deepcopy(self.schema)
+        schema["properties"]["repositories"]["maxItems"] = 20
+        self.assert_rejected(data, "repositories must be unique", schema=schema)
+
+    def test_extra_repository_fails_schema_max_items(self):
+        data = self.valid()
+        data["repositories"].append(copy.deepcopy(data["repositories"][0]))
+        self.assert_rejected(data, "needs at most 19 items")
 
     def test_missing_required_repository_fails(self):
         data = self.valid()
@@ -80,12 +87,56 @@ class PortfolioRegistryTests(unittest.TestCase):
         schema = copy.deepcopy(self.schema)
         schema["properties"]["repositories"]["minItems"] = 18
         schema["properties"]["repositories"]["maxItems"] = 18
+        schema["properties"]["repositories"]["allOf"] = [
+            clause
+            for clause in schema["properties"]["repositories"]["allOf"]
+            if clause["contains"]["properties"]["repository"]["const"] != "Quirk-Systems/.github-private"
+        ]
         self.assert_rejected(data, "missing organization repositories: Quirk-Systems/.github-private", schema=schema)
+
+    def test_missing_required_repository_fails_schema_contains(self):
+        data = self.valid()
+        data["repositories"] = [entry for entry in data["repositories"] if entry["repository"] != "Quirk-Systems/.github-private"]
+        schema = copy.deepcopy(self.schema)
+        schema["properties"]["repositories"]["minItems"] = 18
+        schema["properties"]["repositories"]["maxItems"] = 18
+        self.assert_rejected(data, "fewer than 1 items match the contains schema", schema=schema)
 
     def test_scope_partition_drift_fails(self):
         data = self.valid()
         data["repositories"][-1]["scope"] = "organization"
         self.assert_rejected(data, "unexpected organization repositories")
+
+    def test_empty_adjacency_rule_fails(self):
+        data = self.valid()
+        data["scope"]["adjacent_repository_selection_rule"] = ""
+        self.assert_rejected(data, "adjacent_repository_selection_rule")
+
+    def test_whitespace_adjacency_rule_fails(self):
+        data = self.valid()
+        data["scope"]["adjacent_repository_selection_rule"] = "   "
+        self.assert_rejected(data, "adjacent_repository_selection_rule")
+
+    def test_owner_identified_without_name_fails(self):
+        data = self.valid()
+        data["repositories"][0]["owner"] = {"state": "identified"}
+        self.assert_rejected(data, "missing required keys ['name']")
+
+    def test_reserved_lifecycle_requires_reservation_class(self):
+        data = self.valid()
+        reserved = next(entry for entry in data["repositories"] if entry["lifecycle"] == "reserved")
+        reserved["primary_class"] = "canon"
+        self.assert_rejected(data, "primary_class")
+
+    def test_table_cells_escape_pipes_and_newlines(self):
+        data = self.valid()
+        entry = data["repositories"][0]
+        entry["canonical_responsibility"] = "left | right\nnext line"
+        entry["deployment_security_boundary"] = "a|b\r\nc"
+        rendered = self.report.render(data)
+        self.assertIn("left \\| right<br>next line", rendered)
+        self.assertIn("a\\|b<br>c", rendered)
+        self.assertNotIn("left | right", rendered)
 
 
 if __name__ == "__main__":

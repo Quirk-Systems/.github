@@ -5,8 +5,9 @@ Standard library only. Enumerations and required keys are read from
 .quirk/schemas/repository-manifest.schema.json so this validator and the
 schema cannot drift; the validator applies the subset of JSON Schema the
 contract uses (closed objects, required keys, enums, const, patterns, typed
-arrays with unique items). Passing proves shape, not that the declared
-domain, owner, or lifecycle claims are true.
+arrays with unique items, local $ref, allOf, if/then/else, and contains).
+Passing proves shape, not that the declared domain, owner, or lifecycle
+claims are true.
 """
 
 import argparse
@@ -27,7 +28,39 @@ def _fail(message):
     raise ManifestError(message)
 
 
-def _check(value, schema, label):
+def _resolve_ref(ref, root, label):
+    if not ref.startswith("#/"):
+        _fail(f"{label}: unsupported $ref {ref!r}; only local '#/' references are supported")
+    target = root
+    for part in ref[2:].split("/"):
+        part = part.replace("~1", "/").replace("~0", "~")
+        if not isinstance(target, dict) or part not in target:
+            _fail(f"{label}: $ref {ref!r} does not resolve in the schema")
+        target = target[part]
+    return target
+
+
+def _matches(value, schema, root):
+    try:
+        _check(value, schema, "candidate", root)
+    except ManifestError:
+        return False
+    return True
+
+
+def _check(value, schema, label, root=None):
+    if root is None:
+        root = schema
+    if "$ref" in schema:
+        _check(value, _resolve_ref(schema["$ref"], root, label), label, root)
+    for index, subschema in enumerate(schema.get("allOf", [])):
+        _check(value, subschema, f"{label} (allOf[{index}])", root)
+    if "if" in schema:
+        if _matches(value, schema["if"], root):
+            if "then" in schema:
+                _check(value, schema["then"], label, root)
+        elif "else" in schema:
+            _check(value, schema["else"], label, root)
     if "const" in schema:
         if value != schema["const"]:
             _fail(f"{label}: must equal {schema['const']!r}")
@@ -67,8 +100,17 @@ def _check(value, schema, label):
             _fail(f"{label}: items must be unique")
         if "minItems" in schema and len(value) < schema["minItems"]:
             _fail(f"{label}: needs at least {schema['minItems']} items")
+        if "maxItems" in schema and len(value) > schema["maxItems"]:
+            _fail(f"{label}: needs at most {schema['maxItems']} items")
+        if "contains" in schema:
+            matched = sum(1 for item in value if _matches(item, schema["contains"], root))
+            min_contains = schema.get("minContains", 1)
+            if matched < min_contains:
+                _fail(f"{label}: fewer than {min_contains} items match the contains schema")
+            if "maxContains" in schema and matched > schema["maxContains"]:
+                _fail(f"{label}: more than {schema['maxContains']} items match the contains schema")
         for index, item in enumerate(value):
-            _check(item, schema.get("items", {}), f"{label}[{index}]")
+            _check(item, schema.get("items", {}), f"{label}[{index}]", root)
     if isinstance(value, dict):
         properties = schema.get("properties", {})
         if schema.get("additionalProperties") is False:
@@ -80,7 +122,7 @@ def _check(value, schema, label):
             _fail(f"{label}: missing required keys {missing}")
         for key, item in value.items():
             if key in properties:
-                _check(item, properties[key], f"{label}.{key}")
+                _check(item, properties[key], f"{label}.{key}", root)
 
 
 def validate_manifest(data, schema, root=None):
