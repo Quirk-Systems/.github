@@ -57,6 +57,11 @@ def _check(value, schema, label):
             _fail(f"{label}: {value!r} does not match {schema['pattern']}")
         if "minLength" in schema and len(value) < schema["minLength"]:
             _fail(f"{label}: shorter than {schema['minLength']}")
+        if "maxLength" in schema and len(value) > schema["maxLength"]:
+            _fail(f"{label}: longer than {schema['maxLength']}")
+    if isinstance(value, int) and not isinstance(value, bool):
+        if "minimum" in schema and value < schema["minimum"]:
+            _fail(f"{label}: below minimum {schema['minimum']}")
     if isinstance(value, list):
         if schema.get("uniqueItems") and len({json.dumps(v, sort_keys=True) for v in value}) != len(value):
             _fail(f"{label}: items must be unique")

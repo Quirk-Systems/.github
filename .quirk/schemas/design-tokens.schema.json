@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Quirk-Systems/.github/blob/main/.quirk/schemas/design-tokens.schema.json",
+  "title": "Quirk design tokens",
+  "description": "A constrained subset of the W3C Design Tokens Community Group format (2025 draft): nested groups whose leaves carry $value and optionally $type, $description, $extensions. Aliases use {group.token}. Group names are lowercase kebab-case. The token file is the canonical source; CSS variables, Tailwind themes, Figma variables, and any other projection must be regenerated from it. Validation proves shape and resolvable aliases, not visual quality or accessibility.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "$extensions"],
+  "properties": {
+    "$schema": {"const": "https://github.com/Quirk-Systems/.github/blob/main/.quirk/schemas/design-tokens.schema.json"},
+    "$description": {"type": "string", "minLength": 1},
+    "$extensions": {"$ref": "#/$defs/rootExtensions"}
+  },
+  "patternProperties": {
+    "^[a-z0-9]+(?:-[a-z0-9]+)*$": {"$ref": "#/$defs/group"}
+  },
+  "$defs": {
+    "tokenType": {
+      "enum": ["color", "dimension", "fontFamily", "fontWeight", "duration", "cubicBezier", "number", "typography", "shadow"]
+    },
+    "rootExtensions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["quirk"],
+      "properties": {
+        "quirk": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "version", "implementation_owner", "authority_effect"],
+          "properties": {
+            "status": {"enum": ["candidate", "reviewed", "canonical"]},
+            "version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+            "implementation_owner": {"type": "string", "pattern": "^Quirk-Systems/[A-Za-z0-9_.-]+$"},
+            "authority_effect": {"const": "none"}
+          }
+        }
+      }
+    },
+    "group": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "$type": {"$ref": "#/$defs/tokenType"},
+        "$description": {"type": "string", "minLength": 1},
+        "$extensions": {"type": "object"}
+      },
+      "patternProperties": {
+        "^[a-z0-9]+(?:-[a-z0-9]+)*$": {"anyOf": [{"$ref": "#/$defs/token"}, {"$ref": "#/$defs/group"}]}
+      }
+    },
+    "token": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["$value"],
+      "properties": {
+        "$value": {},
+        "$type": {"$ref": "#/$defs/tokenType"},
+        "$description": {"type": "string", "minLength": 1},
+        "$deprecated": {"type": ["boolean", "string"]},
+        "$extensions": {"type": "object"}
+      }
+    }
+  }
+}
