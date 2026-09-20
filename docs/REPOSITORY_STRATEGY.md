@@ -4,7 +4,7 @@ Status: **Proposed foundation**
 Authority: `Quirk-Systems/.github`
 Applies to: every repository in the Quirk Systems organization
 
-> **Portfolio correction:** The naming decision, portfolio table, target topology, and Phase 0 cutover below are historical proposal text. Their empty/private `quirk-os` premise is stale: `project-scaffold` and `quirk-os` are distinct, public, non-empty repositories. See [the portfolio drift record](PORTFOLIO-DRIFT-2026-08-28.md) and the [candidate registry](../.quirk/repositories.json). Do not execute rename, archive, migration, or classification actions from these historical sections; a successor topology decision is required.
+> **Portfolio correction:** The naming decision, portfolio table, target topology, and Phase 0 cutover below are historical proposal text. Their empty/private `quirk-os` premise is stale: `project-scaffold` and `quirk-os` are distinct, public, non-empty repositories. See [the portfolio drift record](PORTFOLIO-DRIFT-2026-08-28.md) and the [truthful topology inventory](../.quirk/repositories.json). Do not execute rename, archive, migration, or classification actions from these historical sections; a successor topology decision is required.
 
 `Quirk-Systems/quirk-skills` is recorded as a private candidate Skill source repository. That source ownership grants no Skill admission, activation, runtime, Canon, deployment, or publication authority. Repository existence and observed development activity do not settle portfolio classification or operational admission.
 
