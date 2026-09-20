@@ -176,7 +176,7 @@ Required preserved fields include at least:
 - adjudication, rationale, and authority reference (when needed);
 - supersession linkage when regraded.
 
-Any changed suite/fixture/grader/subject response/candidate head requires a new receipt; prior current-action disposition becomes stale.
+Any changed suite/fixture/grader/subject response/candidate head requires a new receipt; prior current-head disposition (for current action) becomes stale.
 
 Projection stores (for example Supabase) may index these records but are not semantic authority. Sensitive transcripts require explicit classification, retention, and access control.
 
