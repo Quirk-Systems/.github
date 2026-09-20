@@ -48,8 +48,11 @@ through `with:`; no reusable workflow interpolates caller input inside a
 
 `governance-contracts.yml` (tests, validators, exact-range receipts),
 `codeql.yml`, `scorecard.yml` (publishes to the OpenSSF Scorecard API after
-merge to `main`), `dependency-review.yml`, `workflow-lint.yml`, and
-`agent-task-dispatch.yml`. Self-applied jobs run
+merge to `main`), `workflow-lint.yml`, `agent-task-dispatch.yml`, and
+`dependency-review.yml`, which is **dispatch-only** for now: the action fails
+unless the repository's **Dependency graph** is enabled, an owner-only
+setting. Once an owner enables it (Settings → Code security) and reads it
+back, restore its `pull_request:` trigger in a receipted change. Self-applied jobs run
 `step-security/harden-runner` in egress **audit** mode; switch to `block`
 only after the observed egress allowlist is recorded in a governed change.
 

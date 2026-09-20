@@ -44,7 +44,7 @@ own policy at `job.workflow_sha`.
 
 ### Wave 2 — Security and supply-chain spine
 
-- [x] `codeql.yml`, `scorecard.yml`, `dependency-review.yml`, `workflow-lint.yml`
+- [x] `codeql.yml`, `scorecard.yml`, `dependency-review.yml` (dispatch-only until the owner-only Dependency graph setting is enabled), `workflow-lint.yml`
 - [x] `reusable-codeql.yml`, `reusable-dependency-review.yml`, `reusable-workflow-lint.yml`, `reusable-sbom-provenance.yml`, `reusable-stale-incubations.yml`
 - [x] `tests/test_workflow_pins.py`, `docs/governance/REUSABLE_WORKFLOWS.md`
 - [x] Receipt `qreceipt.security-workflow-spine.6883b4a8baf2`

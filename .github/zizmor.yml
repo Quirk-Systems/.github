@@ -42,3 +42,17 @@ rules:
       - reusable-pr-title-lint.yml
       - governance-contracts.yml
       - reusable-evidence-binding.yml
+  # Online audits (run only in CI): the legacy files pin to full SHAs without
+  # version comments; PR #20 repairs them. Remove when that lands.
+  ref-version-mismatch:
+    ignore:
+      - governance-contracts.yml
+      - reusable-evidence-binding.yml
+      - quirk-semantic-governance.yml
+      - reusable-validate.yml
+      - reusable-pr-title-lint.yml
+  stale-action-refs:
+    ignore:
+      - governance-contracts.yml
+      - reusable-evidence-binding.yml
+      - quirk-semantic-governance.yml
