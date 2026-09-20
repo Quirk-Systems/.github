@@ -95,10 +95,24 @@ def _assert_supported(schema, label):
         if keyword in schema:
             _assert_supported(schema[keyword], f"{label}/{keyword}")
     for keyword in _SCHEMA_LIST_VALUED:
-        for index, branch in enumerate(schema.get(keyword, []) or []):
+        if keyword not in schema:
+            continue
+        branches = schema[keyword]
+        if not isinstance(branches, list):
+            raise SchemaSupportError(
+                f"{label}/{keyword}: must be a list of schemas, got {type(branches).__name__}"
+            )
+        for index, branch in enumerate(branches):
             _assert_supported(branch, f"{label}/{keyword}[{index}]")
     for keyword in _SCHEMA_MAP_VALUED:
-        for name, branch in (schema.get(keyword) or {}).items():
+        if keyword not in schema:
+            continue
+        entries = schema[keyword]
+        if not isinstance(entries, dict):
+            raise SchemaSupportError(
+                f"{label}/{keyword}: must be an object of schemas, got {type(entries).__name__}"
+            )
+        for name, branch in entries.items():
             _assert_supported(branch, f"{label}/{keyword}.{name}")
 
 

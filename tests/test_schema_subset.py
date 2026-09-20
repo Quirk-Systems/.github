@@ -189,6 +189,43 @@ class SchemaSubsetTests(unittest.TestCase):
         with self.assertRaises(self.module.SchemaSupportError):
             self.check(1, {"anyOf": [{"$ref": "#/$defs/nope"}, {"type": "integer"}]}, "x")
 
+    def test_malformed_schema_containers_raise_a_controlled_error(self):
+        """A bad schema must produce the validator's diagnostic, not a traceback.
+
+        `--schema` is caller-supplied, so a map keyword holding a non-object or a
+        list keyword holding a non-list reached the prewalk and surfaced as a raw
+        AttributeError or TypeError that main() does not catch.
+        """
+        support = self.module.SchemaSupportError
+        for schema in (
+            {"properties": 1},
+            {"patternProperties": []},
+            {"$defs": "x"},
+            {"definitions": 0},
+            {"anyOf": 1},
+            {"allOf": {"a": 1}},
+            {"oneOf": "nope"},
+        ):
+            with self.subTest(schema=schema):
+                with self.assertRaises(support):
+                    self.check({}, schema, "x")
+
+    def test_malformed_schema_container_exits_cleanly_through_the_cli(self):
+        import subprocess
+        import sys
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            bad = Path(tmp) / "bad.schema.json"
+            bad.write_text('{"properties": 1}', encoding="utf-8")
+            result = subprocess.run(
+                [sys.executable, str(ROOT / "scripts" / "validate_manifest.py"),
+                 str(ROOT / ".quirk" / "manifest.json"), "--schema", str(bad)],
+                capture_output=True, text=True,
+            )
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("FAIL:", result.stderr)
+        self.assertNotIn("Traceback", result.stderr)
+
     # --- the reported bug, end to end ------------------------------------
 
     def test_real_inventory_rejects_malformed_fields_behind_ref(self):
