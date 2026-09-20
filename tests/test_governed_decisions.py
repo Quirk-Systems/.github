@@ -70,6 +70,20 @@ class GovernedDecisionTests(unittest.TestCase):
         decision = self.valid_decision()
         self.validator.validate_decision(decision)
 
+    def test_repository_must_be_in_allowed_repository_set(self):
+        decision = self.valid_decision()
+        with self.assertRaisesRegex(
+            self.validator.DecisionError, "must match one allowed --repository value"
+        ):
+            self.validator.validate_decision(
+                decision,
+                repositories={"Quirk-Systems/.github"},
+            )
+        self.validator.validate_decision(
+            decision,
+            repositories={"Quirk-Systems/.github", "Quirk-Systems/Quirk"},
+        )
+
     def test_schema_is_closed_and_binds_exact_range(self):
         schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
         self.assertFalse(schema["additionalProperties"])
