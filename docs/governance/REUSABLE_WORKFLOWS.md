@@ -36,7 +36,7 @@ through `with:`; no reusable workflow interpolates caller input inside a
 | `reusable-evidence-binding.yml` | `pull_request` only | none | `contents: read` | Every changed path in the PR range is covered by a fresh verified receipt | Semantic sufficiency, review, merge, canon |
 | `quirk-semantic-governance.yml` | any | none | `contents: read` | Caller `.quirk/manifest.json` has the required keys; the canonical registry lints clean | That the manifest's domain claims are true |
 | `reusable-validate.yml` | any | `package-manager`, `node-version`, `bun-version`, `working-directory`, `test-script`, `run-build`, `run-e2e`, `e2e-script` | `contents: read` | JS lint, type-check, tests, build, optional Playwright e2e | Deployment or runtime behavior. Being hardened in a separate PR (pins, permissions) |
-| `reusable-pr-title-lint.yml` | `pull_request` | none | `pull-requests: read` | PR title is a Conventional Commit | Commit contents. Being hardened in a separate PR |
+| `reusable-pr-title-lint.yml` | `pull_request` | none | `pull-requests: read` | PR title is a Conventional Commit | Commit contents |
 | `reusable-codeql.yml` | `push`, `pull_request`, `schedule` | `languages` (required), `build-mode`, `queries` | `contents: read`, `actions: read`, `security-events: write` | CodeQL analysis uploaded to code scanning | Absence of vulnerabilities outside the query suite |
 | `reusable-dependency-review.yml` | `pull_request` only | `fail-on-severity`, `deny-licenses` | `contents: read` | No newly introduced dependency crosses the severity or license policy | Runtime reachability of any advisory |
 | `reusable-workflow-lint.yml` | `push`, `pull_request` | `persona` | `contents: read` | zizmor finds nothing at the chosen persona (honors the caller's `.github/zizmor.yml`) | Correctness of the workflow logic |
@@ -53,6 +53,9 @@ merge to `main`), `workflow-lint.yml`, `agent-task-dispatch.yml`, and
 repository's **Dependency graph** (Settings → Code security), an owner-only
 setting; the action fails at startup without it, so a red `Dependency Review`
 check that names the graph is a settings problem, not a dependency finding.
+The owner enabled it on 2026-09-20 (read back: the repository SBOM endpoint
+answered 200 and the check passed on PR #30); if it is ever disabled, the
+check fails at startup again on every pull request.
 Self-applied jobs run
 `step-security/harden-runner` in egress **audit** mode; switch to `block`
 only after the observed egress allowlist is recorded in a governed change.
