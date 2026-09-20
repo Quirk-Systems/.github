@@ -1,4 +1,5 @@
 {
+  "schema_version": "repository-manifest.v1",
   "repository": "Quirk-Systems/.github",
   "domain": "organization-governance",
   "registry": {
@@ -10,6 +11,13 @@
   "semantic_impact": {
     "default_change_class": "canonical-change",
     "local_extensions": [],
-    "projections": ["organization-policy", "repository-manifests", "ci", "documentation"]
-  }
+    "projections": ["organization-policy", "repository-manifests", "ci", "documentation", "portfolio-report", "agent-instructions"]
+  },
+  "primary_class": "canon",
+  "lifecycle": "active",
+  "owner": "@bryansayler",
+  "data_classification": "public",
+  "canonical_inputs": [],
+  "extraction_trigger": null,
+  "retirement_condition": null
 }

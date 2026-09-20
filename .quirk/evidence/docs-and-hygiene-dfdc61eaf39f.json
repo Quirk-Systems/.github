@@ -1,0 +1,135 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.docs-and-hygiene.dfdc61eaf39f",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "0f1b1948232d7f0eff06cf8001145b88f7d1132f",
+    "commit": "dfdc61eaf39f2429c9d4d740a1f514adabccbd79",
+    "changed_paths": [
+      ".editorconfig",
+      ".gitattributes",
+      ".github/ISSUE_TEMPLATE/config.yml",
+      ".gitignore",
+      "CONTRIBUTING.md",
+      "GOVERNANCE.md",
+      "NOTICE",
+      "README.md",
+      "SUPPORT.md",
+      "docs/superpowers/plans/2026-09-20-org-control-plane.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.docs-and-hygiene.dfdc61eaf39f",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The cited bytes add the repository README, SUPPORT.md, GOVERNANCE.md, contributing guidance for the two-commit receipt protocol, NOTICE scope, editor and Git attribute configuration, a Python-oriented .gitignore, an issue-chooser support link, and the plan ledger for this change. All relative Markdown links resolve; unit tests, validators, ruff, actionlint, and zizmor passed locally on this subject. No ruleset, ownership, or organization setting is changed by these documents.",
+      "evidence_paths": [
+        ".editorconfig",
+        ".gitattributes",
+        ".github/ISSUE_TEMPLATE/config.yml",
+        ".gitignore",
+        "CONTRIBUTING.md",
+        "GOVERNANCE.md",
+        "NOTICE",
+        "README.md",
+        "SUPPORT.md",
+        "docs/superpowers/plans/2026-09-20-org-control-plane.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".editorconfig",
+      "state": "present",
+      "git_blob": "e9a123208872bba1e927fe12dac6b1f4ae3bcd78",
+      "sha256": "sha256:f42c72e651636db9561490d0d0d4cd1f4585ef365bef1b96e5548a1a8f1fb34b"
+    },
+    {
+      "path": ".gitattributes",
+      "state": "present",
+      "git_blob": "123945f1509172c2240cc6894e7e46de36891742",
+      "sha256": "sha256:f6a73eea1eb1162bcbbdfbf00e5a3a59a6a628a858f3ea6a707aabfacf6430b4"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/config.yml",
+      "state": "present",
+      "git_blob": "d09cad3baa5c5e12446413b2f9848b46daf0c148",
+      "sha256": "sha256:c379ffc43afdef8c67697fcfa659acf2c8fcf329f6701a79e68defd20d98dbc8"
+    },
+    {
+      "path": ".gitignore",
+      "state": "present",
+      "git_blob": "4a3192d6d6e19e36c9e9301c41237d10457f49cb",
+      "sha256": "sha256:1be926ab603c5ee00dde879f9fe4e1a797abcc560b323d763461c8f1e72b0c26"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "state": "present",
+      "git_blob": "3929ec6c57784473fe4e001bd377fca085ba25ed",
+      "sha256": "sha256:5404f7c1e14c9f5017a2b654c7befbc36c56f0384746017282918bf85fc96698"
+    },
+    {
+      "path": "GOVERNANCE.md",
+      "state": "present",
+      "git_blob": "68a2b6bba3721c799c6ebbce4f3cc6cdf0a54791",
+      "sha256": "sha256:97ad3378f2d809233d3ef794d8ea6d685d139e121ba6aadd057dec5226c09c9a"
+    },
+    {
+      "path": "NOTICE",
+      "state": "present",
+      "git_blob": "b5a72e991cc5b1c9ad2568cd8430869c8f609797",
+      "sha256": "sha256:a75eff90a25acecdb4e587739eec4c6e6139dbdcac638be98d78a864c087fe18"
+    },
+    {
+      "path": "README.md",
+      "state": "present",
+      "git_blob": "0da17f6a8b37a184ec4a747fb42acda242b6f19b",
+      "sha256": "sha256:6d2aa358cd807699957e4e699e1ec478b40fac90bb7932364d80ef2cc14d19d5"
+    },
+    {
+      "path": "SUPPORT.md",
+      "state": "present",
+      "git_blob": "91bc4a33cd508b79d86bab1523afb7bf919b80ee",
+      "sha256": "sha256:0420d3734e24181504c41deeaa87dee1f1d55a06a6c9cd9de72a7ebcd8814607"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-09-20-org-control-plane.md",
+      "state": "present",
+      "git_blob": "601b1861e9d6358e1eb3440927506ef4ef6112e4",
+      "sha256": "sha256:b3ab531ab5cf5095453cffb49e62e8c460438364fed05bdeb491355c732f13d9"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "relative Markdown link check over every *.md (0 broken)",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check 0f1b1948232d7f0eff06cf8001145b88f7d1132f dfdc61eaf39f2429c9d4d740a1f514adabccbd79",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T12:39:01Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:da480642e5b2d070dc04aeebf90e152286d28130251a209d545931716bd02aa7"
+}

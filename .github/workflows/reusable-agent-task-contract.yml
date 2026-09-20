@@ -1,0 +1,66 @@
+name: Reusable Agent Task Contract
+
+on:
+  workflow_call:
+
+# Validation only reads the caller's task records and this repository's schema.
+permissions:
+  contents: read
+
+concurrency:
+  group: reusable-agent-task-contract-${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: validate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout caller repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          path: .quirk-subject
+
+      - name: Require immutable policy identity
+        env:
+          POLICY_REPOSITORY: ${{ job.workflow_repository }}
+          POLICY_SHA: ${{ job.workflow_sha }}
+        run: |
+          python3 -I - <<'PY'
+          import os
+          import re
+          if os.environ.get("POLICY_REPOSITORY") != "Quirk-Systems/.github":
+              raise SystemExit("Unexpected or unavailable policy repository identity")
+          if not re.fullmatch(r"[0-9a-f]{40}", os.environ.get("POLICY_SHA", "")):
+              raise SystemExit("Immutable policy SHA unavailable; GitHub.com job context required")
+          PY
+
+      - name: Checkout immutable policy source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .quirk-policy
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            scripts/validate_agent_tasks.py
+            scripts/validate_manifest.py
+            .quirk/schemas/agent-task.schema.json
+            .quirk/schemas/repository-manifest.schema.json
+
+      - name: Verify policy checkout identity
+        env:
+          POLICY_SHA: ${{ job.workflow_sha }}
+        run: test "$(git -C .quirk-policy rev-parse HEAD)" = "$POLICY_SHA"
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Validate agent task contracts
+        run: python3 -I .quirk-policy/scripts/validate_agent_tasks.py --root .quirk-subject --schema .quirk-policy/.quirk/schemas/agent-task.schema.json

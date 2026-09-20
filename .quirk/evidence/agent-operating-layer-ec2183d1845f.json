@@ -1,0 +1,227 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.agent-operating-layer.ec2183d1845f",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "b33b60b479dff7c69db79d16e9fb4a2c3b95d518",
+    "commit": "ec2183d1845fe440520fe5fb2a9d59749801f7d7",
+    "changed_paths": [
+      ".claude/settings.json",
+      ".claude/skills/quirk-evidence-receipt/SKILL.md",
+      ".claude/skills/quirk-repo-maintenance/SKILL.md",
+      ".github/skills/quirk-evidence-receipt/SKILL.md",
+      ".github/zizmor.yml",
+      "AGENTS.md",
+      "CLAUDE.md",
+      "docs/governance/AGENT_OPERATING_MODEL.md",
+      "pyproject.toml",
+      "scripts/hooks/guard.py",
+      "scripts/quirk_concept.py",
+      "scripts/validate.sh",
+      "scripts/validate_agent_assets.py",
+      "scripts/validate_evidence_receipts.py",
+      "scripts/validate_governed_decisions.py",
+      "tests/test_agent_assets.py",
+      "tests/test_evidence_receipts.py",
+      "tests/test_governed_decisions.py",
+      "tests/test_maintenance_index.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.agent-operating-layer.ec2183d1845f",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The cited bytes add AGENTS.md, CLAUDE.md, Claude Code settings with a PreToolUse guard, the quirk-evidence-receipt skill and Claude shims, scripts/validate_agent_assets.py with 17 unit tests, scripts/validate.sh, ruff and zizmor configuration, and apply ruff safe fixes to existing validators. 58 unit tests, all validators, ruff, actionlint, and zizmor (offline, pedantic, with scoped exemptions for four pre-existing workflows) passed locally on this subject. No agent host execution, hosted CI run, permission enforcement, or merge approval is established.",
+      "evidence_paths": [
+        ".claude/settings.json",
+        ".claude/skills/quirk-evidence-receipt/SKILL.md",
+        ".claude/skills/quirk-repo-maintenance/SKILL.md",
+        ".github/skills/quirk-evidence-receipt/SKILL.md",
+        ".github/zizmor.yml",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "docs/governance/AGENT_OPERATING_MODEL.md",
+        "pyproject.toml",
+        "scripts/hooks/guard.py",
+        "scripts/quirk_concept.py",
+        "scripts/validate.sh",
+        "scripts/validate_agent_assets.py",
+        "scripts/validate_evidence_receipts.py",
+        "scripts/validate_governed_decisions.py",
+        "tests/test_agent_assets.py",
+        "tests/test_evidence_receipts.py",
+        "tests/test_governed_decisions.py",
+        "tests/test_maintenance_index.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".claude/settings.json",
+      "state": "present",
+      "git_blob": "6dce237e61152e621b2093c833a7880d4f288d79",
+      "sha256": "sha256:008f21a1ae8444adf754ada0f9737e4fc7b3ea92a89805096a9e5d6fb1641a50"
+    },
+    {
+      "path": ".claude/skills/quirk-evidence-receipt/SKILL.md",
+      "state": "present",
+      "git_blob": "c83cd611e9fd3a39b52a43e8270472b17155973d",
+      "sha256": "sha256:b6d75e38032d51c27a727325fd445979fb9c33f18df2407ff6103447f1ee618e"
+    },
+    {
+      "path": ".claude/skills/quirk-repo-maintenance/SKILL.md",
+      "state": "present",
+      "git_blob": "3b8f06e0a54b3a3a699e71889ce03382281a8de7",
+      "sha256": "sha256:2b3b6d8abc3945987f6e5fe3f10db2d569fb3ceb99699226e365df9dbfe3abe8"
+    },
+    {
+      "path": ".github/skills/quirk-evidence-receipt/SKILL.md",
+      "state": "present",
+      "git_blob": "3689621a8acd063d79ce9df9b1b4d75d56d8a454",
+      "sha256": "sha256:3493ceed08d3e5d8c93b823575e717fa8afce95a7f456d6272f1e6d65663a26c"
+    },
+    {
+      "path": ".github/zizmor.yml",
+      "state": "present",
+      "git_blob": "c8eb9dc634b47f0b6a3402dc5d5c88cee1d706ed",
+      "sha256": "sha256:016f394cbc1d4dc5b0474fb77608c9957f4e0fc69fe4fca2c338dd4f7c87f64b"
+    },
+    {
+      "path": "AGENTS.md",
+      "state": "present",
+      "git_blob": "d273f762eb2a21d92dd37c7160c773c93bc81484",
+      "sha256": "sha256:8d4c59273442c06f89723d7e455871314e3ab37f5da5f9cf5b70aa184081b6c4"
+    },
+    {
+      "path": "CLAUDE.md",
+      "state": "present",
+      "git_blob": "98b7be129ddcbe89c1872634c05812ff2c770519",
+      "sha256": "sha256:b90e690222907c4689b21decc3e6ffd76d633f3c39c0e97ef111126592f1e01a"
+    },
+    {
+      "path": "docs/governance/AGENT_OPERATING_MODEL.md",
+      "state": "present",
+      "git_blob": "004882d9a78bfba17ae2c90e494e39dc8ffbe6f3",
+      "sha256": "sha256:ebf01b5220a585ecf62385eead2a23763ca325d9a38653342e0b3edee25f3cc9"
+    },
+    {
+      "path": "pyproject.toml",
+      "state": "present",
+      "git_blob": "5c46bd0258ea89e0e178bcc5045a22c465c542ad",
+      "sha256": "sha256:bb20334120a82b81e3a5baaae7597b97db3bb02e802554e5a04cb4be159a4ac3"
+    },
+    {
+      "path": "scripts/hooks/guard.py",
+      "state": "present",
+      "git_blob": "c85d514d59729e9d8a3b1c3b3115bf8895e71959",
+      "sha256": "sha256:6d035d6ee47424a7664f3cff7b3078d61ac421ade7310735e4cd834a80a1a6a1"
+    },
+    {
+      "path": "scripts/quirk_concept.py",
+      "state": "present",
+      "git_blob": "92b33723e6c5125132cbddc56a98752a3ae35f09",
+      "sha256": "sha256:6e06236b204d6412d60cecaa776782b91322825d83ce58ce9f37a7ec0f89accf"
+    },
+    {
+      "path": "scripts/validate.sh",
+      "state": "present",
+      "git_blob": "0371360227e16cd2902e85dd122663cabe5141a7",
+      "sha256": "sha256:0f61b0f6fbbb0dbcf006cdbe6b52461f9ca46ed15d62bee6626a861808e0d602"
+    },
+    {
+      "path": "scripts/validate_agent_assets.py",
+      "state": "present",
+      "git_blob": "78bc3257bba1f8761c454e7ff53befd148bb34bc",
+      "sha256": "sha256:522ac984af77b0fc50d6fe62bde751bbfa82c136202dd47319bf4cb47f9fba15"
+    },
+    {
+      "path": "scripts/validate_evidence_receipts.py",
+      "state": "present",
+      "git_blob": "363f237b6a94edb3cb7e43fe7138d7d8014d687a",
+      "sha256": "sha256:9412b23431f626431f696cc5fae0a78df641988f0412a638639bdb1e3ff26f92"
+    },
+    {
+      "path": "scripts/validate_governed_decisions.py",
+      "state": "present",
+      "git_blob": "8d6ef48c8f097623c06daae6dd82f755707ca3fa",
+      "sha256": "sha256:9526b68166790311b6ecf5cfb734da2c5f48d9fcec34fce113bca7d3a9b80275"
+    },
+    {
+      "path": "tests/test_agent_assets.py",
+      "state": "present",
+      "git_blob": "ba35823bd7b4e63e0420d4ecf5653db9e3c074d7",
+      "sha256": "sha256:4634f9968df38aa2c3df3c221b978b68b7dbd61b2bbf824fbe8e9aeb001f4126"
+    },
+    {
+      "path": "tests/test_evidence_receipts.py",
+      "state": "present",
+      "git_blob": "dd6b44a0f17476bc420738d8e2a75028e11e7391",
+      "sha256": "sha256:a110b5f66168a375993eb4e4dec6605fcc2907121c1ed1ae3f4ad140857e3b29"
+    },
+    {
+      "path": "tests/test_governed_decisions.py",
+      "state": "present",
+      "git_blob": "d4fcefceda292365a288e344dc244e40e2eee830",
+      "sha256": "sha256:ed0e86e0930e60b1d373d1e2e0275ce3f5469fb505a6393abc032aa18f7ecab0"
+    },
+    {
+      "path": "tests/test_maintenance_index.py",
+      "state": "present",
+      "git_blob": "331e81bd8b7474299ace4aa8b8df6709822daf59",
+      "sha256": "sha256:7651351fb31747fc4bdecec4402d3c1d26c62b1fe1ba78f700322ba1b87f435d"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_agent_assets.py",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate-copilot-maintenance.py",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "ruff check .",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "actionlint -ignore 'property \"workflow_(repository|sha)\" is not defined'",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "uv tool run --quiet zizmor --offline --persona pedantic .github/workflows",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check b33b60b479dff7c69db79d16e9fb4a2c3b95d518 ec2183d1845fe440520fe5fb2a9d59749801f7d7",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T12:16:42Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:5c97e721843ae3511b846592d587f4cd84342034b9fa725f214b30bd6d1da10d"
+}

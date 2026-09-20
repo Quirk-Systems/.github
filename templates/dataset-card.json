@@ -1,0 +1,48 @@
+{
+  "schema_version": "dataset-card.v1",
+  "dataset_id": "qdataset.example.prompt-evals",
+  "title": "Example: prompt evaluation cases",
+  "summary": "Synthetic positive and adversarial requests used to dry-run agent profiles. Replace every field before use.",
+  "status": "draft",
+  "owner": "@bryansayler",
+  "source": {
+    "repository": "Quirk-Systems/.github",
+    "commit": "0000000000000000000000000000000000000000",
+    "paths": ["docs/copilot-maintenance/scenarios.json"]
+  },
+  "collection": {
+    "method": "Authored by hand as synthetic fixtures; no scraping, no user data.",
+    "period": "2026-09",
+    "contains_personal_data": false,
+    "consent_basis": null
+  },
+  "structure": {
+    "format": "JSON array",
+    "record_unit": "one scenario with id, kind, profile, request, artifacts",
+    "schema_reference": "docs/copilot-maintenance/README.md#verification",
+    "splits": [],
+    "record_count": 6
+  },
+  "license": {
+    "spdx": "Apache-2.0",
+    "rights_holder": "Quirk Systems",
+    "attribution": null
+  },
+  "data_classification": "public",
+  "intended_use": ["Instruction-following dry evaluation of Quirk agent profiles"],
+  "out_of_scope_use": ["Training or fine-tuning any model", "Benchmarking hosted Copilot behavior"],
+  "known_limitations": ["Six examples; not a behavioral benchmark", "Rubric scored by the author, not an independent evaluator"],
+  "provenance": {
+    "created_at": "2026-09-20",
+    "produced_by": "@bryansayler",
+    "evidence_receipts": []
+  },
+  "semantic_impact": {
+    "change_class": "reuse-canon",
+    "concepts": ["entity.asset"]
+  },
+  "authority": {
+    "effect": "none",
+    "required_next": ["review"]
+  }
+}

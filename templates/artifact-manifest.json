@@ -1,0 +1,49 @@
+{
+  "schema_version": "artifact-manifest.v1",
+  "artifact_id": "qasset.example.portfolio-diagram.2026-09-20",
+  "asset_concept": "entity.asset",
+  "title": "Example: portfolio topology diagram",
+  "kind": "image",
+  "status": "draft",
+  "produced_at": "2026-09-20T00:00:00Z",
+  "producer": {
+    "actor": "agent:quirk-artifact-forge",
+    "tool": "scripts/quirk_concept.py map | mermaid-cli 11.x",
+    "model": null
+  },
+  "source": {
+    "repository": "Quirk-Systems/.github",
+    "commit": "0000000000000000000000000000000000000000",
+    "paths": [".quirk/registry.json"]
+  },
+  "inputs": [
+    {"name": "registry", "kind": "file", "reference": ".quirk/registry.json", "sha256": null},
+    {"name": "layout", "kind": "parameter", "reference": "graph TD", "sha256": null}
+  ],
+  "outputs": [
+    {
+      "path": "assets/portfolio-topology.svg",
+      "media_type": "image/svg+xml",
+      "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "bytes": 0
+    }
+  ],
+  "license": {
+    "spdx": "Apache-2.0",
+    "rights_holder": "Quirk Systems",
+    "third_party_material": []
+  },
+  "data_classification": "public",
+  "semantic_impact": {
+    "change_class": "projection-change",
+    "concepts": ["entity.asset", "concept.topology"]
+  },
+  "authority": {
+    "effect": "none",
+    "required_next": ["review"]
+  },
+  "residue": [
+    "Example values: the commit and digests are zeros and must be replaced by real identities before use.",
+    "A rendered diagram projects the registry; it is not a source of truth."
+  ]
+}

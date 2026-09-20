@@ -1,0 +1,100 @@
+{
+  "schema_version": "agent-task.v1",
+  "task_id": "qtask.example.repair-ci-pin",
+  "repository": "Quirk-Systems/.github",
+  "title": "Example: repair a failing workflow pin",
+  "status": "proposed",
+  "subject": {
+    "base_commit": "0000000000000000000000000000000000000000",
+    "issue": null
+  },
+  "objective": {
+    "outcome": "The named workflow passes on the exact head with its action pinned to a full SHA and version comment.",
+    "allowed_paths": [
+      ".github/workflows/reusable-validate.yml",
+      ".quirk/evidence/"
+    ],
+    "forbidden_paths": [
+      ".quirk/registry.json",
+      ".claude/settings.json",
+      ".github/CODEOWNERS"
+    ]
+  },
+  "knowledge_sources": {
+    "allowed": [
+      "this repository at base_commit",
+      "docs/governance/REUSABLE_WORKFLOWS.md",
+      "the linked failing workflow run"
+    ],
+    "forbidden": [
+      "private transcripts",
+      "any repository outside Quirk-Systems"
+    ]
+  },
+  "tools": {
+    "allowed": [
+      "read",
+      "search",
+      "edit",
+      "python3 -m unittest",
+      "scripts/validate.sh",
+      "git commit",
+      "git push -u origin <task-branch>"
+    ],
+    "approval_gated": [
+      "pip install",
+      "network access beyond github.com"
+    ],
+    "forbidden": [
+      "merge",
+      "approve or dismiss reviews",
+      "deploy",
+      "publish",
+      "edit rulesets or org settings",
+      "read or write secrets",
+      "git push --force"
+    ]
+  },
+  "execution": {
+    "environment": "GitHub-hosted ubuntu-24.04 or Claude Code Remote sandbox",
+    "max_runtime_minutes": 60,
+    "max_files_changed": 6,
+    "network": "github-only"
+  },
+  "owner": {
+    "human": "@bryansayler",
+    "shutdown_authority": "@bryansayler"
+  },
+  "agent": {
+    "profile": "quirk-repo-repair",
+    "model": {
+      "provider": "example-provider",
+      "identifier": "example-model",
+      "version": null
+    }
+  },
+  "evidence": {
+    "verification_commands": [
+      "scripts/validate.sh",
+      "python3 -m unittest tests.test_workflow_pins -v"
+    ],
+    "receipt_required": true
+  },
+  "rollback": {
+    "plan": "Revert the task branch commits; no runtime, release, or external state is touched.",
+    "reversible": true
+  },
+  "authority": {
+    "effect": "none",
+    "required_next": [
+      "authorize",
+      "review",
+      "merge"
+    ]
+  },
+  "idempotency_key": "sha256:62a1591c6577b21fbad208f8694fd0e7984f6b397c6def1da630da33e6567d03",
+  "residue": [
+    "Example values: the base commit is a placeholder; regenerate the idempotency key (sha256 of repository + base_commit + task_id + \"agent-task\") whenever either changes.",
+    "A committed task record is not proof the agent ran or that its result was reviewed."
+  ]
+}

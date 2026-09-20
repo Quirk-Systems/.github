@@ -1,0 +1,152 @@
+name: Repository proposal
+description: Propose a new Quirk Systems repository or a major repository boundary change
+title: "repo proposal: "
+labels:
+  - proposal
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A repository is not created to honor a noun. It is created to enforce a real boundary.
+
+        Complete this form before creating, splitting, renaming, merging, making public, deprecating, or archiving a repository.
+
+  - type: input
+    id: proposed_name
+    attributes:
+      label: Proposed repository or boundary
+      description: Use the exact proposed repository name or describe the boundary change.
+      placeholder: Quirk-Systems/example
+    validations:
+      required: true
+
+  - type: dropdown
+    id: primary_class
+    attributes:
+      label: Primary repository class
+      options:
+        - canon
+        - kernel
+        - registry
+        - interface
+        - connector
+        - instrument
+        - realm
+        - reference
+        - lab
+        - sandbox
+    validations:
+      required: true
+
+  - type: dropdown
+    id: operation
+    attributes:
+      label: Proposed operation
+      options:
+        - create
+        - extract or split
+        - rename
+        - merge into another repository
+        - change visibility
+        - deprecate
+        - archive
+    validations:
+      required: true
+
+  - type: textarea
+    id: responsibility
+    attributes:
+      label: Unique responsibility
+      description: What single responsibility will this repository own that no existing repository should own?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Why not an existing boundary?
+      description: Explain why this cannot remain a module, package, folder, feature flag, branch, issue, or lab inside an existing repository.
+    validations:
+      required: true
+
+  - type: textarea
+    id: consumers
+    attributes:
+      label: Consumers and extraction evidence
+      description: Name current consumers. For an extraction, identify the real second independent consumer.
+    validations:
+      required: true
+
+  - type: textarea
+    id: authority
+    attributes:
+      label: Canonical authority and projections
+      description: Identify the source of truth and every runtime, database, interface, or generated projection.
+    validations:
+      required: true
+
+  - type: textarea
+    id: boundary
+    attributes:
+      label: Required separation boundary
+      description: Describe any security, privacy, credential, deployment, scaling, ownership, legal, or release-cadence boundary.
+    validations:
+      required: true
+
+  - type: input
+    id: owner
+    attributes:
+      label: Named owner
+      description: Person or team accountable for purpose, permissions, reviews, maintenance, and retirement.
+      placeholder: "@owner"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: visibility
+    attributes:
+      label: Intended visibility
+      options:
+        - public
+        - private
+        - undecided pending review
+    validations:
+      required: true
+
+  - type: textarea
+    id: operating_loop
+    attributes:
+      label: Quirk operating-loop role
+      description: Explain how this boundary participates in preparation, session, execution, review, and persistent world update.
+    validations:
+      required: true
+
+  - type: textarea
+    id: success
+    attributes:
+      label: Success and health criteria
+      description: Define the evidence that this repository is useful, healthy, and worth maintaining.
+    validations:
+      required: true
+
+  - type: textarea
+    id: retirement
+    attributes:
+      label: Retirement or merge-back condition
+      description: Define when the repository should be frozen, merged, deprecated, or archived.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Proposal checks
+      options:
+        - label: I searched for an existing repository, package, module, issue, or lab that already owns this responsibility.
+          required: true
+        - label: I identified the canonical source of truth rather than treating a runtime projection as canon.
+          required: true
+        - label: I documented a named owner and retirement condition.
+          required: true
+        - label: I understand that the default decision is to keep the work inside an existing boundary until extraction evidence is real.
+          required: true
