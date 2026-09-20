@@ -1,0 +1,48 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.portfolio-count-diagnostics.586d47ada9fe",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "221b77c408ffc3665f0adb611ab35d45d8714b51",
+    "commit": "586d47ada9fe1a7e997e6e23d7e7489c09917bee",
+    "changed_paths": [
+      "scripts/validate_portfolio.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.portfolio-count-diagnostics.586d47ada9fe",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Restores concrete expected-versus-actual details to the portfolio validator scope-count diagnostics so topology drift remains actionable in CI output; hosted GitHub execution, merge approval, and owner decisions remain unproven.",
+      "evidence_paths": [
+        "scripts/validate_portfolio.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "scripts/validate_portfolio.py",
+      "state": "present",
+      "git_blob": "df61cc815692aa9ea473a4983fcc812f96989789",
+      "sha256": "sha256:3a235c43f1a43380f8920e1610c7b51f28cf3484c9696a666c17f3f780eafbb4"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T20:08:16Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:a36167f78a340767b15f9e11faa39d004f05172b4c53823036c55712e14c7bf8"
+}

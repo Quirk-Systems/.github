@@ -1,0 +1,56 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.portfolio-inventory-validator-followup.ba1bf60a9552",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "a9955993ab8792432f9036e1778c9b1af0fbd412",
+    "commit": "ba1bf60a95526eb2328994af6704384029e72e3c",
+    "changed_paths": [
+      "scripts/validate_portfolio.py",
+      "tests/test_portfolio.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.portfolio-inventory-validator-followup.ba1bf60a9552",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Tightens the truthful topology portfolio validator to apply the loaded inventory schema, count scope entries directly, and assert exact expected repository sets in tests; hosted GitHub execution, merge approval, and owner decisions remain unproven.",
+      "evidence_paths": [
+        "scripts/validate_portfolio.py",
+        "tests/test_portfolio.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "scripts/validate_portfolio.py",
+      "state": "present",
+      "git_blob": "37b2dae1face552a5153b10d03edb669ad400c33",
+      "sha256": "sha256:397d3d0aed2c86eb11257a47cdb87b41fe190dbbc4e14fb3980d5880ab74e8ed"
+    },
+    {
+      "path": "tests/test_portfolio.py",
+      "state": "present",
+      "git_blob": "1a3c36acf8ba0ded977b3c882fa2e758ebf04fb0",
+      "sha256": "sha256:1135d966624abc24f961116745fe03d94f0993acf0b10241e3c1552312778dee"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T20:01:38Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:2bed1dc55c98ca392194a21052b20a0ce2df76020fdc57b57a96b5351587924d"
+}

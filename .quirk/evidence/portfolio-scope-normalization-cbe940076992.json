@@ -1,0 +1,48 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.portfolio-scope-normalization.cbe940076992",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "c8ebae67bb4a3216a05d1087ded6401958ea3787",
+    "commit": "cbe940076992121a65ac380e023468f163d9d834",
+    "changed_paths": [
+      "scripts/validate_portfolio.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.portfolio-scope-normalization.cbe940076992",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Normalizes the portfolio validator to reuse the validated local scope object before applying scope-count checks so malformed scope data fails with the intended structural diagnostics; hosted GitHub execution, merge approval, and owner decisions remain unproven.",
+      "evidence_paths": [
+        "scripts/validate_portfolio.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "scripts/validate_portfolio.py",
+      "state": "present",
+      "git_blob": "800de5dc60848ae8e61bdfef1fec13a2c7280d13",
+      "sha256": "sha256:aa239f9b11f92d93f0271426a60eaae713c97f9caa7e2f2458bad1df2a589dbe"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T20:06:40Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:aff8fe682228c2e9eac1bdb9e451e8133d15d9fc9b201d206c0b23e988c144a7"
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.poster-claim-binding.d8bff043f194",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "e1782a1775cd0688c147e92e8ae7d5335bac7e67",
+    "commit": "d8bff043f1942f30833b4f60cc9e3f219d8ce71f",
+    "changed_paths": [
+      "docs/briefs/2026-09-20-poster-claim-binding.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.poster-claim-binding.d8bff043f194",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Adds a draft brief proposing that Quirk poster assertions be bound to a machine-checkable claims file. The brief admits no registry concepts, creates no repository, and authorizes no build. The schema, claims file, and validator it names do not exist at this commit. scripts/validate.sh exits 1 here and at base e1782a1 from pre-existing failures in tests/test_topology_contracts.py and the manual-pr-ledger schema $id, neither touching docs/briefs/.",
+      "evidence_paths": [
+        "docs/briefs/2026-09-20-poster-claim-binding.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/briefs/2026-09-20-poster-claim-binding.md",
+      "state": "present",
+      "git_blob": "a91cf0e814ffde225a2c2e84b8a8cd804e3d01f5",
+      "sha256": "sha256:ac29578e3354d2e29f535b5a2397f5d3fac7fd112f2fc3f12b1aecc662f9c717"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python3 scripts/validate_governed_decisions.py --repository Quirk-Systems/.github --root . --decisions .quirk/decisions",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_evidence_receipts.py --repository Quirk-Systems/.github --root . --receipts .quirk/evidence",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/quirk_concept.py lint",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_agent_assets.py",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T20:35:14Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:db75c67412558e39fb05b4370a374825dc21a6e8c91bfefa489b056d189c1bed"
+}

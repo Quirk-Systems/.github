@@ -1,0 +1,48 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.portfolio-scope-count-alignment.aac82b7bb8a8",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "fd775f29920a01c032fa67d844af164532664feb",
+    "commit": "aac82b7bb8a85b3eee264999b4b404fb46b40a72",
+    "changed_paths": [
+      "scripts/validate_portfolio.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.portfolio-scope-count-alignment.aac82b7bb8a8",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Aligns the portfolio validator scope-count checks with both the unique expected repository sets and the raw scope entry partition so duplicate or drifted scope members fail closed; hosted GitHub execution, merge approval, and owner decisions remain unproven.",
+      "evidence_paths": [
+        "scripts/validate_portfolio.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "scripts/validate_portfolio.py",
+      "state": "present",
+      "git_blob": "202f8fc1976db8b8597a1b531a73c6fb3f95a119",
+      "sha256": "sha256:87d383c75db1d35e58cc3c0035d35ddc01c65c19f326e169288b45a29ab1298e"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T20:05:02Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:0b369fdd408ebe124f27e213bfd6f1b47f4c57c97d18e47f57e12498d9a1e4d3"
+}
