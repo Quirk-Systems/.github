@@ -1,0 +1,69 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.maintenance-node24-action-pins.33d9848478be",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "8dd23197a8bf40684871c24bd7e1ee4675a60ad6",
+    "commit": "33d9848478be6196c4ae5d08704ae0ed3ae49030",
+    "changed_paths": [
+      ".github/workflows/governance-contracts.yml",
+      ".github/workflows/reusable-evidence-binding.yml",
+      "tests/test_evidence_receipts.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.maintenance-node24-action-pins.33d9848478be",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Governance evidence workflows now pin checkout and setup-python to immutable node24-targeted commits while preserving exact-head checkout and read-only behavior.",
+      "evidence_paths": [
+        ".github/workflows/governance-contracts.yml",
+        ".github/workflows/reusable-evidence-binding.yml",
+        "tests/test_evidence_receipts.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/workflows/governance-contracts.yml",
+      "state": "present",
+      "git_blob": "75cf489eb79e05e3b861bc4e8a582edcf30cf5ca",
+      "sha256": "sha256:d63b39ca33f8f545cfab759a0ca04020c374fc42eb3d8911daaeaa4fb8783eb1"
+    },
+    {
+      "path": ".github/workflows/reusable-evidence-binding.yml",
+      "state": "present",
+      "git_blob": "18c36abbb087c2a8a911eeb738b41b6bdeae2564",
+      "sha256": "sha256:707d271fe4011061489bf507693b21a28e7343eae542ff9a687abbfe8c8b80e8"
+    },
+    {
+      "path": "tests/test_evidence_receipts.py",
+      "state": "present",
+      "git_blob": "66b6166a0201a727ca41ad6e69c8931be43e8231",
+      "sha256": "sha256:8416b218b104f5031df05b43af26ffa9de79db13537c8e766b2fb27ff1886076"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python -m unittest tests.test_evidence_receipts.EvidenceReceiptTest.test_workflows_are_stable_read_only_and_do_not_execute_claimant_commands tests.test_workflow_pins -v",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T13:07:38Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:4a4960e368f2f3f9cf06d5fef089fd1b405c2ee1bc9ee8c15e4d3068c91d435c"
+}
