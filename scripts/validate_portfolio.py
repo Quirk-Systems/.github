@@ -45,6 +45,8 @@ def validate_portfolio(data, schema):
         "adjacent_repository_selection_rule",
     }
     validate_topology.validate_object(scope, scope_fields, scope_fields, "portfolio scope", errors)
+    if not isinstance(scope, dict):
+        scope = {}
 
     if not isinstance(repositories, list):
         errors.append("repositories must be an array")
@@ -89,8 +91,8 @@ def validate_portfolio(data, schema):
         "adjacent repositories",
         errors,
     )
-    expected_organization_count = data.get("scope", {}).get("expected_organization_repository_count")
-    expected_adjacent_count = data.get("scope", {}).get("expected_adjacent_repository_count")
+    expected_organization_count = scope.get("expected_organization_repository_count")
+    expected_adjacent_count = scope.get("expected_adjacent_repository_count")
     if len(organization) != expected_organization_count:
         errors.append("organization repository count does not match scope")
     if len(adjacent) != expected_adjacent_count:
