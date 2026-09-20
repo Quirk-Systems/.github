@@ -57,8 +57,9 @@ For each target repository, an authorized owner must:
    check context. Expected local names are `Governance Contracts / validate` for
    `.github` and `Reusable Evidence Binding / validate` for a caller, but the
    observed GitHub context is authoritative.
-3. Record repository, pull-request URL, workflow run URL, observed check
-   context, pinned policy SHA, actor, and UTC timestamp in the rollout change.
+3. Record repository, pull-request URL, positive and negative workflow run URLs,
+   observed check context, pinned policy SHA, actor, and UTC timestamp in the
+   rollout change.
 4. Require the observed governance context together with the repository's existing
    CI context. Never replace functional CI with artifact binding.
 5. Prove the positive path with a fully receipted exact range.
