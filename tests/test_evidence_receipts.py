@@ -9,15 +9,16 @@ import tempfile
 import unittest
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 GENERATOR = ROOT / "scripts" / "create_evidence_receipt.py"
 VALIDATOR = ROOT / "scripts" / "validate_evidence_receipts.py"
 SCHEMA = ROOT / ".quirk" / "schemas" / "evidence-receipt.schema.json"
 GOVERNANCE_WORKFLOW = ROOT / ".github" / "workflows" / "governance-contracts.yml"
 REUSABLE_WORKFLOW = ROOT / ".github" / "workflows" / "reusable-evidence-binding.yml"
-CHECKOUT_PIN = "actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955"
-PYTHON_PIN = "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065"
+CHECKOUT_PIN = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+PYTHON_PIN = "actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97"
+LEGACY_CHECKOUT_PIN = "actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955"
+LEGACY_PYTHON_PIN = "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065"
 
 sys.path.insert(0, str(ROOT / "scripts"))
 import validate_evidence_receipts  # noqa: E402
@@ -589,7 +590,7 @@ class EvidenceReceiptTest(unittest.TestCase):
 
     def test_nul_diff_parser_rejects_malformed_non_utf8_and_unsafe_paths(self):
         self.assertEqual(
-            validate_evidence_receipts.parse_name_status("A\0café/資料.txt\0".encode("utf-8")),
+            validate_evidence_receipts.parse_name_status("A\0café/資料.txt\0".encode()),
             [("café/資料.txt", "present")],
         )
         malformed_outputs = (
@@ -663,9 +664,12 @@ class EvidenceReceiptTest(unittest.TestCase):
             self.assertNotRegex(workflow, r"actions/(?:checkout|setup-python)@v[0-9]")
             self.assertIn(CHECKOUT_PIN, workflow)
             self.assertIn(PYTHON_PIN, workflow)
+            self.assertNotIn(LEGACY_CHECKOUT_PIN, workflow)
+            self.assertNotIn(LEGACY_PYTHON_PIN, workflow)
         self.assertIn("fetch-depth: 0", governance)
         self.assertIn("python -m unittest discover -s tests -v", governance)
-        self.assertIn("scripts/validate_topology.py", governance)
+        self.assertNotIn("python scripts/validate_topology.py", governance)
+        self.assertIn("scripts/validate_governed_decisions.py", governance)
         self.assertIn("scripts/validate_evidence_receipts.py", governance)
         self.assertIn("${{ job.workflow_repository }}", reusable)
         self.assertIn("${{ job.workflow_sha }}", reusable)

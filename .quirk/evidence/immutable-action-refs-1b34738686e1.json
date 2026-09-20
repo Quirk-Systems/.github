@@ -1,0 +1,58 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.immutable-action-refs.1b34738686e1",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "ef109a03a6e0619a2281916bf03398f7e2f94ff6",
+    "commit": "1b34738686e1916087b38a333263885f89347ca9",
+    "changed_paths": [
+      ".github/workflows/quirk-semantic-governance.yml"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.immutable-action-refs.1b34738686e1",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The exact two-reference checkout pin repair is covered by 36 local governance tests, zero stored-decision errors and whitespace validation. Hosted run 34716985441 also passed its 36 unit tests, then failed because this committed evidence receipt was missing. Reusable consumer execution, policy enforcement, deployment, and merge approval are not established.",
+      "evidence_paths": [
+        ".github/workflows/quirk-semantic-governance.yml"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/workflows/quirk-semantic-governance.yml",
+      "state": "present",
+      "git_blob": "b32def3cb77fa276f40035d05c5f34dcf601bab3",
+      "sha256": "sha256:3ca7b6950173937c7c6f5f28f39fb4db08cdac9888b302ae1dd4a7b3d44aaf52"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python -m unittest discover -s tests -v",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python scripts/validate_governed_decisions.py --repository Quirk-Systems/.github --root . --decisions .quirk/decisions",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check ef109a03a6e0619a2281916bf03398f7e2f94ff6 1b34738686e1916087b38a333263885f89347ca9",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-12T20:28:37Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:cc35709bb9f96f0fceff5b4d675db08b7c77ce925943c926a88c51f415e14293"
+}

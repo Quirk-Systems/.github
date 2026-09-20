@@ -1,0 +1,61 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.maintenance-index.17067cc1b6e0",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "59c05caf9b68ef006d8627d9fc679b536c0a4e56",
+    "commit": "17067cc1b6e00c6af650c0c9cad9e68fb376391c",
+    "changed_paths": [
+      "docs/governance/MAINTENANCE_INDEX.md",
+      "tests/test_maintenance_index.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.maintenance-index.17067cc1b6e0",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The repaired maintenance index and its document-structure checks are bound to the cited subject bytes.",
+      "evidence_paths": [
+        "docs/governance/MAINTENANCE_INDEX.md",
+        "tests/test_maintenance_index.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/governance/MAINTENANCE_INDEX.md",
+      "state": "present",
+      "git_blob": "44cba71356cdb66f4ceb5a24f11e575fe00a757b",
+      "sha256": "sha256:b4efced87e45a8a627edf68d4208318a4dc0fd384fb5b349d52db4dbfe4345b8"
+    },
+    {
+      "path": "tests/test_maintenance_index.py",
+      "state": "present",
+      "git_blob": "1b20fccd07a5c804ab117a4cc4fb4e795c926376",
+      "sha256": "sha256:1a1cff8d10e43b7aaefd6c867595421f7ae796d9a07cd51a4d030dbcfd9649f7"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python -m unittest tests.test_maintenance_index -v",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python -m unittest discover -s tests -v",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-11T16:12:29Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:49cfc17404362bc5a7d594d9583e230b0229b421e1fd2d53cdf155f735a13010"
+}

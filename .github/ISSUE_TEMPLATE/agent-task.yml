@@ -1,0 +1,161 @@
+name: Agent task
+description: Propose a bounded task for an agent, with the containment fields every agent-authored change must expose
+title: "agent-task: "
+labels:
+  - agent-task
+  - needs-owner
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Containment before capability. This form is the human-readable half of `.quirk/schemas/agent-task.schema.json`.
+        Filing it proposes the task; it does not authorize, schedule, or run anything. A workflow checks that every
+        section is answered and comments the result. Only the human owner records `authorize`.
+
+  - type: input
+    id: repository
+    attributes:
+      label: Owning repository
+      placeholder: Quirk-Systems/example
+    validations:
+      required: true
+
+  - type: input
+    id: base_commit
+    attributes:
+      label: Base commit
+      description: Full 40-character SHA the agent starts from.
+    validations:
+      required: true
+
+  - type: textarea
+    id: objective
+    attributes:
+      label: Bounded objective
+      description: The observable outcome. One or two sentences.
+    validations:
+      required: true
+
+  - type: textarea
+    id: allowed_paths
+    attributes:
+      label: Allowed paths
+      description: One per line. The agent may change nothing outside these.
+    validations:
+      required: true
+
+  - type: textarea
+    id: forbidden_paths
+    attributes:
+      label: Forbidden paths
+      description: One per line. Write "none declared" if empty; a blank answer fails the check.
+    validations:
+      required: true
+
+  - type: textarea
+    id: knowledge_allowed
+    attributes:
+      label: Allowed knowledge sources
+      description: Repositories, docs, issues, or URLs the agent may read.
+    validations:
+      required: true
+
+  - type: textarea
+    id: knowledge_forbidden
+    attributes:
+      label: Forbidden knowledge sources
+      description: Private transcripts, customer data, unreviewed drafts, or anything else the agent must not read. Write "none declared" if empty.
+    validations:
+      required: true
+
+  - type: textarea
+    id: tools_allowed
+    attributes:
+      label: Allowed tools
+      description: Read, search, edit, specific commands. No wildcards.
+    validations:
+      required: true
+
+  - type: textarea
+    id: tools_gated
+    attributes:
+      label: Approval-gated tools
+      description: Tools the agent may use only after an explicit human approval in the thread. Write "none declared" if empty.
+    validations:
+      required: true
+
+  - type: textarea
+    id: tools_forbidden
+    attributes:
+      label: Forbidden tools
+      description: Must name at least merge, approve, deploy, publish, ruleset, and secrets.
+      value: "merge; approve or dismiss reviews; deploy; publish; edit rulesets or org settings; read or write secrets"
+    validations:
+      required: true
+
+  - type: textarea
+    id: execution
+    attributes:
+      label: Execution environment and limits
+      description: Where it runs, max runtime, max files changed, network policy (none | package-registries | github-only | allowlist | unrestricted).
+    validations:
+      required: true
+
+  - type: input
+    id: owner
+    attributes:
+      label: Human owner
+      placeholder: "@handle"
+    validations:
+      required: true
+
+  - type: input
+    id: shutdown
+    attributes:
+      label: Shutdown authority
+      description: Who can stop the task at any time. Removing the `agent-task` label or closing the issue is the kill switch.
+      placeholder: "@handle"
+    validations:
+      required: true
+
+  - type: textarea
+    id: agent
+    attributes:
+      label: Agent profile and model identity
+      description: Profile or skill name, and provider / model identifier / version when the output is consequential.
+    validations:
+      required: true
+
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification commands
+      description: Exactly what will be run and recorded in the evidence receipt.
+    validations:
+      required: true
+
+  - type: textarea
+    id: rollback
+    attributes:
+      label: Rollback plan
+      description: How the change is reversed or contained, and whether it is fully reversible.
+    validations:
+      required: true
+
+  - type: textarea
+    id: residue
+    attributes:
+      label: Residue
+      description: What stays unknown, what is excluded, and which human decisions remain.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Boundaries
+      options:
+        - label: This issue proposes a task. It is not authorization; the owner records that separately.
+          required: true
+        - label: The agent will return an evidence receipt for independent review and will not approve, merge, or deploy its own work.
+          required: true

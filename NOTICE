@@ -1,9 +1,12 @@
-quirk-systems/.github
+Quirk-Systems/.github
 Copyright 2025-2026 Quirk Systems
 
 This repository contains the organization profile, community-health files,
-and reusable GitHub Actions workflows for Quirk Systems
-(https://github.com/quirk-systems).
+governance doctrine, the Quirk concept and portfolio registries, evidence and
+decision contracts with their validators, reusable GitHub Actions workflows,
+agent instructions, skills, prompt packs, creation templates, and the
+candidate design-token source for Quirk Systems
+(https://github.com/Quirk-Systems).
 
 Licensed under the Apache License, Version 2.0 (the "License").
 A copy of the License is included in the LICENSE file at the root of
