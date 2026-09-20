@@ -1,13 +1,8 @@
 #!/usr/bin/env python3
-"""Validate the portfolio registry (.quirk/repositories.json).
+"""Validate the truthful topology inventory used for the portfolio projection.
 
-Standard library only. Applies .quirk/schemas/portfolio-registry.schema.json
-through the same subset validator used for manifests, then checks the
-cross-entry rules: unique repositories, the two canon repositories present,
-no observed-unclassified entry that is also a classified entry, and no
-observed entry claiming anything beyond observation. Passing proves the file
-is well-formed and internally consistent; it does not prove any
-classification is correct or that the observation is current.
+Standard library only. Applies the loaded inventory schema, then checks the
+cross-entry invariants needed by docs/PORTFOLIO.md.
 """
 
 import argparse
@@ -16,12 +11,12 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA = ROOT / ".quirk" / "schemas" / "portfolio-registry.schema.json"
+SCHEMA = ROOT / ".quirk" / "schemas" / "repository-inventory.schema.json"
 REGISTRY = ROOT / ".quirk" / "repositories.json"
-REQUIRED_REPOSITORIES = ("Quirk-Systems/.github", "Quirk-Systems/.github-private")
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from validate_manifest import ManifestError, _check  # noqa: E402
+import validate_topology  # noqa: E402
 
 
 class PortfolioError(ValueError):
@@ -33,34 +28,90 @@ def validate_portfolio(data, schema):
         _check(data, schema, "portfolio")
     except ManifestError as error:
         raise PortfolioError(str(error)) from error
-    names = [entry["repository"] for entry in data["repositories"]]
-    if len(names) != len(set(names)):
-        raise PortfolioError("repositories must be unique")
-    for required in REQUIRED_REPOSITORIES:
-        if required not in names:
-            raise PortfolioError(f"{required} must be registered")
-    observed = data.get("observed_unclassified", [])
-    observed_names = [entry["repository"] for entry in observed]
-    if len(observed_names) != len(set(observed_names)):
-        raise PortfolioError("observed_unclassified repositories must be unique")
-    overlap = sorted(set(observed_names) & set(names))
-    if overlap:
-        raise PortfolioError(f"observed_unclassified entries duplicate classified entries: {overlap}")
-    if observed_names != sorted(observed_names, key=str.casefold):
-        raise PortfolioError("observed_unclassified must be sorted by repository name")
-    observation = data.get("observation")
-    if observed and not observation:
-        raise PortfolioError("observed_unclassified requires an observation record")
-    if observation:
-        for name in observation["registered_not_observed"]:
-            if name not in names:
-                raise PortfolioError(f"registered_not_observed names an unregistered repository: {name}")
-        expected_total = len(names) - len(observation["registered_not_observed"]) + len(observed_names)
-        if observation["total_observed"] != expected_total:
-            raise PortfolioError(
-                f"observation.total_observed is {observation['total_observed']} but registered-observed plus "
-                f"observed-unclassified is {expected_total}"
-            )
+
+    if not isinstance(data, dict):
+        raise PortfolioError("portfolio must be an object")
+
+    errors = []
+    root_fields = {"registry_version", "authority", "snapshot", "scope", "repositories"}
+    validate_topology.validate_object(data, root_fields, root_fields, "portfolio", errors)
+
+    repositories = data.get("repositories", [])
+    scope = data.get("scope", {})
+    if not isinstance(scope, dict):
+        scope = {}
+    scope_fields = {
+        "organization",
+        "expected_organization_repository_count",
+        "expected_adjacent_repository_count",
+        "adjacent_repository_selection_rule",
+    }
+    validate_topology.validate_object(scope, scope_fields, scope_fields, "portfolio scope", errors)
+
+    if not isinstance(repositories, list):
+        errors.append("repositories must be an array")
+        repositories = []
+
+    repository_ids = []
+    organization = set()
+    adjacent = set()
+    organization_entries = 0
+    adjacent_entries = 0
+    for item in repositories:
+        if not validate_topology.validate_object(
+            item,
+            validate_topology.REQUIRED_REPOSITORY_FIELDS,
+            validate_topology.REQUIRED_REPOSITORY_FIELDS,
+            "repository",
+            errors,
+        ):
+            continue
+        repository = item["repository"]
+        repository_ids.append(repository)
+        if item["scope"] == "organization":
+            organization.add(repository)
+            organization_entries += 1
+        elif item["scope"] == "adjacent":
+            adjacent.add(repository)
+            adjacent_entries += 1
+        else:
+            errors.append("invalid repository scope: " + str(item["scope"]))
+
+    if len(repository_ids) != len(set(repository_ids)):
+        errors.append("repositories must be unique")
+    validate_topology.validate_expected_set(
+        organization,
+        validate_topology.EXPECTED_ORGANIZATION_REPOSITORIES,
+        "organization repositories",
+        errors,
+    )
+    validate_topology.validate_expected_set(
+        adjacent,
+        validate_topology.EXPECTED_ADJACENT_REPOSITORIES,
+        "adjacent repositories",
+        errors,
+    )
+    expected_organization_count = scope.get("expected_organization_repository_count")
+    expected_adjacent_count = scope.get("expected_adjacent_repository_count")
+    if len(organization) != expected_organization_count:
+        errors.append(
+            f"organization repository count does not match scope: expected {expected_organization_count}, got {len(organization)}"
+        )
+    if len(adjacent) != expected_adjacent_count:
+        errors.append(
+            f"adjacent repository count does not match scope: expected {expected_adjacent_count}, got {len(adjacent)}"
+        )
+    if organization_entries != expected_organization_count:
+        errors.append(
+            f"organization repository entry count does not match scope: expected {expected_organization_count}, got {organization_entries}"
+        )
+    if adjacent_entries != expected_adjacent_count:
+        errors.append(
+            f"adjacent repository entry count does not match scope: expected {expected_adjacent_count}, got {adjacent_entries}"
+        )
+
+    if errors:
+        raise PortfolioError("; ".join(errors))
     return data
 
 
@@ -77,8 +128,9 @@ def main(argv=None):
         print(f"FAIL: {error}", file=sys.stderr)
         return 1
     print(
-        f"Portfolio OK: {len(data['repositories'])} classified, "
-        f"{len(data.get('observed_unclassified', []))} observed-unclassified"
+        f"Portfolio OK: {len(data['repositories'])} inventory repositories "
+        f"({data['scope']['expected_organization_repository_count']} organization, "
+        f"{data['scope']['expected_adjacent_repository_count']} adjacent)"
     )
     return 0
 

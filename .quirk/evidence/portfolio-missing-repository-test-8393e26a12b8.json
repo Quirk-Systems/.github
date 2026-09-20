@@ -1,0 +1,56 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.portfolio-missing-repository-test.8393e26a12b8",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "7d66fe8fc5b1b8ff2ae69f782af11b0cb670fa01",
+    "commit": "8393e26a12b80540646614803cda773b4e925b41",
+    "changed_paths": [
+      "scripts/validate_portfolio.py",
+      "tests/test_portfolio.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.portfolio-missing-repository-test.8393e26a12b8",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Isolates the missing required repository validator path in tests and normalizes scope before validating it so structural portfolio failures stay attributable; hosted GitHub execution, merge approval, and owner decisions remain unproven.",
+      "evidence_paths": [
+        "scripts/validate_portfolio.py",
+        "tests/test_portfolio.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "scripts/validate_portfolio.py",
+      "state": "present",
+      "git_blob": "b0da119ce110276dabdad4eebc2aa3ad3ef5f20f",
+      "sha256": "sha256:ff1c927485312fa17a05723be567b4df6404c2b174331c1f025047f514942003"
+    },
+    {
+      "path": "tests/test_portfolio.py",
+      "state": "present",
+      "git_blob": "a9d7d6ceda71dc876fc59c4748e5e79ea241c6bc",
+      "sha256": "sha256:adf2cabe94ff85637280516661d3de3e5eaea6de453567af3d55e41b3037ed99"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T20:10:02Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:d999168f89093272052e65d0af9fe40e545216eef6529e2531f0c2cd3e4f9cda"
+}

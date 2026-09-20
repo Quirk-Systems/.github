@@ -25,7 +25,7 @@ The conversation is not the system. The agent is not the system. The repository 
 - [`quirk-generator`](https://github.com/Quirk-Systems/quirk-generator) — multi-model visual-generation instrument
 - [`.github`](https://github.com/Quirk-Systems/.github) — public governance, semantic authority, agent instructions, and reusable organization workflows
 
-The full classified portfolio and the observed-but-unclassified inventory are projected in [`docs/PORTFOLIO.md`](https://github.com/Quirk-Systems/.github/blob/main/docs/PORTFOLIO.md).
+The full truthful topology inventory for the 2026-08-21 cut is projected in [`docs/PORTFOLIO.md`](https://github.com/Quirk-Systems/.github/blob/main/docs/PORTFOLIO.md).
 
 ## Operating principles
 
