@@ -1,0 +1,96 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.schema-branch-fail-closed.9b737825bbee",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "eda0cb8509038109e38f9e21b4a488277cdc4bc3",
+    "commit": "9b737825bbee942399814447a654b20544a84c09",
+    "changed_paths": [
+      ".quirk/evidence/lint-import-order-9b9c2423fcd4.json",
+      ".quirk/evidence/schema-ref-resolution-bd90a1778313.json",
+      "scripts/validate_manifest.py",
+      "scripts/validate_portfolio.py",
+      "scripts/validate_topology.py",
+      "tests/test_schema_subset.py",
+      "tests/test_topology_contracts.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.schema-branch-fail-closed.9b737825bbee",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "An unsupported keyword anywhere in a schema document, including a branch no value reaches, is refused rather than hidden by a matching sibling branch, and a circular, unresolvable or remote $ref reached through a boolean keyword raises a schema error instead of exhausting the stack. Verified by reproducing both before the change and their rejection after. Full draft 2020-12 conformance is still not implemented and remains refused rather than ignored.",
+      "evidence_paths": [
+        "scripts/validate_manifest.py",
+        "tests/test_schema_subset.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".quirk/evidence/lint-import-order-9b9c2423fcd4.json",
+      "state": "present",
+      "git_blob": "62b646400be7ee8f1baadfa64e111aebd2187a93",
+      "sha256": "sha256:01b8164b791a38b7268b246cdc5a747de6cf19a88249cf8b22140c34f6603a85"
+    },
+    {
+      "path": ".quirk/evidence/schema-ref-resolution-bd90a1778313.json",
+      "state": "present",
+      "git_blob": "676816fd9cd859c8fb618e397a71b415452b22ba",
+      "sha256": "sha256:a1abecd96c7d31bf369b7bc782635108f37295055eedd3b2bd60b5300ca9aaac"
+    },
+    {
+      "path": "scripts/validate_manifest.py",
+      "state": "present",
+      "git_blob": "538698feaad0135dd359f787538bd2f7d0ccb274",
+      "sha256": "sha256:9ca11dd7602d273929d3c02c1fda9fa8d8f968bcbfe51666dd3208b2dea4b164"
+    },
+    {
+      "path": "scripts/validate_portfolio.py",
+      "state": "present",
+      "git_blob": "7a61fd93396245d8be1919395c7d7ecb3a79adc8",
+      "sha256": "sha256:c915e036de4b7c4f734ab524df239e1c52f2dcfa72d5ad0795bfd7ac77d6627d"
+    },
+    {
+      "path": "scripts/validate_topology.py",
+      "state": "present",
+      "git_blob": "b3927e13f180028437efb8c33207c29d0c42e445",
+      "sha256": "sha256:e33b88463c1bd99fce1b47725ff0c876bec364f8c0139c1dd3dc42bd95f0ee39"
+    },
+    {
+      "path": "tests/test_schema_subset.py",
+      "state": "present",
+      "git_blob": "dfc57191c8e78847aa5ad6393fe4a0a36a12088b",
+      "sha256": "sha256:fe323e8f1fb97d686671e7e28ed79b05711d3523b1c9158f522ad10cb31cee25"
+    },
+    {
+      "path": "tests/test_topology_contracts.py",
+      "state": "present",
+      "git_blob": "496516b4c624b0c041261f60b39433b1d8cf862c",
+      "sha256": "sha256:7fd1253ceff90d268be2bfb35a8a08f818ed35e6822575cca318adaf12006959"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python3 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T21:58:26Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:48b92c7c1dfe5d6d1166dee906467c9835c5228bad73b5a6384271101cd95226"
+}
