@@ -20,7 +20,9 @@ CHECKOUT_PIN = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
 PYTHON_PIN = "actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97"
 LEGACY_CHECKOUT_PIN = "actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955"
 LEGACY_PYTHON_PIN = "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065"
-USES_PIN_RE = re.compile(r"^\s*-?\s*uses:\s*(actions/(checkout|setup-python)@\S+)(?:\s+#\s*(\S+))?\s*$")
+USES_PIN_RE = re.compile(
+    r"^\s*-?\s*uses:\s*(actions/(checkout|setup-python)@[^#\s]+)(?:\s+#\s*(\S+))?\s*$"
+)
 
 sys.path.insert(0, str(ROOT / "scripts"))
 import validate_evidence_receipts  # noqa: E402
