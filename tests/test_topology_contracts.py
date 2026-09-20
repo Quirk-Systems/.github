@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-INVENTORY = ROOT / ".quirk" / "repositories.json"
+INVENTORY = ROOT / ".quirk" / "repository-topology.inventory.json"
 LEDGER = ROOT / ".quirk" / "manual-prs.json"
 VALIDATOR = ROOT / "scripts" / "validate_topology.py"
 INVENTORY_SCHEMA = ROOT / ".quirk" / "schemas" / "repository-inventory.schema.json"
