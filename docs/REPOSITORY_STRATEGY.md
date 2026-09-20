@@ -35,9 +35,9 @@ Every repository must clearly declare which part of this loop it serves and whic
 
 ## 2. Historical naming proposal — stale premises
 
-The implemented kernel is currently `Quirk-Systems/project-scaffold`. The private `Quirk-Systems/quirk-os` repository is an empty placeholder.
+Historical proposal assumption (now stale): the implemented kernel was `Quirk-Systems/project-scaffold`, and `Quirk-Systems/quirk-os` was a private empty placeholder.
 
-The intended cutover is:
+Historical proposed cutover sequence (non-operative):
 
 1. Rename the empty `quirk-os` placeholder to `quirk-os-reserved`.
 2. Archive the renamed placeholder after confirming it contains no unique settings, secrets, environments, releases, packages, or branch rules.

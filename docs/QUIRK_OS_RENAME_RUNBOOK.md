@@ -6,8 +6,8 @@ Goal: preserve the implemented kernel and its full history while moving the cano
 
 ## Historical assumed state — superseded by drift evidence
 
-- `Quirk-Systems/project-scaffold` — active public repository containing the implemented Quirk OS kernel, history, issues, pull requests, workflows, and architecture.
-- `Quirk-Systems/quirk-os` — empty private placeholder blocking the desired name.
+- Historical assumption (stale): `Quirk-Systems/project-scaffold` was the active public repository containing the implemented Quirk OS kernel, history, issues, pull requests, workflows, and architecture.
+- Historical assumption (stale): `Quirk-Systems/quirk-os` was an empty private placeholder blocking the desired name.
 
 ## Required authority
 
