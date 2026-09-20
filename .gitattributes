@@ -1,0 +1,9 @@
+# Receipts bind SHA-256 of file bytes; normalize line endings so the same
+# content hashes identically on every platform.
+* text=auto eol=lf
+*.py text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.sh text eol=lf
