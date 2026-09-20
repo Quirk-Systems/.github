@@ -35,7 +35,7 @@ any irreversible authority action.
 
 ## Proof Passport output contract
 
-`scripts/closure_harness_shadow.py` validates
+`scripts/closure_harness_shadow.py` validates the default queue file
 `.quirk/closure-wave1-queue.json` and emits a machine-readable JSON proof
 passport for one exact queue subject.
 

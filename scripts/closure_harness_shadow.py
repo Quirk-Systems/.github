@@ -59,6 +59,7 @@ def validate_queue(queue):
 
     allowed = queue.get("allowed_dispositions")
     _require(isinstance(allowed, list), "allowed_dispositions must be an array")
+    _require(len(allowed) == len(set(allowed)), "allowed_dispositions must not contain duplicates")
     _require(set(allowed) == ALLOWED_DISPOSITIONS, "allowed_dispositions must match the finite closure set")
 
     wave_1 = queue.get("wave_1")
@@ -171,6 +172,10 @@ def main(argv=None):
         queue = json.loads(args.queue.read_text(encoding="utf-8"))
         validate_queue(queue)
         if args.check:
+            _require(
+                not any(value is not None for value in (args.repository, args.pull_request, args.base_sha, args.output)),
+                "--check cannot be combined with emit arguments",
+            )
             print(f"Closure queue OK: {len(queue['wave_1']['items'])} wave_1 items (shadow mode)")
             return 0
 

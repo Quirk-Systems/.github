@@ -54,6 +54,12 @@ class ClosureHarnessShadowTests(unittest.TestCase):
         with self.assertRaisesRegex(self.module.ClosureHarnessError, "target_disposition"):
             self.module.validate_queue(queue)
 
+    def test_queue_rejects_duplicate_allowed_dispositions(self):
+        queue = self.valid_queue()
+        queue["allowed_dispositions"].append("READY_FOR_MERGE")
+        with self.assertRaisesRegex(self.module.ClosureHarnessError, "must not contain duplicates"):
+            self.module.validate_queue(queue)
+
     def test_emit_passport_is_read_only_and_exact_head_bound(self):
         passport = self.module.build_passport(
             self.queue,
@@ -87,6 +93,18 @@ class ClosureHarnessShadowTests(unittest.TestCase):
             )
             payload = json.loads(output.read_text(encoding="utf-8"))
             self.assertEqual(payload["disposition"]["value"], "READY_FOR_HUMAN_ADMISSION")
+
+    def test_cli_rejects_check_with_emit_arguments(self):
+        self.assertEqual(
+            self.module.main(["--check", "--repository", "Quirk-Systems/.github"]),
+            1,
+        )
+
+    def test_cli_emit_requires_subject_arguments(self):
+        self.assertEqual(
+            self.module.main(["--pull-request", "9", "--base-sha", "a" * 40]),
+            1,
+        )
 
 
 if __name__ == "__main__":
