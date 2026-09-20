@@ -89,10 +89,16 @@ def validate_portfolio(data, schema):
         "adjacent repositories",
         errors,
     )
-    if organization_entries != data.get("scope", {}).get("expected_organization_repository_count"):
+    expected_organization_count = data.get("scope", {}).get("expected_organization_repository_count")
+    expected_adjacent_count = data.get("scope", {}).get("expected_adjacent_repository_count")
+    if len(organization) != expected_organization_count:
         errors.append("organization repository count does not match scope")
-    if adjacent_entries != data.get("scope", {}).get("expected_adjacent_repository_count"):
+    if len(adjacent) != expected_adjacent_count:
         errors.append("adjacent repository count does not match scope")
+    if organization_entries != expected_organization_count:
+        errors.append("organization repository entry count does not match scope")
+    if adjacent_entries != expected_adjacent_count:
+        errors.append("adjacent repository entry count does not match scope")
 
     if errors:
         raise PortfolioError("; ".join(errors))
