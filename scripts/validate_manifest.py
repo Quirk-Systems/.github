@@ -37,7 +37,7 @@ def _fail(message):
 
 
 _ANNOTATION_KEYWORDS = frozenset({
-    "$schema", "$id", "$anchor", "$comment", "$defs", "definitions",
+    "$schema", "$id", "$comment", "$defs", "definitions",
     "title", "description", "examples", "default", "deprecated",
     "readOnly", "writeOnly",
 })
