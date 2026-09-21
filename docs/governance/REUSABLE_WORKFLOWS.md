@@ -64,10 +64,20 @@ only after the observed egress allowlist is recorded in a governed change.
 
 - Pin actions to full SHAs with a `# vX.Y.Z` comment; `tests/test_workflow_pins.py`
   enforces this for every workflow not listed as legacy.
-- Pin runners to `ubuntu-24.04`, set `timeout-minutes` on every job, set
-  `persist-credentials: false` on every checkout, declare top-level
-  `permissions: contents: read` and grant write scopes only at job level with a
-  comment explaining each one.
+- Pin runners to `ubuntu-24.04`, set `timeout-minutes` on every job, and set
+  `persist-credentials: false` on every checkout.
+- A **self-applied** workflow declares top-level `permissions: contents: read`
+  and grants write scopes only at job level, each with a comment.
+- A **reusable** workflow's top-level `permissions:` block is not a local
+  default: GitHub validates it against the caller job's grant **before it
+  creates any job**, so a scope named there is demanded of every caller whether
+  or not a job uses it. A caller that grants only what the jobs use then never
+  compiles — its run ends `startup_failure`, with no job and no log to diagnose
+  from. So where every job names its own scopes, the top-level block is
+  `permissions: {}` and asks callers for nothing; where a job names none, the
+  top-level block is what that job gets and names exactly that.
+  `tests/test_workflow_pins.py` enforces this. The *Caller permissions* column
+  above, not the top-level block, is what a caller reads to write its grant.
 - Never use `pull_request_target` or `workflow_run` here; if a future need
   arises it is an owner-reviewed decision with its own receipt.
 - Local lint: `scripts/validate.sh` runs actionlint and zizmor (offline,

@@ -18,9 +18,12 @@ on:
         type: string
         default: security-and-quality
 
-# Read-only by default; the analyze job adds security-events write for SARIF upload.
-permissions:
-  contents: read
+# Request nothing of callers here. GitHub validates this block against the
+# caller job's `permissions:` grant before it creates any job, so a scope named
+# here is demanded of every caller whether or not a job uses it. The analyze
+# job names what it needs; see the Caller permissions column in
+# docs/governance/REUSABLE_WORKFLOWS.md.
+permissions: {}
 
 concurrency:
   group: reusable-codeql-${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.sha }}
