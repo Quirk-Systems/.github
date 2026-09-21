@@ -226,6 +226,48 @@ class SchemaSubsetTests(unittest.TestCase):
         self.assertIn("FAIL:", result.stderr)
         self.assertNotIn("Traceback", result.stderr)
 
+    # --- an annotation must not steer reference resolution ---------------
+
+    def test_anchor_is_refused_rather_than_accepted_and_ignored(self):
+        """$anchor names a reference target, so it is not an annotation.
+
+        Admitting it let a schema declare an anchor this validator never
+        applies, and a $ref to that anchor could not resolve either, so the
+        keyword was accepted and inert at once.
+        """
+        support = self.module.SchemaSupportError
+        self.assertNotIn("$anchor", self.module._KNOWN_KEYWORDS)
+        for schema in (
+            {"type": "object", "$anchor": "thing"},
+            {"type": "object", "properties": {"a": {"$anchor": "thing"}}},
+            {"type": "object", "$defs": {"d": {"$anchor": "thing"}}},
+        ):
+            with self.subTest(schema=schema):
+                with self.assertRaises(support):
+                    self.check({"a": 1}, schema, "x")
+
+    def test_nested_id_is_refused_because_refs_resolve_from_the_root(self):
+        support = self.module.SchemaSupportError
+        for keyword in ("$id", "$schema"):
+            with self.subTest(keyword=keyword):
+                with self.assertRaises(support):
+                    self.check(
+                        {"a": 1},
+                        {"type": "object",
+                         "properties": {"a": {keyword: "https://example.test/sub"}}},
+                        "x",
+                    )
+
+    def test_root_identity_keywords_stay_allowed(self):
+        self.check({}, {"$id": "https://example.test/s",
+                        "$schema": self.module._DIALECT,
+                        "type": "object"}, "x")
+
+    def test_a_foreign_dialect_is_refused(self):
+        with self.assertRaises(self.module.SchemaSupportError):
+            self.check({}, {"$schema": "http://json-schema.org/draft-07/schema#",
+                            "type": "object"}, "x")
+
     # --- the reported bug, end to end ------------------------------------
 
     def test_real_inventory_rejects_malformed_fields_behind_ref(self):

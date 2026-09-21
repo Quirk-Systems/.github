@@ -36,11 +36,20 @@ def _fail(message):
     raise ManifestError(message)
 
 
+# A keyword belongs here only if it cannot change which data is valid. A
+# keyword that steers reference resolution is not an annotation, however much
+# it looks like metadata: $anchor names a reference target and a nested $id
+# rebases one, and this validator resolves every $ref from the document root,
+# so both are refused below rather than accepted and ignored.
 _ANNOTATION_KEYWORDS = frozenset({
-    "$schema", "$id", "$anchor", "$comment", "$defs", "definitions",
+    "$schema", "$id", "$comment", "$defs", "definitions",
     "title", "description", "examples", "default", "deprecated",
     "readOnly", "writeOnly",
 })
+
+# The one dialect this subset implements. A schema declaring another is
+# refused rather than read with 2020-12 rules it may not mean.
+_DIALECT = "https://json-schema.org/draft/2020-12/schema"
 
 # Keywords this subset validator actually applies. Anything outside the union
 # of these two sets makes _check fail closed: a schema keyword that is silently
@@ -74,7 +83,7 @@ _SCHEMA_LIST_VALUED = ("allOf", "anyOf", "oneOf")
 _SCHEMA_MAP_VALUED = ("properties", "patternProperties", "$defs", "definitions")
 
 
-def _assert_supported(schema, label):
+def _assert_supported(schema, label, at_root=True):
     """Reject any unsupported keyword anywhere in the document, before matching.
 
     Checking only the branches a value happens to reach would let an unapplied
@@ -91,9 +100,23 @@ def _assert_supported(schema, label):
             f"{label}: unsupported schema keywords {unknown}; this validator "
             "fails closed rather than accepting data it cannot check"
         )
+    if at_root:
+        declared = schema.get("$schema")
+        if declared is not None and declared.rstrip("#") != _DIALECT:
+            raise SchemaSupportError(
+                f"{label}: $schema declares {declared!r}; this validator "
+                f"implements only {_DIALECT}"
+            )
+    else:
+        for keyword in ("$id", "$schema"):
+            if keyword in schema:
+                raise SchemaSupportError(
+                    f"{label}: nested {keyword} changes how references resolve, "
+                    "and this validator resolves every $ref from the document root"
+                )
     for keyword in _SCHEMA_VALUED:
         if keyword in schema:
-            _assert_supported(schema[keyword], f"{label}/{keyword}")
+            _assert_supported(schema[keyword], f"{label}/{keyword}", False)
     for keyword in _SCHEMA_LIST_VALUED:
         if keyword not in schema:
             continue
@@ -103,7 +126,7 @@ def _assert_supported(schema, label):
                 f"{label}/{keyword}: must be a list of schemas, got {type(branches).__name__}"
             )
         for index, branch in enumerate(branches):
-            _assert_supported(branch, f"{label}/{keyword}[{index}]")
+            _assert_supported(branch, f"{label}/{keyword}[{index}]", False)
     for keyword in _SCHEMA_MAP_VALUED:
         if keyword not in schema:
             continue
@@ -113,7 +136,7 @@ def _assert_supported(schema, label):
                 f"{label}/{keyword}: must be an object of schemas, got {type(entries).__name__}"
             )
         for name, branch in entries.items():
-            _assert_supported(branch, f"{label}/{keyword}.{name}")
+            _assert_supported(branch, f"{label}/{keyword}.{name}", False)
 
 
 def _resolve_ref(ref, root, label):
