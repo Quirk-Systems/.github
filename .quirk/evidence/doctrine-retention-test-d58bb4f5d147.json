@@ -1,0 +1,69 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.doctrine-retention-test.d58bb4f5d147",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "03d7c3614534a2dfdc22bb33942393edcc6b9d86",
+    "commit": "d58bb4f5d1477c413261d4955f2e24b77c395585",
+    "changed_paths": [
+      ".quirk/repositories.json",
+      "docs/PORTFOLIO.md",
+      "docs/roadmaps/2026-09-20-org-control-plane.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.doctrine-retention-test.d58bb4f5d147",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The retention test on the quirk-core portfolio entry turns on owning a distinct versioned enforceable contract and no longer requires a consumer set; the entry's responsibility, consumers and evidence anchors state what three repositories contain. VERIFIED by reading clones on 2026-09-21: quirk-core at b3162b0cd6dcc6c07570f240ca33c711ed860f0b contains contracts/v0.2 with TRANCHE.json status frozen, frozenDigest sha256:c0532f523ad415e3f996068486699d71b69c8b3aa0768e0c551ad25313c459b6, nine contract schemas, a fixture set, eight named invariants, check-contract-tranche.py and .github/workflows/quirk-contracts-conformance.yml; project-scaffold at 18636ffe64b37fdd0a85dff9798b6a604b59a073 has no vendor/quirk-core path and no occurrence of that digest, and its docs/ontology/ONTOLOGY.md defers extraction until a second independent consumer imports the contracts; quirk-os at f8cc12ed85e10b4cdee522cb3f32ab964f1e015b references quirk-core only in docs/skills/ARCHITECTURE.md and contains no occurrence of that digest. VERIFIED by reading .quirk/repositories.json: doctrine is the primary class of exactly one entry, and no canon or kernel entry's retention rule requires a consumer. VERIFIED at this commit: 180 tests pass under Python 3.12, scripts/validate.sh reports all executed checks passed, and portfolio_report.py --check reports the projection in sync. UNKNOWN: the state of quirk-core pull requests 1 and 2, because GitHub API access in this session is scoped to two repositories and the only available source was that repository's own README, which lists both as open. This receipt records a rule change in a registry entry; it admits nothing, retires nothing, and grants no authority.",
+      "evidence_paths": [
+        ".quirk/repositories.json",
+        "docs/PORTFOLIO.md",
+        "docs/roadmaps/2026-09-20-org-control-plane.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".quirk/repositories.json",
+      "state": "present",
+      "git_blob": "8a9fa79ab26ef921f0424e287e2a2e8b727fd436",
+      "sha256": "sha256:0126e72ac756c760dca2b2f85c8f68c97ba1dc834e316132eef5586b66fd1efd"
+    },
+    {
+      "path": "docs/PORTFOLIO.md",
+      "state": "present",
+      "git_blob": "e36ec5d1277cc382992180db701ae4ab18b4b06c",
+      "sha256": "sha256:f6020c82d5a062ad415ff10b7f9280e0f358021ed8c91a55db32ae5f20b9d4c8"
+    },
+    {
+      "path": "docs/roadmaps/2026-09-20-org-control-plane.md",
+      "state": "present",
+      "git_blob": "ccbca9f308f2343c3ecead54aa31aee75fc453ac",
+      "sha256": "sha256:e637715b930a0bc0c2cb24eef8258782f88d7c4107fc737c1bb3421032cd1765"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "uv run --no-project --python 3.12 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-21T17:25:41Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:6bab1f6f783efd95259967d4492fe404bbe3ae0efd461c1c71bf2fab8ac69063"
+}
