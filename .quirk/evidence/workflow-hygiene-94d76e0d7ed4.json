@@ -1,0 +1,179 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.workflow-hygiene.94d76e0d7ed4",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "62218674c00d6a9d4c81db13000d25c5f37afc6d",
+    "commit": "4c827fbea301673651dadaaf02bfc0ea154770fa",
+    "changed_paths": [
+      ".github/CODEOWNERS",
+      ".github/copilot-instructions.md",
+      ".github/dependabot.yml",
+      ".github/labeler.yml",
+      ".github/release-drafter.yml",
+      ".github/workflows/governance-contracts.yml",
+      ".github/workflows/quirk-semantic-governance.yml",
+      ".github/workflows/reusable-pr-title-lint.yml",
+      ".github/workflows/reusable-validate.yml",
+      ".github/workflows/workflow-hygiene.yml",
+      ".quirk/evidence/workflow-hygiene-341be91c47ba.json",
+      ".quirk/evidence/workflow-hygiene-a7984a1bb3e9.json",
+      ".quirk/evidence/workflow-hygiene-a84ea3514a24.json",
+      ".quirk/evidence/workflow-hygiene-ec9bef880a87.json",
+      ".quirk/evidence/workflow-hygiene-repair-bf7e143b43e0.json",
+      "docs/ORG_DEFAULTS_AND_REPO_MAP.md",
+      "scripts/validate_workflow_hygiene.py",
+      "tests/test_workflow_hygiene.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.workflow-hygiene.94d76e0d7ed4",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The cited org-default files and workflow-hygiene repairs are bound to the exact subject bytes; repository validation passed locally with the dependency-free parser, explicit event-driven concurrency set, and literal/folded block-scalar handling.",
+      "evidence_paths": [
+        ".github/CODEOWNERS",
+        ".github/copilot-instructions.md",
+        ".github/dependabot.yml",
+        ".github/labeler.yml",
+        ".github/release-drafter.yml",
+        ".github/workflows/governance-contracts.yml",
+        ".github/workflows/quirk-semantic-governance.yml",
+        ".github/workflows/reusable-pr-title-lint.yml",
+        ".github/workflows/reusable-validate.yml",
+        ".github/workflows/workflow-hygiene.yml",
+        "docs/ORG_DEFAULTS_AND_REPO_MAP.md",
+        "scripts/validate_workflow_hygiene.py",
+        "tests/test_workflow_hygiene.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/CODEOWNERS",
+      "state": "present",
+      "git_blob": "6e8bad1f3f07c5031d10c87327d7bb47152ed21b",
+      "sha256": "sha256:bc080769d77e13ba8ff47b9d6b5bde30946b43ea3f8771bd8a9fdffd41eb2b87"
+    },
+    {
+      "path": ".github/copilot-instructions.md",
+      "state": "present",
+      "git_blob": "3bfe19876c11463332b037e42a7b1b664691f6a7",
+      "sha256": "sha256:e246e04e3768a64b4c80fa9e74a2b43f8064b1aef9fc0ecc47c5185f3babad78"
+    },
+    {
+      "path": ".github/dependabot.yml",
+      "state": "present",
+      "git_blob": "adad271b31e93549eea9183494760f1307b935da",
+      "sha256": "sha256:e8aa8f5a1882ee6e20f35232e56540ff5ca5b38546301af1ef25b934fe4f564c"
+    },
+    {
+      "path": ".github/labeler.yml",
+      "state": "present",
+      "git_blob": "d1dfae34269d097ca1151299e5eb8642585b57f4",
+      "sha256": "sha256:952377410ec494c042cf5ca2f085efbb2e0a4fe5a319e87cbd7713843550cf1a"
+    },
+    {
+      "path": ".github/release-drafter.yml",
+      "state": "present",
+      "git_blob": "ea20fc0594f74480620d72c576f510c49829f9ac",
+      "sha256": "sha256:30f2b210b004272bde223f365f0224231e10c372a01eb99ccc1b5ab6ba28302a"
+    },
+    {
+      "path": ".github/workflows/governance-contracts.yml",
+      "state": "present",
+      "git_blob": "e079c6e41293629e7910e4cd29eee20dd003ad16",
+      "sha256": "sha256:c706a5b5a1e633681ded1083b484c54e9b8266a02e5b5cbaf251c919b9f906a0"
+    },
+    {
+      "path": ".github/workflows/quirk-semantic-governance.yml",
+      "state": "present",
+      "git_blob": "9bf4c9762a7a7d117a6439de82214e860a404f36",
+      "sha256": "sha256:2e6413f7589073f9520f7b15d327ba491cfb0b5cabaca17d9fac6bedd780f523"
+    },
+    {
+      "path": ".github/workflows/reusable-pr-title-lint.yml",
+      "state": "present",
+      "git_blob": "1bb5c3d82118f2f166084fb5ef97b3ef0e3a67c1",
+      "sha256": "sha256:e884c88674e270fd62c8b0ac6c9dd990d4348278b29f8db04fa853288ce6fe4c"
+    },
+    {
+      "path": ".github/workflows/reusable-validate.yml",
+      "state": "present",
+      "git_blob": "08930b6c01dfbfd41c3d723ff82bcff09169acaa",
+      "sha256": "sha256:e5d7c11a795cebe212c6d72ed0813d6c337f265f6dabe61dabcde8cbc37ae6a9"
+    },
+    {
+      "path": ".github/workflows/workflow-hygiene.yml",
+      "state": "present",
+      "git_blob": "427e5724a1c00548798dd219a97a7d8eac105e3f",
+      "sha256": "sha256:6b003898a31ccb48e6e072770fa4cd4429dac07f2cf05c02d341dc22528c67e8"
+    },
+    {
+      "path": ".quirk/evidence/workflow-hygiene-341be91c47ba.json",
+      "state": "present",
+      "git_blob": "8d76f90e62019301b2f2f219bba9bcb959af254b",
+      "sha256": "sha256:3b857fe35ad8b6f6859c457f0e2d2d6ab68d0d5a4ec2ae120c57bd5a1dc3c1f4"
+    },
+    {
+      "path": ".quirk/evidence/workflow-hygiene-a7984a1bb3e9.json",
+      "state": "present",
+      "git_blob": "9e4948eaec9b34b9aee8bc058c16fb4084cda008",
+      "sha256": "sha256:a1fbf3cfe16b87d72e3e22bfe3c9201f0de994e0d50d4c782a07b1c80b3842f4"
+    },
+    {
+      "path": ".quirk/evidence/workflow-hygiene-a84ea3514a24.json",
+      "state": "present",
+      "git_blob": "2989d539b601b53a3f1f74798f4b3e3030115fef",
+      "sha256": "sha256:17873f7d71855e5b523dec7fb14c73ea28b73add0e3574fa2c23882c9ac4c3ab"
+    },
+    {
+      "path": ".quirk/evidence/workflow-hygiene-ec9bef880a87.json",
+      "state": "present",
+      "git_blob": "ddfc0680c9fe67c8fcc5928c3089523a3281b003",
+      "sha256": "sha256:da0ae0cef5a564670a36428fd6e3925cda6a4148d50be6fe58961cb02d3b7b54"
+    },
+    {
+      "path": ".quirk/evidence/workflow-hygiene-repair-bf7e143b43e0.json",
+      "state": "present",
+      "git_blob": "98f2260c16bb4804ce1488a123d7435b2e3a6f5d",
+      "sha256": "sha256:92d58567f20d4e71390e59b24a231e080fe91a788ef9a134ec59dd5e6cfbc2e2"
+    },
+    {
+      "path": "docs/ORG_DEFAULTS_AND_REPO_MAP.md",
+      "state": "present",
+      "git_blob": "decf1449f2fc6ce0c6b640a619b42db8003c7985",
+      "sha256": "sha256:92ccc467fd95ed0a984a73c9c34b7694ee6fe4a0f208ad71088d3e944a49b233"
+    },
+    {
+      "path": "scripts/validate_workflow_hygiene.py",
+      "state": "present",
+      "git_blob": "f2ed393c5b0acaa175b1d7a1f3172e512358c634",
+      "sha256": "sha256:af81b11e64b229270312788dc6153874481c83ff2c5d47600dfb8cda345cb19b"
+    },
+    {
+      "path": "tests/test_workflow_hygiene.py",
+      "state": "present",
+      "git_blob": "1827783572b074333deaf44353d7a5e71d086889",
+      "sha256": "sha256:2e74ded959e7e30528060b817b973e688c71f0c3539d4c8735a7ed5359280b02"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-21T08:58:46Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:aa348c310b205cac52aea0770f14086ada55a2cf6885bda2e510c5e9bf0f12ec"
+}
