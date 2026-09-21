@@ -1,0 +1,37 @@
+governance:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.quirk/**'
+          - 'docs/governance/**'
+          - 'docs/QUIRK_SEMANTIC_GOVERNANCE.md'
+          - 'docs/REPOSITORY_STRATEGY.md'
+semantic:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.quirk/registry.json'
+          - '.quirk/manifest.json'
+          - 'scripts/quirk_concept.py'
+workflows:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.github/workflows/**'
+          - '.github/dependabot.yml'
+          - '.github/release-drafter.yml'
+          - '.github/labeler.yml'
+copilot:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.github/copilot-instructions.md'
+          - '.github/skills/**'
+          - 'agents/**'
+          - 'prompt-packs/**'
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'tests/**'
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'README.md'
+          - 'profile/**'
+          - 'docs/**'
