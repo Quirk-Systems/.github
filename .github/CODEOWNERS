@@ -1,0 +1,37 @@
+# Quirk Systems organization canon and shared workflow spine.
+#
+# The catch-all below already covers every path. The entries under it are not
+# redundant to GitHub — the last matching rule wins — but they are redundant to
+# a reader while one person owns everything. They are kept as a map of the
+# surfaces that exist, so that splitting ownership later is an edit rather than
+# an inventory. Add a path here when a directory is added at the root.
+* @bryansayler
+
+# Canonical state and governance.
+/.quirk/ @bryansayler
+/docs/ @bryansayler
+/profile/ @bryansayler
+/datasets/ @bryansayler
+
+# Shared GitHub defaults.
+/.github/workflows/ @bryansayler
+/.github/ISSUE_TEMPLATE/ @bryansayler
+/.github/PULL_REQUEST_TEMPLATE.md @bryansayler
+/.github/copilot-instructions.md @bryansayler
+/.github/dependabot.yml @bryansayler
+/.github/release-drafter.yml @bryansayler
+/.github/labeler.yml @bryansayler
+/.github/zizmor.yml @bryansayler
+
+# Executable governance and reusable agent assets.
+/scripts/ @bryansayler
+/tests/ @bryansayler
+/prompt-packs/ @bryansayler
+/agents/ @bryansayler
+/templates/ @bryansayler
+/.github/skills/ @bryansayler
+/.claude/ @bryansayler
+
+# Instruction surfaces every agent reads first.
+/AGENTS.md @bryansayler
+/CLAUDE.md @bryansayler
