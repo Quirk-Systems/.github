@@ -10,8 +10,10 @@ names the exact head it observed, who owns it, when it was last read against
 that head, when it must be read again, and what it derives from. The
 validator, `scripts/validate_living_docs.py`, checks the header against
 `.quirk/schemas/living-document.schema.json`, the sections each kind
-requires, checkbox discipline, and lineage, and reports the day a document
-lapses. Templates: `templates/INTENTION.md`, `GOAL.md`, `ROADMAP.md`,
+requires, checkbox discipline on every list item, and lineage, and reports
+the day a document lapses. `scripts/validate.sh` runs it with `--strict`,
+so a lapsed document turns the pull-request gate red until someone re-reads
+it. Templates: `templates/INTENTION.md`, `GOAL.md`, `ROADMAP.md`,
 `TODO.md`; briefs and plans can carry the same header.
 
 ## The chain
@@ -43,7 +45,9 @@ strength → intention → goal → tasks (todo, plan) → roadmap. Each arrow i
    `quirk-plan` skill.
 5. **Place them on the roadmap** with `templates/ROADMAP.md`: Now, Next,
    Later, Done. Move items; never delete them. Every Done item names its
-   evidence. Decisions awaiting an owner is a real list, not a formality.
+   evidence. Decisions awaiting an owner is a real list, not a formality; its
+   items stay `- [ ]`, since a decided one moves to Now or Done instead of
+   being ticked where it sits.
 6. **Set the dates honestly.** Reviewed is today. Review by is the date the
    document will be wrong if nobody re-reads it (two weeks for roadmaps and
    todos, four for intentions and goals is a reasonable default). Observed
@@ -66,8 +70,10 @@ strength → intention → goal → tasks (todo, plan) → roadmap. Each arrow i
 - Use `Status: candidate` until the owner has read it; only the owner moves it
   to `active`.
 - Cite receipts and commits, not branch names or "recent work".
-- Let stale be visible. The validator reports lapsed documents on every run;
-  `--strict` turns that into a failure for the pull request that ships them.
+- Let stale bite. The validator reports lapsed documents on every run, and
+  `scripts/validate.sh` passes `--strict`, so the next pull request goes red
+  until the lapsed document is re-read and bumped, or retired. Set review
+  dates you will honor; that red gate is the contract working, not a defect.
 
 ## Don't → Do instead
 

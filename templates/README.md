@@ -30,7 +30,10 @@ observed head, reviewed, review by, derived from, authority effect) that
 carry it; any other file under `docs/` that carries a `Kind:` line opts in
 (briefs and plans). Lineage needs at least one entry and every
 repository-relative path must exist inside the checkout. A document past its
-review date is reported stale; `--strict` fails on it.
+review date is reported stale, and `scripts/validate.sh` passes `--strict`,
+so a lapsed document fails the gate until it is re-read and bumped, or
+retired. In a roadmap, every list item carries its section's box, including
+`## Decisions awaiting an owner`, whose items stay unchecked.
 
 Design tokens have no template; the seed source is `.quirk/design/tokens.json`
 and the contract is `.quirk/schemas/design-tokens.schema.json` (see
