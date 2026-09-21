@@ -29,6 +29,7 @@ are never deleted. Each Done item names the evidence that closed it.
 
 - [ ] Offer the living-document validator to consumer repositories as a reusable workflow once two repositories carry such documents
 - [ ] Give the org-default `labeler.yml` and `release-drafter.yml` the workflows that read them, once a `pull-requests: write` and `contents: write` job is agreed
+- [ ] Build or name the first consumer of quirk-core's `contracts/v0.2` tranche, so the recorded consumer gap closes on evidence rather than lapsing (owner: @bryansayler)
 
 ## Done
 
@@ -42,8 +43,8 @@ are never deleted. Each Done item names the evidence that closed it.
 - [x] `.github-private` callers pinned to a reviewed `main` commit, the `pull_request` trigger restored, and a `reusable-workflow-lint.yml` caller added (evidence: `.github-private` PRs #3 and #4)
 - [x] PR #20 decided: closed, with its five org-default files re-landed and its duplicated workflow-hygiene validator dropped in favour of `tests/test_workflow_pins.py` (evidence: this pull request, receipt `qreceipt.org-defaults.ca693deef695`)
 - [x] The owner-only activation inputs compiled from observed runs rather than predicted: check contexts and per-job egress destinations (evidence: `docs/governance/OWNER_ACTIVATION_INPUTS.md`)
+- [x] `quirk-core` decided by tightening the test rather than the repository: a doctrine-class repository is kept separate for owning a distinct, versioned, enforceable contract, and a consumer is no longer part of that test, because canon precedes what is built against it and no sibling `canon` or `kernel` entry carries such a requirement. Re-applied, quirk-core passes on the frozen `contracts/v0.2` tranche; the absent consumer is recorded as an observation (evidence: `.quirk/repositories.json` and `docs/PORTFOLIO.md` at this head, anchored to quirk-core `b3162b0cd6dcc6c07570f240ca33c711ed860f0b`)
 
 ## Decisions awaiting an owner
 
-- [ ] `quirk-core`: fold into the admitted kernel canon, or keep distinct and accept that it has no consumer yet. Read on 2026-09-21 at `b3162b0cd6dcc6c07570f240ca33c711ed860f0b`, it does own a distinct contract — the frozen `contracts/v0.2` tranche, nine schemas and eight invariants behind digest `sha256:c0532f52…`, with its own conformance workflow. No repository consumes it: `project-scaffold` at `18636ffe` has no vendored pin, and its `docs/ontology/ONTOLOGY.md` says extraction should wait for a second independent consumer; `quirk-os` at `f8cc12ed` names it only in prose. The registry's own test wants both, so half of it fails (owner: @bryansayler)
 - [ ] Required-checks ruleset activation: owner-only, and the exact contexts to require are in `docs/governance/OWNER_ACTIVATION_INPUTS.md`. `zizmor` must not be required until its `paths:` filters go, or it pends forever (owner: @bryansayler)
