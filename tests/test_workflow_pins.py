@@ -21,7 +21,6 @@ LEGACY = {
     "governance-contracts.yml",
     "quirk-semantic-governance.yml",
     "reusable-evidence-binding.yml",
-    "reusable-pr-title-lint.yml",
     "reusable-validate.yml",
 }
 

@@ -1,0 +1,109 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.pr-title-lint-repair.8d04d9cc4bcb",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "62218674c00d6a9d4c81db13000d25c5f37afc6d",
+    "commit": "8d04d9cc4bcbd4eea7a2f2b0cbae0a7443c902c1",
+    "changed_paths": [
+      ".github/workflows/reusable-pr-title-lint.yml",
+      ".github/zizmor.yml",
+      "docs/governance/REUSABLE_WORKFLOWS.md",
+      "docs/superpowers/plans/2026-09-20-org-control-plane.md",
+      "scripts/validate_portfolio.py",
+      "scripts/validate_topology.py",
+      "tests/test_topology_contracts.py",
+      "tests/test_workflow_pins.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.pr-title-lint-repair.8d04d9cc4bcb",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The cited bytes pin amannn/action-semantic-pull-request to commit 0723387faaf9b38adef4775cd42cfd5155ed6017 (tag v5.5.3, fetched and confirmed a commit object), pin the runner, add a timeout, read-only default permissions with a job-level pull-requests: read scope, and a concurrency group; they remove the file from the legacy exemptions in tests/test_workflow_pins.py and .github/zizmor.yml; they record the Dependency graph as observed enabled on 2026-09-20 in the plan ledger and catalog; and they sort imports in three topology files. scripts/validate.sh passed locally on this subject: unit tests, all validators, ruff, actionlint, and zizmor offline pedantic with zero findings on reusable-pr-title-lint.yml. Not verified: a hosted run of the repaired reusable workflow from a caller.",
+      "evidence_paths": [
+        ".github/workflows/reusable-pr-title-lint.yml",
+        ".github/zizmor.yml",
+        "docs/governance/REUSABLE_WORKFLOWS.md",
+        "docs/superpowers/plans/2026-09-20-org-control-plane.md",
+        "scripts/validate_portfolio.py",
+        "scripts/validate_topology.py",
+        "tests/test_topology_contracts.py",
+        "tests/test_workflow_pins.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/workflows/reusable-pr-title-lint.yml",
+      "state": "present",
+      "git_blob": "e87324dc9f708bb093e87438f3ff74224233d9f4",
+      "sha256": "sha256:4f7b455528829182d07abe0ff153f01b0a4b3c41849c94463fc3af36526ea6ba"
+    },
+    {
+      "path": ".github/zizmor.yml",
+      "state": "present",
+      "git_blob": "d30e28e6b0a179339e05e48dbe7383fdb9c9810c",
+      "sha256": "sha256:a7d3a8ced7f0d674112596514c51b278bddae645ea8f635edc32c26cfaf195e2"
+    },
+    {
+      "path": "docs/governance/REUSABLE_WORKFLOWS.md",
+      "state": "present",
+      "git_blob": "2ac00df695eedd4917e3fb947d5ade00c94fbd4e",
+      "sha256": "sha256:55dddc2f4f809fe84cd2819727212f558d5ee68c1b3507adc9fe61ff98269b48"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-09-20-org-control-plane.md",
+      "state": "present",
+      "git_blob": "9a30bad1e83d616dacacab4ed6191ee9c1324ca5",
+      "sha256": "sha256:ee91fdba0e4f3b27593a2c26cd5f0379ac235503298f81c7718d1bf678e6f09f"
+    },
+    {
+      "path": "scripts/validate_portfolio.py",
+      "state": "present",
+      "git_blob": "cd3a593aca5d0f9914a1cea6547a172eea5c776f",
+      "sha256": "sha256:628292381976423e9b62fa337625233df141884f4d04327aae392962941eb8db"
+    },
+    {
+      "path": "scripts/validate_topology.py",
+      "state": "present",
+      "git_blob": "b3927e13f180028437efb8c33207c29d0c42e445",
+      "sha256": "sha256:e33b88463c1bd99fce1b47725ff0c876bec364f8c0139c1dd3dc42bd95f0ee39"
+    },
+    {
+      "path": "tests/test_topology_contracts.py",
+      "state": "present",
+      "git_blob": "496516b4c624b0c041261f60b39433b1d8cf862c",
+      "sha256": "sha256:7fd1253ceff90d268be2bfb35a8a08f818ed35e6822575cca318adaf12006959"
+    },
+    {
+      "path": "tests/test_workflow_pins.py",
+      "state": "present",
+      "git_blob": "a10294535e50118324da8e05d7c1788f82197537",
+      "sha256": "sha256:e769bc72b0c90074cbc8148b650adcb373a78fa3e8d53b9b2132f650d453b52c"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check 62218674c00d6a9d4c81db13000d25c5f37afc6d 8d04d9cc4bcbd4eea7a2f2b0cbae0a7443c902c1",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T22:49:03Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:45e87ffb1b86ba1bfd8bd10ae4afc2341cfaa3a00af192cc6b64a360397932cb"
+}

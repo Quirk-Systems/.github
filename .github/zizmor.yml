@@ -6,7 +6,8 @@
 # removal of `${{ inputs.* }}` interpolation inside `run:`). Their known findings
 # are scoped here by exact filename so nothing else inherits the exemption.
 # Remove each entry when that file is repaired; the workflow-lint job then
-# enforces the full ruleset on it.
+# enforces the full ruleset on it. reusable-pr-title-lint.yml was repaired on
+# 2026-09-20 and carries no exemption.
 rules:
   template-injection:
     ignore:
@@ -14,20 +15,16 @@ rules:
   unpinned-uses:
     ignore:
       - reusable-validate.yml
-      - reusable-pr-title-lint.yml
   excessive-permissions:
     ignore:
       - reusable-validate.yml
-      - reusable-pr-title-lint.yml
       - quirk-semantic-governance.yml
   artipacked:
     ignore:
       - reusable-validate.yml
-      - quirk-semantic-governance.yml
   anonymous-definition:
     ignore:
       - reusable-validate.yml
-      - reusable-pr-title-lint.yml
       - quirk-semantic-governance.yml
       - governance-contracts.yml
   concurrency-limits:
@@ -35,11 +32,9 @@ rules:
       - reusable-validate.yml
       - quirk-semantic-governance.yml
       - governance-contracts.yml
-      - reusable-pr-title-lint.yml
       - reusable-evidence-binding.yml
   undocumented-permissions:
     ignore:
-      - reusable-pr-title-lint.yml
       - governance-contracts.yml
       - reusable-evidence-binding.yml
   # Online audits (run only in CI): the legacy files pin to full SHAs without
@@ -50,7 +45,6 @@ rules:
       - reusable-evidence-binding.yml
       - quirk-semantic-governance.yml
       - reusable-validate.yml
-      - reusable-pr-title-lint.yml
   stale-action-refs:
     ignore:
       - governance-contracts.yml

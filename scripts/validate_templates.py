@@ -33,6 +33,11 @@ REQUIRED_SECTIONS = {
     "ADR.md": ["## Decision", "## Forces and constraints", "## Options considered", "## Rationale",
                "## Semantic impact", "## Consequences", "## Evidence", "## Required next authority"],
     "MOVE_RECEIPT.md": ["## Action", "## Authority", "## Exact subject", "## Resulting state", "## Reversal", "## Residue"],
+    # Living documents; the header contract is .quirk/schemas/living-document.schema.json (validate_living_docs.py).
+    "INTENTION.md": ["## Strength", "## Intention", "## Goals", "## Not this", "## Review"],
+    "GOAL.md": ["## Outcome", "## Measure", "## Tasks", "## Evidence", "## Review"],
+    "ROADMAP.md": ["## Now", "## Next", "## Later", "## Done", "## Decisions awaiting an owner"],
+    "TODO.md": ["## Open", "## Blocked", "## Done"],
 }
 JSON_EXAMPLES = {
     "artifact-manifest.json": "artifact-manifest.schema.json",

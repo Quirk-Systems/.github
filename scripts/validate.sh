@@ -23,11 +23,14 @@ run "$PY" scripts/quirk_concept.py lint
 run "$PY" scripts/validate-copilot-maintenance.py
 run "$PY" scripts/validate_agent_assets.py
 for script in scripts/validate_manifest.py scripts/validate_portfolio.py scripts/validate_templates.py \
-              scripts/validate_agent_tasks.py scripts/design_tokens.py; do
+              scripts/validate_agent_tasks.py scripts/design_tokens.py scripts/validate_living_docs.py; do
   if [[ -f "$script" ]]; then
     case "$script" in
       scripts/validate_manifest.py) run "$PY" "$script" .quirk/manifest.json ;;
       scripts/design_tokens.py) run "$PY" "$script" validate .quirk/design/tokens.json ;;
+      # --strict: a living document past its review date fails the gate, so
+      # freshness is enforced rather than merely printed.
+      scripts/validate_living_docs.py) run "$PY" "$script" --strict ;;
       *) run "$PY" "$script" ;;
     esac
   fi

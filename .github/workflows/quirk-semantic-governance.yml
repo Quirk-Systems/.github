@@ -13,18 +13,24 @@ jobs:
         with:
           fetch-depth: 1
           filter: blob:none
+          persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             .quirk/manifest.json
 
+      # The policy source is this workflow's own commit, never a moving branch:
+      # a caller that pins this workflow to a SHA gets the registry and the
+      # concept linter exactly as they were at that SHA. `ref: main` would have
+      # let the policy change underneath a pinned caller.
       - name: Checkout Quirk semantic core
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          repository: Quirk-Systems/.github
-          ref: main
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
           path: .quirk-core
           fetch-depth: 1
           filter: blob:none
+          persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             .quirk/registry.json

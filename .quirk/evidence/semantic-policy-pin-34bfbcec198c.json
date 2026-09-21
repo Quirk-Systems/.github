@@ -1,0 +1,69 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.semantic-policy-pin.34bfbcec198c",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "6d2375946d8b1fce82d05a76f46ed5570f23be6b",
+    "commit": "34bfbcec198c6640568f054743bea232aae7ca02",
+    "changed_paths": [
+      ".github/workflows/quirk-semantic-governance.yml",
+      ".github/zizmor.yml",
+      "docs/governance/REUSABLE_WORKFLOWS.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.semantic-policy-pin.34bfbcec198c",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The cited bytes replace the moving 'ref: main' policy checkout in quirk-semantic-governance.yml with job.workflow_repository at job.workflow_sha, add persist-credentials: false to both checkouts, retire that file's artipacked exemption, and correct the catalog row. scripts/validate.sh passed locally on this subject; zizmor offline pedantic reports no findings with 24 ignored, down from 26. Not verified: a hosted run of the repaired callee from a caller; the observed reproducibility claim rests on reading the workflow, not on a hosted execution.",
+      "evidence_paths": [
+        ".github/workflows/quirk-semantic-governance.yml",
+        ".github/zizmor.yml",
+        "docs/governance/REUSABLE_WORKFLOWS.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/workflows/quirk-semantic-governance.yml",
+      "state": "present",
+      "git_blob": "6b127a651a1d41e37cefb08161f6a315611a13cf",
+      "sha256": "sha256:ac4794f4947c570847197ac03e25c32a4f6a8286544768fc216a462dcf6f950c"
+    },
+    {
+      "path": ".github/zizmor.yml",
+      "state": "present",
+      "git_blob": "97569ac12359520b5a625ea01486aad4251ff8b6",
+      "sha256": "sha256:a79e52efaea6d2f0c7b56adf9da7cb5060a02b8b3bb05c31ac7d94bb71e38cf8"
+    },
+    {
+      "path": "docs/governance/REUSABLE_WORKFLOWS.md",
+      "state": "present",
+      "git_blob": "ba459c7817003e59baa72b6183165ed5d9bcae1b",
+      "sha256": "sha256:a5678d492efc61a2092f794c9c991744b843dcfef4518ebd1e3dc03b0a3526f7"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check 6d2375946d8b1fce82d05a76f46ed5570f23be6b 34bfbcec198c6640568f054743bea232aae7ca02",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-21T08:07:59Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:85890123300a7738c11e2b0a6cb38920df9c04064345e8fedc1039912f25150e"
+}

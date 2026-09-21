@@ -15,8 +15,8 @@ SCHEMA = ROOT / ".quirk" / "schemas" / "repository-inventory.schema.json"
 REGISTRY = ROOT / ".quirk" / "repositories.json"
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from validate_manifest import ManifestError, _check  # noqa: E402
 import validate_topology  # noqa: E402
+from validate_manifest import ManifestError, _check  # noqa: E402
 
 
 class PortfolioError(ValueError):

@@ -18,6 +18,22 @@ every JSON example validates against its schema.
 | [`artifact-manifest.json`](./artifact-manifest.json) | Publishing any generated asset (image, audio, document, dataset slice, model output) with provenance | `.quirk/schemas/artifact-manifest.schema.json` | `quirk-artifact-forge` |
 | [`dataset-card.json`](./dataset-card.json) | Describing a dataset's origin, schema, license, and intended use before it is consumed | `.quirk/schemas/dataset-card.schema.json` | `quirk-dataset-card` |
 | [`agent-task.json`](./agent-task.json) | Proposing a bounded agent task with tools, paths, limits, owner, shutdown authority, evidence, and rollback | `.quirk/schemas/agent-task.schema.json` | `agent-task` issue form |
+| [`INTENTION.md`](./INTENTION.md) | Turning an evidenced strength into a direction the organization keeps true | `.quirk/schemas/living-document.schema.json` (header) | `quirk-living-doc` |
+| [`GOAL.md`](./GOAL.md) | Stating an observable outcome with a measure that can sit in a receipt | `.quirk/schemas/living-document.schema.json` (header) | `quirk-living-doc` |
+| [`ROADMAP.md`](./ROADMAP.md) | Ordering work as Now / Next / Later / Done with the decisions only an owner can make | `.quirk/schemas/living-document.schema.json` (header) | `quirk-living-doc` |
+| [`TODO.md`](./TODO.md) | Tracking bounded tasks with an owner, a proof, and who can unblock each blocked one | `.quirk/schemas/living-document.schema.json` (header) | `quirk-living-doc` |
+
+The four living-document templates share one header (kind, status, owner,
+observed head, reviewed, review by, derived from, authority effect) that
+`scripts/validate_living_docs.py` parses and checks. Every Markdown file under
+`docs/intentions/`, `docs/goals/`, `docs/roadmaps/`, and `docs/todos/` must
+carry it; any other file under `docs/` that carries a `Kind:` line opts in
+(briefs and plans). Lineage needs at least one entry and every
+repository-relative path must exist inside the checkout. A document past its
+review date is reported stale, and `scripts/validate.sh` passes `--strict`,
+so a lapsed document fails the gate until it is re-read and bumped, or
+retired. In a roadmap, every list item carries its section's box, including
+`## Decisions awaiting an owner`, whose items stay unchecked.
 
 Design tokens have no template; the seed source is `.quirk/design/tokens.json`
 and the contract is `.quirk/schemas/design-tokens.schema.json` (see

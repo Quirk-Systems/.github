@@ -1,0 +1,98 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.living-document-freshness.dbf106bd8152",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "81bf54a64b9e3f596d1d840e178c4564d6a73781",
+    "commit": "dbf106bd8152bd8ee4d34dce68cd4382e0865757",
+    "changed_paths": [
+      "docs/intentions/2026-09-20-evidence-first-planning.md",
+      "docs/roadmaps/2026-09-20-org-control-plane.md",
+      "scripts/validate.sh",
+      "scripts/validate_living_docs.py",
+      "templates/ROADMAP.md",
+      "tests/test_living_docs.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.living-document-freshness.dbf106bd8152",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The cited bytes add the roadmap's decisions section to the checkbox map as an unchecked-only box, make scripts/validate.sh run the living-document validator with --strict so a lapsed document fails the gate, add a test that checks the repository's documents against the real current date, add opt-in brief and plan fixtures covering their required sections and discovery, and narrow the intention's goal summary to the coverage the validator enforces. Observed locally on this subject: scripts/validate.sh all executed checks passed with the strict validator reporting 4 documents and 0 stale; python -m unittest tests.test_living_docs 19 tests OK; uv run --no-project --python 3.12 -m unittest discover -s tests 157 tests OK; zizmor offline pedantic no findings. Freshness enforcement is dated behavior: the gate turns red when a review date passes, which is the intent.",
+      "evidence_paths": [
+        "docs/intentions/2026-09-20-evidence-first-planning.md",
+        "docs/roadmaps/2026-09-20-org-control-plane.md",
+        "scripts/validate.sh",
+        "scripts/validate_living_docs.py",
+        "templates/ROADMAP.md",
+        "tests/test_living_docs.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/intentions/2026-09-20-evidence-first-planning.md",
+      "state": "present",
+      "git_blob": "18f5b2d580d29ee627d897f3b189fe985c3ff169",
+      "sha256": "sha256:fd970ed99189b902ee818acde9f36c2122333917d988da4cf47ca3cf2fc41acb"
+    },
+    {
+      "path": "docs/roadmaps/2026-09-20-org-control-plane.md",
+      "state": "present",
+      "git_blob": "401391b2e4c3414c5baea774ba078ea6e8f56ef5",
+      "sha256": "sha256:5ef55998472c683508ede3489d305751958d9098723d14fdd8497b37feed0b98"
+    },
+    {
+      "path": "scripts/validate.sh",
+      "state": "present",
+      "git_blob": "e68dfe01ec049d10c9817d0248fbbdcd165702b8",
+      "sha256": "sha256:ddcc6f1d36f81e21ee6e083a24ba5338e53a904912eccf2abe73546d39ab2b75"
+    },
+    {
+      "path": "scripts/validate_living_docs.py",
+      "state": "present",
+      "git_blob": "a873ddf1a2948d82171efcd02cc66eef0c147501",
+      "sha256": "sha256:03d084e75af0903ffd9ed4b95b101aab60bb03086b6c105dd24919954b8c046e"
+    },
+    {
+      "path": "templates/ROADMAP.md",
+      "state": "present",
+      "git_blob": "3df188e958d4cea5be670b64f35db0279a2d3d09",
+      "sha256": "sha256:3ce9eb05db0930f6f32703b689dbe2a4f4f73e7e922dba1644542613423aefc4"
+    },
+    {
+      "path": "tests/test_living_docs.py",
+      "state": "present",
+      "git_blob": "a039342c54c635e198f2c7c3adb39ab5e0cf2e20",
+      "sha256": "sha256:84e8edbacc5fa9e30e525b7ba34110518e94532c3e9bacf7827bef43d4e02933"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "uv run --no-project --python 3.12 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check 81bf54a64b9e3f596d1d840e178c4564d6a73781 dbf106bd8152bd8ee4d34dce68cd4382e0865757",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-21T08:27:49Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:05fee26e71c6581126db9197f710fbd98f73fba8990cbc2448fb33689c723941"
+}

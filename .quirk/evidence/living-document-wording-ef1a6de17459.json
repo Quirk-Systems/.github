@@ -1,0 +1,61 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.living-document-wording.ef1a6de17459",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "e1d48fc5618f484a3c8eff97401d8fd09b5c983c",
+    "commit": "ef1a6de174598f422e2d249b56a97632f6045e2c",
+    "changed_paths": [
+      ".github/skills/quirk-living-doc/SKILL.md",
+      "templates/README.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.living-document-wording.ef1a6de17459",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The cited bytes align the quirk-living-doc skill and the template index with the behavior shipped in the previous commit: validate.sh runs the validator with --strict so a lapsed document fails the gate, and a roadmap's decisions section takes an unchecked box. Documentation only; no validator or test behavior changes. scripts/validate.sh passed locally on this subject.",
+      "evidence_paths": [
+        ".github/skills/quirk-living-doc/SKILL.md",
+        "templates/README.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/skills/quirk-living-doc/SKILL.md",
+      "state": "present",
+      "git_blob": "42962022c43280df433ead4f05357474fc09462e",
+      "sha256": "sha256:c2b0d59c837bf8adfa8dfcd7dbfa64b91fad793a1d461695324985a441f0a66f"
+    },
+    {
+      "path": "templates/README.md",
+      "state": "present",
+      "git_blob": "fd72332c43852350e698296a27f9b909afa16070",
+      "sha256": "sha256:0ad52daf2159e314b5d16d38adcaf62526f9afeff955e2d125e201ee6d75d05c"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check e1d48fc5618f484a3c8eff97401d8fd09b5c983c ef1a6de174598f422e2d249b56a97632f6045e2c",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-21T08:29:08Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:da48e72af833b8ee777de3b46e94bd32aa748f6e46b4ad2bb1140fd1d633cf6b"
+}
