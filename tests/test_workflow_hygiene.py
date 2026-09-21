@@ -36,6 +36,17 @@ class WorkflowHygieneTests(unittest.TestCase):
             self.assertEqual(len(errors), 1)
             self.assertIn("missing top-level concurrency", errors[0])
 
+    def test_workflow_dispatch_requires_concurrency(self):
+        with tempfile.TemporaryDirectory() as directory:
+            self.write(
+                directory,
+                "missing-concurrency.yml",
+                """name: Missing concurrency\non:\n  workflow_dispatch:\npermissions:\n  contents: read\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955\n""",
+            )
+            errors = validate_workflows(Path(directory), ".github/workflows")
+            self.assertEqual(len(errors), 1)
+            self.assertIn("missing top-level concurrency", errors[0])
+
     def test_other_event_driven_workflows_require_concurrency(self):
         for event in ["issues", "issue_comment", "release", "merge_group", "repository_dispatch"]:
             with self.subTest(event=event), tempfile.TemporaryDirectory() as directory:

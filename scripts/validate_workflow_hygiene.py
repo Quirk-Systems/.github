@@ -317,18 +317,29 @@ class WorkflowParser:
         return self.parse_node(current_indent)
 
     def parse_block_scalar(self, indent):
-        lines = []
+        raw_lines = []
         while self.index < len(self.lines):
             raw = self.lines[self.index]
             if not raw.strip():
-                lines.append('')
+                raw_lines.append(None)
                 self.index += 1
                 continue
             current_indent = len(raw) - len(raw.lstrip(' '))
             if current_indent <= indent:
                 break
-            lines.append(raw[current_indent:])
+            raw_lines.append(raw)
             self.index += 1
+        content_indent = min(
+            len(line) - len(line.lstrip(' '))
+            for line in raw_lines
+            if line is not None
+        )
+        lines = []
+        for line in raw_lines:
+            if line is None:
+                lines.append('')
+                continue
+            lines.append(line[content_indent:])
         return '\n'.join(lines)
 
     def parse_inline_value(self, text):
