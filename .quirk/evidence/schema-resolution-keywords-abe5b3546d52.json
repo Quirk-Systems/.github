@@ -1,0 +1,110 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.schema-resolution-keywords.abe5b3546d52",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "eda0cb8509038109e38f9e21b4a488277cdc4bc3",
+    "commit": "abe5b3546d5292bebbdeaad91a156ba62b2d3cfc",
+    "changed_paths": [
+      ".quirk/evidence/lint-import-order-9b9c2423fcd4.json",
+      ".quirk/evidence/schema-branch-fail-closed-9b737825bbee.json",
+      ".quirk/evidence/schema-container-guard-f26ee7e20658.json",
+      ".quirk/evidence/schema-ref-resolution-bd90a1778313.json",
+      "scripts/validate_manifest.py",
+      "scripts/validate_portfolio.py",
+      "scripts/validate_topology.py",
+      "tests/test_schema_subset.py",
+      "tests/test_topology_contracts.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.schema-resolution-keywords.abe5b3546d52",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Keywords that steer reference resolution are refused rather than accepted and ignored: $anchor anywhere, and $id or $schema below the document root. A $schema declaring a dialect other than draft 2020-12 is refused. Verified by reproducing the acceptance before the change and the refusal after, and by confirming no schema in .quirk/schemas uses $anchor or a nested $id and that all ten declare draft 2020-12. Anchor resolution itself remains unimplemented, and full draft 2020-12 conformance is still neither implemented nor claimed.",
+      "evidence_paths": [
+        "scripts/validate_manifest.py",
+        "tests/test_schema_subset.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".quirk/evidence/lint-import-order-9b9c2423fcd4.json",
+      "state": "present",
+      "git_blob": "62b646400be7ee8f1baadfa64e111aebd2187a93",
+      "sha256": "sha256:01b8164b791a38b7268b246cdc5a747de6cf19a88249cf8b22140c34f6603a85"
+    },
+    {
+      "path": ".quirk/evidence/schema-branch-fail-closed-9b737825bbee.json",
+      "state": "present",
+      "git_blob": "91d4e7f127ffa6c5605b7a48fc929d4f159877fe",
+      "sha256": "sha256:72ea8713e6abe231a738081ad996d5142fdaa728c9d7a88254ef06d7be69d88b"
+    },
+    {
+      "path": ".quirk/evidence/schema-container-guard-f26ee7e20658.json",
+      "state": "present",
+      "git_blob": "c7d8c45db2efd9137e0dff21e3898cfc60b3a06c",
+      "sha256": "sha256:fd84ebc05cdd4a57726cb297c52bd38f99942ee0a149d9e926adde8e9ec1bd64"
+    },
+    {
+      "path": ".quirk/evidence/schema-ref-resolution-bd90a1778313.json",
+      "state": "present",
+      "git_blob": "676816fd9cd859c8fb618e397a71b415452b22ba",
+      "sha256": "sha256:a1abecd96c7d31bf369b7bc782635108f37295055eedd3b2bd60b5300ca9aaac"
+    },
+    {
+      "path": "scripts/validate_manifest.py",
+      "state": "present",
+      "git_blob": "86ccf56965327aa8790f907255f888b529ef0383",
+      "sha256": "sha256:4c14f1674a5c2f82b2192b2712d032c295cc2c6ed057ea2fdc3d6ffdfd823151"
+    },
+    {
+      "path": "scripts/validate_portfolio.py",
+      "state": "present",
+      "git_blob": "7a61fd93396245d8be1919395c7d7ecb3a79adc8",
+      "sha256": "sha256:c915e036de4b7c4f734ab524df239e1c52f2dcfa72d5ad0795bfd7ac77d6627d"
+    },
+    {
+      "path": "scripts/validate_topology.py",
+      "state": "present",
+      "git_blob": "b3927e13f180028437efb8c33207c29d0c42e445",
+      "sha256": "sha256:e33b88463c1bd99fce1b47725ff0c876bec364f8c0139c1dd3dc42bd95f0ee39"
+    },
+    {
+      "path": "tests/test_schema_subset.py",
+      "state": "present",
+      "git_blob": "db70423331ef9872809658b328dac87f429a3e82",
+      "sha256": "sha256:eaf3c591890f7630aa40f8d8ad424e3f581b4e6c2804cfc3194b60d807be4ac8"
+    },
+    {
+      "path": "tests/test_topology_contracts.py",
+      "state": "present",
+      "git_blob": "496516b4c624b0c041261f60b39433b1d8cf862c",
+      "sha256": "sha256:7fd1253ceff90d268be2bfb35a8a08f818ed35e6822575cca318adaf12006959"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python3 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-21T09:07:50Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:0121b91b8123a299d3710495a622c75cb9c6578f0f9ab0ea2a7371028298dbfd"
+}

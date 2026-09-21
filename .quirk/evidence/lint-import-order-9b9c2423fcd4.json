@@ -1,0 +1,82 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.lint-import-order.9b9c2423fcd4",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "eda0cb8509038109e38f9e21b4a488277cdc4bc3",
+    "commit": "9b9c2423fcd407ac8ecf2da787cb16d38d7e4947",
+    "changed_paths": [
+      "scripts/validate_manifest.py",
+      "scripts/validate_portfolio.py",
+      "scripts/validate_topology.py",
+      "tests/test_schema_subset.py",
+      "tests/test_topology_contracts.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.lint-import-order.9b9c2423fcd4",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Sorts the import blocks ruff flagged in two files, the last errors preventing scripts/validate.sh from exiting 0. Applied by ruff --fix with no behaviour change. This establishes that the repository's documented pre-receipt gate now passes; it establishes nothing about the topology data those files validate.",
+      "evidence_paths": [
+        "scripts/validate_topology.py",
+        "tests/test_topology_contracts.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "scripts/validate_manifest.py",
+      "state": "present",
+      "git_blob": "91f9507f47e9c96e896e801fee91eab47b21c55c",
+      "sha256": "sha256:8ae1c430051ce438e4334a95e40770e6c2850012ba1490d36d226466808caca4"
+    },
+    {
+      "path": "scripts/validate_portfolio.py",
+      "state": "present",
+      "git_blob": "7a61fd93396245d8be1919395c7d7ecb3a79adc8",
+      "sha256": "sha256:c915e036de4b7c4f734ab524df239e1c52f2dcfa72d5ad0795bfd7ac77d6627d"
+    },
+    {
+      "path": "scripts/validate_topology.py",
+      "state": "present",
+      "git_blob": "b3927e13f180028437efb8c33207c29d0c42e445",
+      "sha256": "sha256:e33b88463c1bd99fce1b47725ff0c876bec364f8c0139c1dd3dc42bd95f0ee39"
+    },
+    {
+      "path": "tests/test_schema_subset.py",
+      "state": "present",
+      "git_blob": "4cd6b18f2e213683255b0d0db517cbe163dcf1ec",
+      "sha256": "sha256:fda0d0ef3f9cc2c06d3f717eee5a86efc26329e9020bd148161fb532b4227210"
+    },
+    {
+      "path": "tests/test_topology_contracts.py",
+      "state": "present",
+      "git_blob": "496516b4c624b0c041261f60b39433b1d8cf862c",
+      "sha256": "sha256:7fd1253ceff90d268be2bfb35a8a08f818ed35e6822575cca318adaf12006959"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T21:42:20Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:48986e1b4f1ae69798ca93df9f594c8297b450569c60e7e29ebbc4e8036fde7e"
+}
