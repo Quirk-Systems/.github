@@ -161,6 +161,9 @@ class LivingDocumentTests(unittest.TestCase):
     def test_every_list_marker_needs_a_checkbox(self):
         self.assert_rejects(GOOD_TODO.replace("- [ ] first task", "* first task"), "## Open")
         self.assert_rejects(GOOD_TODO.replace("- [ ] first task", "+ first task"), "## Open")
+        self.assert_rejects(GOOD_TODO.replace("- [ ] first task", "1. first task"), "## Open")
+        self.assert_rejects(GOOD_TODO.replace("- [ ] first task", "2) first task"), "## Open")
+        self.assert_rejects(GOOD_TODO.replace("- [ ] first task", "- [ ] first task\n  1. nested task"), "## Open")
         self.assert_rejects(GOOD_TODO.replace("- [ ] first task", "- [ ] first task\n  - nested task"), "## Open")
         data, _ = self.module.validate_document(
             self.write(GOOD_TODO.replace("- [ ] first task", "- [ ] first task\n  - [ ] nested task")), self.tmp, TODAY)
@@ -173,6 +176,11 @@ class LivingDocumentTests(unittest.TestCase):
         with self.assertRaises(ValueError) as ctx:
             self.module.main(["--root", str(self.tmp), "--today", TODAY.isoformat()])
         self.assertIn("Kind", str(ctx.exception))
+
+    def test_a_comma_inside_one_lineage_entry_fails_loudly(self):
+        """Commas separate entries, so an entry containing one is split and must not pass."""
+        self.assert_rejects(GOOD_TODO.replace("`docs/upstream.md`", "`https://example.invalid/a,b`"),
+                            "derived-from path does not exist: b")
 
     def test_urls_in_lineage_are_not_resolved_locally(self):
         text = GOOD_TODO.replace("`docs/upstream.md`", "`https://github.com/Quirk-Systems/.github/pull/30`")

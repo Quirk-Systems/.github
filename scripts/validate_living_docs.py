@@ -63,7 +63,9 @@ OPEN_STATUSES = {"candidate", "active", "paused"}
 # Every Markdown file in these docs/ subdirectories must be a living document.
 CONTRACT_DIRS = ("intentions", "goals", "roadmaps", "todos")
 KIND_LINE = re.compile(r"^Kind:\s*\S", re.M)
-LIST_ITEM = re.compile(r"^\s*[-*+]\s")
+# Any Markdown list item, ordered or not: a checkbox section rejects every
+# marker except its own "- [ ] " / "- [x] ", so `1. task` cannot slip through.
+LIST_ITEM = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s")
 HEADER_SCAN_LINES = 15
 
 
@@ -107,6 +109,9 @@ def parse_header(path, text):
         seen.add(key)
         field = HEADER_KEYS[key]
         if field == "derived_from":
+            # Commas separate entries, so a single path or URL cannot contain
+            # one; a value that is split wrongly fails the lineage check below
+            # rather than being accepted silently.
             data[field] = [strip_markup(item) for item in value.split(",") if item.strip()]
         else:
             data[field] = strip_markup(value)
