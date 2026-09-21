@@ -11,6 +11,17 @@ PINNED_ACTION_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+(?:/[A-Za-z
 PINNED_IMAGE_PATTERN = re.compile(r"^docker://[^\s@]+@sha256:[0-9a-f]{64}$")
 PINNED_CONTAINER_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]*@sha256:[0-9a-f]{64}$")
 UNSAFE_TRIGGERS = {"pull_request_target", "workflow_run"}
+CONCURRENCY_TRIGGERS = {
+    "issue_comment",
+    "issues",
+    "merge_group",
+    "pull_request",
+    "push",
+    "release",
+    "repository_dispatch",
+    "schedule",
+    "workflow_dispatch",
+}
 
 
 class WorkflowHygieneError(Exception):
@@ -227,7 +238,7 @@ class WorkflowParser:
             if not item_text:
                 value = self.parse_child(indent)
             elif item_text[0] in '|>':
-                value = self.parse_block_scalar(indent)
+                value = self.parse_block_scalar(indent, item_text)
             else:
                 key, rest = self.split_mapping_entry(item_text)
                 if key is None:
@@ -298,7 +309,7 @@ class WorkflowParser:
         if rest:
             rest = rest.lstrip()
             if rest and rest[0] in '|>':
-                value = self.parse_block_scalar(indent)
+                value = self.parse_block_scalar(indent, rest)
             else:
                 value = self.parse_inline_value(rest)
         else:
@@ -316,7 +327,7 @@ class WorkflowParser:
             return None
         return self.parse_node(current_indent)
 
-    def parse_block_scalar(self, indent):
+    def parse_block_scalar(self, indent, header):
         raw_lines = []
         while self.index < len(self.lines):
             raw = self.lines[self.index]
@@ -340,7 +351,28 @@ class WorkflowParser:
                 lines.append('')
                 continue
             lines.append(line[content_indent:])
-        return '\n'.join(lines)
+        style = header[0]
+        if style == '|':
+            return '\n'.join(lines)
+        paragraphs = []
+        paragraph = []
+        for line in lines:
+            if line == '':
+                if paragraph:
+                    paragraphs.append(self.fold_block_paragraph(paragraph))
+                    paragraph = []
+                paragraphs.append('')
+                continue
+            paragraph.append(line)
+        if paragraph:
+            paragraphs.append(self.fold_block_paragraph(paragraph))
+        return '\n\n'.join(paragraphs)
+
+    @staticmethod
+    def fold_block_paragraph(lines):
+        if any(line.startswith(' ') for line in lines):
+            return '\n'.join(lines)
+        return ' '.join(line.strip() for line in lines)
 
     def parse_inline_value(self, text):
         value = strip_inline_comment(text).strip()
@@ -504,7 +536,7 @@ def permission_errors(value, location):
 
 
 def requires_concurrency(triggers):
-    return any(trigger != "workflow_call" for trigger in triggers)
+    return bool(triggers & CONCURRENCY_TRIGGERS)
 
 
 def validate_file(path: Path, root: Path):

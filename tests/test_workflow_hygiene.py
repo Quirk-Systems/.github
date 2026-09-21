@@ -103,6 +103,24 @@ class WorkflowHygieneTests(unittest.TestCase):
                 errors = self.check_text(event + "\npermissions: {}\njobs: {}\n")
                 self.assertTrue(any("unsafe trigger" in e for e in errors), errors)
 
+    def test_parse_yaml_text_handles_folded_scalars_aliases_and_flow_mappings(self):
+        action = 'owner/repo/sub/action@' + 'a' * 40
+        workflow = parse_yaml_text(
+            'event: &event push\n'
+            'on: *event\n'
+            'run: >-\n'
+            '  python -m unittest\n'
+            '  tests.test_workflow_hygiene\n'
+            'literal: |\n'
+            '  if true:\n'
+            '    pass\n'
+            'jobs: {test: {steps: [{uses: "' + action + '"}]}}\n'
+        )
+        self.assertEqual(workflow['on'], 'push')
+        self.assertEqual(workflow['run'], 'python -m unittest tests.test_workflow_hygiene')
+        self.assertEqual(workflow['literal'], 'if true:\n  pass')
+        self.assertEqual(workflow['jobs']['test']['steps'][0]['uses'], action)
+
     def test_valid_quoted_and_nested_actions_and_permissions(self):
         action = 'owner/repo/sub/action@' + 'a' * 40
         text = '"on": [push]\npermissions: read-all\nconcurrency: build\njobs: {test: {steps: [{uses: "' + action + '"}]}}\n'
