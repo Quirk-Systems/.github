@@ -329,15 +329,25 @@ class WorkflowParser:
 
     def parse_block_scalar(self, indent, header):
         raw_lines = []
+        pending_blank_lines = []
         while self.index < len(self.lines):
             raw = self.lines[self.index]
+            current_indent = len(raw) - len(raw.lstrip(' '))
             if not raw.strip():
-                raw_lines.append(None)
+                if raw_lines:
+                    raw_lines.append(None)
+                    self.index += 1
+                    continue
+                if current_indent <= indent:
+                    break
+                pending_blank_lines.append(None)
                 self.index += 1
                 continue
-            current_indent = len(raw) - len(raw.lstrip(' '))
             if current_indent <= indent:
                 break
+            if pending_blank_lines:
+                raw_lines.extend(pending_blank_lines)
+                pending_blank_lines.clear()
             raw_lines.append(raw)
             self.index += 1
         if not raw_lines:
@@ -435,14 +445,6 @@ def strip_inline_comment(text):
 
 
 def plain_scalar(token):
-    if token in {'', '~', 'null', 'Null', 'NULL'}:
-        return None
-    if token == 'true':
-        return True
-    if token == 'false':
-        return False
-    if re.fullmatch(r'-?\d+', token):
-        return int(token)
     return token
 
 

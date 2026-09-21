@@ -134,6 +134,15 @@ class WorkflowHygieneTests(unittest.TestCase):
         self.assertEqual(workflow['strip_folded'], 'alpha beta')
         self.assertEqual(workflow['keep_literal'], 'gamma\n')
 
+    def test_parse_yaml_text_handles_block_scalar_blank_lines(self):
+        workflow = parse_yaml_text(
+            'blanky: |+\n'
+            '  \n'
+            '  alpha\n'
+            '  \n'
+        )
+        self.assertEqual(workflow['blanky'], '\nalpha\n\n')
+
     def test_valid_quoted_and_nested_actions_and_permissions(self):
         action = 'owner/repo/sub/action@' + 'a' * 40
         text = '"on": [push]\npermissions: read-all\nconcurrency: build\njobs: {test: {steps: [{uses: "' + action + '"}]}}\n'
