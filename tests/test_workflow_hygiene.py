@@ -165,6 +165,19 @@ class WorkflowHygieneTests(unittest.TestCase):
         text = 'on: workflow_call\npermissions: {}\njobs:\n  test:\n    steps:\n      - run: |\n          on: pull_request_target\n          uses: unpinned/repo@main\n'
         self.assertEqual(self.check_text(text), [])
 
+    def test_inline_scalar_with_colon_and_comment_is_not_treated_as_mapping(self):
+        workflow = parse_yaml_text(
+            'on: workflow_call\n'
+            'permissions: {}\n'
+            'jobs:\n'
+            '  test:\n'
+            '    steps:\n'
+            '      - run: echo foo: bar # keep scalar\n'
+            '      - run: { echo: push # comment }\n'
+        )
+        self.assertEqual(workflow['jobs']['test']['steps'][0]['run'], 'echo foo: bar')
+        self.assertEqual(workflow['jobs']['test']['steps'][1]['run'], {'echo': 'push'})
+
     def test_merge_keys_and_empty_concurrency_fail(self):
         self.assertTrue(self.check_text('base: &base {on: workflow_call}\n<<: *base\npermissions: {}\njobs: {}'))
         self.assertTrue(any('concurrency' in e for e in self.check_text('on: push\npermissions: {}\nconcurrency: {}\njobs: {}')))

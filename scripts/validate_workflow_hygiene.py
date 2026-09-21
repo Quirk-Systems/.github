@@ -175,7 +175,7 @@ class InlineParser:
         start = self.index
         while self.index < len(self.text) and self.text[self.index] not in ',]}':
             self.index += 1
-        token = self.text[start:self.index].strip()
+        token = strip_inline_comment(self.text[start:self.index]).strip()
         return plain_scalar(token)
 
 
@@ -469,6 +469,9 @@ def top_level_colon(text):
             continue
         next_char = text[index + 1:index + 2]
         if not next_char or next_char.isspace() or next_char in {'[', '{', '&', '*', '"', "'"}:
+            key = text[:index].strip()
+            if key and key[0] not in {'"', "'"} and any(ch.isspace() for ch in key):
+                continue
             return index
     return None
 
