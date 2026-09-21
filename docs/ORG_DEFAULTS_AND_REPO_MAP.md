@@ -100,12 +100,10 @@ Extract a capability into another repository when it requires:
 
 ## Workflow validator development
 
-Install the pinned parser in an isolated Python environment with
-`python -m pip install -r requirements-workflow-hygiene.txt`, then run
-`python -m unittest tests.test_workflow_hygiene -v` and
+Run `python -m unittest tests.test_workflow_hygiene -v` and
 `python scripts/validate_workflow_hygiene.py --root . --workflows .github/workflows`.
 Governance CI runs these rules against the repository; the reusable workflow
-checks out its own parser and dependency pin for downstream callers.
+checks out its own parser for downstream callers.
 
 The validator reads YAML structure rather than scanning text. It handles scalar,
 sequence, mapping, quoted and aliased triggers; nested remote action paths; and

@@ -5,9 +5,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from scripts.validate_workflow_hygiene import parse_yaml_text
 from scripts.validate_workflow_hygiene import validate_workflows
-from scripts.validate_workflow_hygiene import WorkflowLoader
-import yaml
 
 
 class WorkflowHygieneTests(unittest.TestCase):
@@ -36,6 +35,18 @@ class WorkflowHygieneTests(unittest.TestCase):
             errors = validate_workflows(Path(directory), ".github/workflows")
             self.assertEqual(len(errors), 1)
             self.assertIn("missing top-level concurrency", errors[0])
+
+    def test_other_event_driven_workflows_require_concurrency(self):
+        for event in ["issues", "issue_comment", "release", "merge_group", "repository_dispatch"]:
+            with self.subTest(event=event), tempfile.TemporaryDirectory() as directory:
+                self.write(
+                    directory,
+                    "missing-concurrency.yml",
+                    f"""name: Missing concurrency\non:\n  {event}:\npermissions:\n  contents: read\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955\n""",
+                )
+                errors = validate_workflows(Path(directory), ".github/workflows")
+                self.assertEqual(len(errors), 1)
+                self.assertIn("missing top-level concurrency", errors[0])
 
     def test_unpinned_action_fails(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -166,9 +177,8 @@ class WorkflowHygieneTests(unittest.TestCase):
             self.assertNotIn('untrusted import executed', result.stderr)
 
     def test_reusable_job_keeps_subject_and_policy_checkouts_separate(self):
-        workflow = yaml.load((Path(__file__).parents[1] /
-                              '.github/workflows/workflow-hygiene.yml').read_text(),
-                             Loader=WorkflowLoader)
+        workflow = parse_yaml_text((Path(__file__).parents[1] /
+                                    '.github/workflows/workflow-hygiene.yml').read_text())
         steps = workflow['jobs']['validate']['steps']
         checkouts = [s for s in steps if s.get('uses', '').startswith('actions/checkout@')]
         self.assertEqual([s['with']['path'] for s in checkouts],
@@ -180,8 +190,7 @@ class WorkflowHygieneTests(unittest.TestCase):
 
     def test_governance_uses_immutable_policy_in_a_separate_job(self):
         root = Path(__file__).parents[1]
-        workflow = yaml.load((root / '.github/workflows/governance-contracts.yml').read_text(),
-                             Loader=WorkflowLoader)
+        workflow = parse_yaml_text((root / '.github/workflows/governance-contracts.yml').read_text())
         job = workflow['jobs']['workflow-hygiene']
         self.assertRegex(job['uses'],
                          r'^Quirk-Systems/\.github/\.github/workflows/workflow-hygiene\.yml@[0-9a-f]{40}$')
@@ -192,7 +201,7 @@ class WorkflowHygieneTests(unittest.TestCase):
         pinned = subprocess.run(
             ['git', 'show', sha + ':.github/workflows/workflow-hygiene.yml'],
             cwd=root, check=True, text=True, capture_output=True).stdout
-        called = yaml.load(pinned, Loader=WorkflowLoader)
+        called = parse_yaml_text(pinned)
         commands = '\n'.join(step.get('run', '') for step in called['jobs']['validate']['steps'])
         self.assertIn('python -I .quirk-policy/scripts/validate_workflow_hygiene.py', commands)
         self.assertIn('--root .quirk-subject', commands)
