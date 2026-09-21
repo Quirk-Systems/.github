@@ -1,0 +1,74 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.living-document-list-markers.0343f0c2a7af",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "a2e81db0c6baadde0bf1a4131c280a6cea94ae2a",
+    "commit": "0343f0c2a7af917e6ea7167531e3f075c231a4fd",
+    "changed_paths": [
+      ".quirk/schemas/living-document.schema.json",
+      "scripts/validate_living_docs.py",
+      "tests/test_living_docs.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.living-document-list-markers.0343f0c2a7af",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The cited bytes widen the list-item pattern to ordered markers so an ordered item under a checkbox section is rejected, and record in the schema, a code comment, and a test that lineage entries are comma-separated and an entry containing a comma is split and fails the existence check. Observed locally on this subject: python -m unittest tests.test_living_docs 20 tests OK; scripts/validate.sh all executed checks passed with the strict validator reporting 4 documents and 0 stale; zizmor offline pedantic no findings.",
+      "evidence_paths": [
+        ".quirk/schemas/living-document.schema.json",
+        "scripts/validate_living_docs.py",
+        "tests/test_living_docs.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".quirk/schemas/living-document.schema.json",
+      "state": "present",
+      "git_blob": "d9084dfaeebe8e77492aaf8513f52b741dc9c1f6",
+      "sha256": "sha256:80dc52a7ba669874e12def3dc266cb7dbb3b1fac5a4a149266071edb0cfb6223"
+    },
+    {
+      "path": "scripts/validate_living_docs.py",
+      "state": "present",
+      "git_blob": "b7c33b87b29203148d59d081320e47fae2501da0",
+      "sha256": "sha256:1ec619d556fe0cc308f64286d8c0ed1449865d8b7a2d4dab3582acf7719960df"
+    },
+    {
+      "path": "tests/test_living_docs.py",
+      "state": "present",
+      "git_blob": "50d43116028563128065643f6351797ee5515b4f",
+      "sha256": "sha256:2006641da2534ad5d05e03f048f351ef11d4553487788d8073d47a0bb60c9ecd"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 -m unittest tests.test_living_docs",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check a2e81db0c6baadde0bf1a4131c280a6cea94ae2a 0343f0c2a7af917e6ea7167531e3f075c231a4fd",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-21T08:53:16Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:c40c631e8bc8972ee87b1d59320e6cc6861235470fb0f4fdbba5d56513260a32"
+}
