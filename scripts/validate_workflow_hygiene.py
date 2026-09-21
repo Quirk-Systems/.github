@@ -340,6 +340,8 @@ class WorkflowParser:
                 break
             raw_lines.append(raw)
             self.index += 1
+        if not raw_lines:
+            return ''
         content_indent = min(
             len(line) - len(line.lstrip(' '))
             for line in raw_lines
@@ -352,27 +354,47 @@ class WorkflowParser:
                 continue
             lines.append(line[content_indent:])
         style = header[0]
+        chomp = '+' if '+' in header else '-' if '-' in header else None
+        trailing_blank_lines = 0
+        content_lines = list(lines)
+        while content_lines and content_lines[-1] == '':
+            trailing_blank_lines += 1
+            content_lines.pop()
         if style == '|':
-            return '\n'.join(lines)
-        paragraphs = []
-        paragraph = []
-        for line in lines:
-            if line == '':
-                if paragraph:
-                    paragraphs.append(self.fold_block_paragraph(paragraph))
-                    paragraph = []
-                paragraphs.append('')
-                continue
-            paragraph.append(line)
-        if paragraph:
-            paragraphs.append(self.fold_block_paragraph(paragraph))
-        return '\n\n'.join(paragraphs)
+            body = '\n'.join(content_lines)
+        else:
+            paragraphs = []
+            paragraph = []
+            for line in content_lines:
+                if line == '':
+                    if paragraph:
+                        paragraphs.append(self.fold_block_paragraph(paragraph))
+                        paragraph = []
+                    paragraphs.append('')
+                    continue
+                paragraph.append(line)
+            if paragraph:
+                paragraphs.append(self.fold_block_paragraph(paragraph))
+            body = '\n\n'.join(paragraphs)
+        return self.apply_block_chomping(body, chomp, trailing_blank_lines)
 
     @staticmethod
     def fold_block_paragraph(lines):
         if any(line.startswith(' ') for line in lines):
             return '\n'.join(lines)
         return ' '.join(line.strip() for line in lines)
+
+    @staticmethod
+    def apply_block_chomping(body, chomp, trailing_blank_lines):
+        if chomp == '-':
+            return body
+        if chomp == '+':
+            if body:
+                return body + '\n' * (1 + trailing_blank_lines)
+            return '\n' * trailing_blank_lines
+        if body:
+            return body + '\n'
+        return '\n' if trailing_blank_lines else ''
 
     def parse_inline_value(self, text):
         value = strip_inline_comment(text).strip()

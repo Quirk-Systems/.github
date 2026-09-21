@@ -118,8 +118,21 @@ class WorkflowHygieneTests(unittest.TestCase):
         )
         self.assertEqual(workflow['on'], 'push')
         self.assertEqual(workflow['run'], 'python -m unittest tests.test_workflow_hygiene')
-        self.assertEqual(workflow['literal'], 'if true:\n  pass')
+        self.assertEqual(workflow['literal'], 'if true:\n  pass\n')
         self.assertEqual(workflow['jobs']['test']['steps'][0]['uses'], action)
+
+    def test_parse_yaml_text_handles_empty_block_scalars_and_chomping(self):
+        workflow = parse_yaml_text(
+            'empty_literal: |\n'
+            'strip_folded: >-\n'
+            '  alpha\n'
+            '  beta\n'
+            'keep_literal: |+\n'
+            '  gamma\n'
+        )
+        self.assertEqual(workflow['empty_literal'], '')
+        self.assertEqual(workflow['strip_folded'], 'alpha beta')
+        self.assertEqual(workflow['keep_literal'], 'gamma\n')
 
     def test_valid_quoted_and_nested_actions_and_permissions(self):
         action = 'owner/repo/sub/action@' + 'a' * 40
