@@ -44,6 +44,6 @@ are never deleted. Each Done item names the evidence that closed it.
 
 ## Decisions awaiting an owner
 
-- PR #20 (Copilot workflow hygiene): merge, revise, or close; it owns CODEOWNERS, dependabot, labeler, release-drafter, copilot-instructions, workflow-hygiene, and edits to the legacy workflows, and it has been dirty against `main` since 2026-09-11 (owner: @bryansayler)
-- `quirk-core`: fold its doctrine into the admitted kernel canon or define a distinct owned contract and consumer, per the truthful topology cut (owner: @bryansayler)
-- Egress `block` mode and required-checks activation: both are owner-only settings that repository content cannot change (owner: @bryansayler)
+- [ ] PR #20 (Copilot workflow hygiene): merge, revise, or close; it owns CODEOWNERS, dependabot, labeler, release-drafter, copilot-instructions, workflow-hygiene, and edits to the legacy workflows, and it has been dirty against `main` since 2026-09-11 (owner: @bryansayler)
+- [ ] `quirk-core`: fold its doctrine into the admitted kernel canon or define a distinct owned contract and consumer, per the truthful topology cut (owner: @bryansayler)
+- [ ] Egress `block` mode and required-checks activation: both are owner-only settings that repository content cannot change (owner: @bryansayler)

@@ -10,7 +10,7 @@ Review by: YYYY-MM-DD
 Derived from: `docs/intentions/<date>-<slug>.md`, `docs/goals/<date>-<slug>.md`  
 Authority effect: **none**
 
-<!-- Every item is a checkbox. Now/Next/Later items are `- [ ]`; Done items are `- [x]` and name the evidence (PR, receipt, commit) that closed them. Move items between sections; never delete them. -->
+<!-- Every list item is a checkbox, in every section. Now/Next/Later and Decisions awaiting an owner take `- [ ]`; Done takes `- [x]` and names the evidence (PR, receipt, commit) that closed it. Move items between sections; never delete them. -->
 
 ## Now
 
@@ -32,6 +32,6 @@ Authority effect: **none**
 
 ## Decisions awaiting an owner
 
-<!-- Items no agent may advance: rulesets, org settings, repository creation, canonical changes, merge. Name the owner and the exact decision. A blank list is a claim; make it true. -->
+<!-- Items no agent may advance: rulesets, org settings, repository creation, canonical changes, merge. Name the owner and the exact decision. Items here stay unchecked; a decided one moves to Now or Done. A blank list is a claim; make it true. -->
 
-- <decision> (owner: @<handle>)
+- [ ] <decision> (owner: @<handle>)

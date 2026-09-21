@@ -11,8 +11,11 @@ roadmap and todo sections, and for lineage (at least one `Derived from`
 entry; every repository-relative path resolves inside the checkout and
 exists). A document whose `Review by` date has passed while it is still
 candidate, active, or paused is stale: stale is always reported and fails
-the run only with --strict. Passing proves shape, lineage, and freshness,
-not that an intention is wise, a goal is met, or a task is done.
+the run only with --strict, which scripts/validate.sh passes, so a lapsed
+document turns the pull-request gate red until someone re-reads it against
+the current head and bumps or retires it. Passing proves shape, lineage,
+and freshness, not that an intention is wise, a goal is met, or a task is
+done.
 """
 
 import argparse
@@ -38,7 +41,11 @@ KIND_SECTIONS = {
     "brief": TEMPLATE_SECTIONS["BRIEF.md"],
 }
 CHECKBOX_SECTIONS = {
-    "roadmap": {"## Now": "[ ]", "## Next": "[ ]", "## Later": "[ ]", "## Done": "[x]"},
+    # Every list item in a roadmap or todo section carries its section's box.
+    # "Decisions awaiting an owner" takes an unchecked box and only that: an
+    # item there is pending by definition, and a decided one leaves the section.
+    "roadmap": {"## Now": "[ ]", "## Next": "[ ]", "## Later": "[ ]", "## Done": "[x]",
+                "## Decisions awaiting an owner": "[ ]"},
     "todo": {"## Open": "[ ]", "## Blocked": "[ ]", "## Done": "[x]"},
 }
 HEADER_KEYS = {

@@ -58,12 +58,50 @@ class LivingDocumentTests(unittest.TestCase):
         return path
 
     def assert_rejects(self, text, fragment):
+        self.assert_rejects_at(text, "todo.md", fragment)
+
+    def assert_rejects_at(self, text, name, fragment):
         with self.assertRaises(ValueError) as ctx:
-            self.module.validate_document(self.write(text), self.tmp, TODAY)
+            self.module.validate_document(self.write(text, name), self.tmp, TODAY)
         self.assertIn(fragment, str(ctx.exception))
+
+    def header(self, kind):
+        return (f"# {kind.title()}: fixture\n\nKind: {kind}\nStatus: active\nOwner: @bryansayler\n"
+                "Repository: `Quirk-Systems/.github`\n"
+                "Observed head: `62218674c00d6a9d4c81db13000d25c5f37afc6d`\n"
+                "Reviewed: 2026-09-20\nReview by: 2026-10-04\n"
+                "Derived from: `docs/upstream.md`\nAuthority effect: **none**\n")
+
+    def opt_in(self, kind):
+        """A brief or plan outside the contract directories, opting in with its header."""
+        body = "".join(f"\n{section}\n\nBody.\n" for section in self.module.KIND_SECTIONS[kind])
+        return self.header(kind) + body
+
+    def roadmap(self):
+        return self.header("roadmap") + (
+            "\n## Now\n\n- [ ] ship the contract\n"
+            "\n## Next\n\n- [ ] repin the callers\n"
+            "\n## Later\n\n- [ ] offer a reusable workflow\n"
+            "\n## Done\n\n- [x] enable the dependency graph (evidence: PR #30)\n"
+            "\n## Decisions awaiting an owner\n\n- [ ] decide PR #20 (owner: @bryansayler)\n")
 
     def test_repository_documents_pass_strict_on_their_review_dates(self):
         self.assertEqual(self.module.main(["--strict", "--today", TODAY.isoformat()]), 0)
+
+    def test_repository_documents_are_fresh_today(self):
+        """The contract only bites if freshness is checked against the real date.
+
+        scripts/validate.sh runs this validator with --strict, so a lapsed
+        document turns the gate red. This test fails the same way, naming the
+        documents to re-read and bump or retire.
+        """
+        stale = [
+            f"{path.relative_to(ROOT)}: {message}"
+            for path in self.module.discover(ROOT)
+            for message in [self.module.validate_document(path, ROOT)[1]]
+            if message
+        ]
+        self.assertEqual(stale, [], "living documents are past their review date; re-read and bump or retire them")
 
     def test_every_kind_has_a_template_and_an_instance(self):
         kinds = {self.module.validate_document(p, ROOT, TODAY)[0]["kind"] for p in self.module.discover(ROOT)}
@@ -144,6 +182,29 @@ class LivingDocumentTests(unittest.TestCase):
     def test_documents_without_kind_line_are_not_living_documents(self):
         self.write("# Ordinary doc\n\nProse only.\n", name="plain.md")
         self.assertEqual([p.name for p in self.module.discover(self.tmp)], [])
+
+    def test_decisions_awaiting_an_owner_needs_unchecked_boxes(self):
+        roadmap = self.roadmap()
+        self.assertIsNone(self.module.validate_document(self.write(roadmap, "roadmap.md"), self.tmp, TODAY)[1])
+        self.assert_rejects_at(roadmap.replace("- [ ] decide PR #20", "- decide PR #20"),
+                               "roadmap.md", "Decisions awaiting an owner")
+        self.assert_rejects_at(roadmap.replace("- [ ] decide PR #20", "- [x] decide PR #20"),
+                               "roadmap.md", "Decisions awaiting an owner")
+
+    def test_opted_in_brief_and_plan_validate_their_own_sections(self):
+        for kind, name in (("brief", "brief.md"), ("plan", "plan.md")):
+            text = self.opt_in(kind)
+            data, stale = self.module.validate_document(self.write(text, name), self.tmp, TODAY)
+            self.assertEqual(data["kind"], kind)
+            self.assertIsNone(stale)
+            self.assertIn(self.tmp / "docs" / name, self.module.discover(self.tmp))
+            missing = self.module.KIND_SECTIONS[kind][0]
+            self.assert_rejects_at(text.replace(f"{missing}\n\nBody.\n", ""), name, "missing section")
+
+    def test_opted_in_kinds_reuse_the_markdown_template_sections(self):
+        from validate_templates import REQUIRED_SECTIONS
+        self.assertEqual(self.module.KIND_SECTIONS["brief"], REQUIRED_SECTIONS["BRIEF.md"])
+        self.assertEqual(self.module.KIND_SECTIONS["plan"], REQUIRED_SECTIONS["PLAN.md"])
 
 
 if __name__ == "__main__":

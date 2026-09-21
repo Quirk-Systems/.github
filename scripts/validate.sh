@@ -28,6 +28,9 @@ for script in scripts/validate_manifest.py scripts/validate_portfolio.py scripts
     case "$script" in
       scripts/validate_manifest.py) run "$PY" "$script" .quirk/manifest.json ;;
       scripts/design_tokens.py) run "$PY" "$script" validate .quirk/design/tokens.json ;;
+      # --strict: a living document past its review date fails the gate, so
+      # freshness is enforced rather than merely printed.
+      scripts/validate_living_docs.py) run "$PY" "$script" --strict ;;
       *) run "$PY" "$script" ;;
     esac
   fi

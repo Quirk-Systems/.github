@@ -42,7 +42,7 @@ checks. Planning inherits the receipt discipline instead of escaping it.
 
 ## Goals
 
-- `docs/goals/2026-09-20-living-documents-validated.md`: every planning document under `docs/` carries a validated living-document header, and the validator runs in `scripts/validate.sh`.
+- `docs/goals/2026-09-20-living-documents-validated.md`: every document under the four contract directories, plus each brief and plan that opts in, carries a validated living-document header, and the validator runs in `scripts/validate.sh`.
 - Goal to write: the twice-weekly portfolio review in `docs/governance/AUTONOMOUS_OPERATIONS.md` reads the roadmap and to-do documents and bumps their review dates, so freshness is produced by the existing cadence rather than by a separate ritual.
 - Goal to write: consumer repositories can run the living-document validator against their own `docs/` through a reusable workflow, once two repositories carry such documents.
 
