@@ -34,7 +34,7 @@ through `with:`; no reusable workflow interpolates caller input inside a
 | Workflow | Trigger it serves | Inputs | Caller permissions | What it proves | What it does not prove |
 | --- | --- | --- | --- | --- | --- |
 | `reusable-evidence-binding.yml` | `pull_request` only | none | `contents: read` | Every changed path in the PR range is covered by a fresh verified receipt | Semantic sufficiency, review, merge, canon |
-| `quirk-semantic-governance.yml` | any | none | `contents: read` | Caller `.quirk/manifest.json` has the required keys; the canonical registry lints clean | That the manifest's domain claims are true |
+| `quirk-semantic-governance.yml` | any | none | `contents: read` | Caller `.quirk/manifest.json` has the required keys; the canonical registry, read at this workflow's own pinned commit, lints clean | That the manifest's domain claims are true |
 | `reusable-validate.yml` | any | `package-manager`, `node-version`, `bun-version`, `working-directory`, `test-script`, `run-build`, `run-e2e`, `e2e-script` | `contents: read` | JS lint, type-check, tests, build, optional Playwright e2e | Deployment or runtime behavior. Being hardened in a separate PR (pins, permissions) |
 | `reusable-pr-title-lint.yml` | `pull_request` | none | `pull-requests: read` | PR title is a Conventional Commit | Commit contents |
 | `reusable-codeql.yml` | `push`, `pull_request`, `schedule` | `languages` (required), `build-mode`, `queries` | `contents: read`, `actions: read`, `security-events: write` | CodeQL analysis uploaded to code scanning | Absence of vulnerabilities outside the query suite |

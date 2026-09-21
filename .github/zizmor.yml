@@ -22,7 +22,6 @@ rules:
   artipacked:
     ignore:
       - reusable-validate.yml
-      - quirk-semantic-governance.yml
   anonymous-definition:
     ignore:
       - reusable-validate.yml
