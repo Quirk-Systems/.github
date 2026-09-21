@@ -1,0 +1,85 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.org-defaults.ca693deef695",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "1263f5008838f743b16ee218046e26dac5c9edd8",
+    "commit": "ca693deef695829083c1ef18495f70fa9a8e727f",
+    "changed_paths": [
+      ".github/CODEOWNERS",
+      ".github/copilot-instructions.md",
+      ".github/dependabot.yml",
+      ".github/labeler.yml",
+      ".github/release-drafter.yml"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.org-defaults.ca693deef695",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "This repository carries the five organization-default files PR #20 owned that main lacked: CODEOWNERS, copilot-instructions.md, dependabot.yml, labeler.yml, release-drafter.yml. VERIFIED at this commit: 180 tests pass under Python 3.12 and scripts/validate.sh reports all executed checks passed, including ruff, actionlint, zizmor --offline --persona pedantic with no findings and 24 ignored (unchanged), validate_agent_assets.py, validate-copilot-maintenance.py, validate_living_docs.py --strict, and portfolio_report.py --check. VERIFIED by reading PR #20 head 3b6959aed8b53920b0ef63a5e7d66f6400e71d56: dependabot.yml, labeler.yml and release-drafter.yml are byte-identical to its versions; CODEOWNERS and copilot-instructions.md are rewritten. UNKNOWN: whether GitHub applies CODEOWNERS for review routing, which depends on branch protection this repository cannot set. Reported not run: no workflow in this repository consumes labeler.yml or release-drafter.yml, so neither configuration has been exercised by any run.",
+      "evidence_paths": [
+        ".github/CODEOWNERS",
+        ".github/copilot-instructions.md",
+        ".github/dependabot.yml",
+        ".github/labeler.yml",
+        ".github/release-drafter.yml"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/CODEOWNERS",
+      "state": "present",
+      "git_blob": "f3095e7bba7d76c2722ffeb05d40f3d25b33f4ee",
+      "sha256": "sha256:06372f4b82f3bf16821986cf26fb1ec2b50bb503f01c9b93ddc89f2e4f73d88a"
+    },
+    {
+      "path": ".github/copilot-instructions.md",
+      "state": "present",
+      "git_blob": "83b6624e75ba92ab8bdb7480cc315b74981bd403",
+      "sha256": "sha256:8c0e1f4f800497fcddbc919a782ab334dcc3fdabd010253c7541cf3ad48064bc"
+    },
+    {
+      "path": ".github/dependabot.yml",
+      "state": "present",
+      "git_blob": "adad271b31e93549eea9183494760f1307b935da",
+      "sha256": "sha256:e8aa8f5a1882ee6e20f35232e56540ff5ca5b38546301af1ef25b934fe4f564c"
+    },
+    {
+      "path": ".github/labeler.yml",
+      "state": "present",
+      "git_blob": "d1dfae34269d097ca1151299e5eb8642585b57f4",
+      "sha256": "sha256:952377410ec494c042cf5ca2f085efbb2e0a4fe5a319e87cbd7713843550cf1a"
+    },
+    {
+      "path": ".github/release-drafter.yml",
+      "state": "present",
+      "git_blob": "ea20fc0594f74480620d72c576f510c49829f9ac",
+      "sha256": "sha256:30f2b210b004272bde223f365f0224231e10c372a01eb99ccc1b5ab6ba28302a"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "uv run --no-project --python 3.12 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-21T15:20:09Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:4f9aa7af8ee54b63591352411f0c1465710a536df6ff64bab23be853e1ef62e0"
+}
