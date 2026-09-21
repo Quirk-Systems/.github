@@ -80,6 +80,7 @@ class SchemaSubsetTests(unittest.TestCase):
     def test_unsupported_keyword_fails_closed(self):
         self.assertRejects("anything", {"multipleOf": 3}, "unsupported schema keywords")
         self.assertRejects({}, {"propertyNames": {"pattern": "^a"}}, "unsupported schema keywords")
+        self.assertRejects({}, {"$anchor": "named-here"}, "unsupported schema keywords")
 
     def test_every_repository_schema_uses_only_supported_keywords(self):
         for path in sorted(SCHEMAS.glob("*.json")):
