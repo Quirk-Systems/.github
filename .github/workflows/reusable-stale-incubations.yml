@@ -14,9 +14,13 @@ on:
         type: string
         default: "incubating,proposal"
 
-# Labeling and commenting need write on issues and pull requests; nothing is closed.
-permissions:
-  contents: read
+# Request nothing of callers here. GitHub validates this block against the
+# caller job's `permissions:` grant before it creates any job, so a scope named
+# here is demanded of every caller whether or not a job uses it: when it read
+# `contents: read`, a caller granting only the two scopes the job below names
+# would never compile. The job names what it needs; see the Caller permissions
+# column in docs/governance/REUSABLE_WORKFLOWS.md.
+permissions: {}
 
 concurrency:
   group: reusable-stale-incubations-${{ github.workflow }}-${{ github.ref }}

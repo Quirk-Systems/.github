@@ -1,0 +1,93 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.reusable-caller-permissions.c2b321a15deb",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "e080d320b6221a5b2c64fd864f47a0b35700b95f",
+    "commit": "c2b321a15debc36ea8588b8fa65d10bc40d2ac61",
+    "changed_paths": [
+      ".github/workflows/reusable-codeql.yml",
+      ".github/workflows/reusable-pr-title-lint.yml",
+      ".github/workflows/reusable-sbom-provenance.yml",
+      ".github/workflows/reusable-stale-incubations.yml",
+      "docs/governance/REUSABLE_WORKFLOWS.md",
+      "tests/test_workflow_pins.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.reusable-caller-permissions.c2b321a15deb",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "No reusable workflow in this repository names a top-level permission scope that none of its jobs uses: where every job names its own scopes the top-level block is 'permissions: {}', and where a job names none the block is exactly what that job gets. tests/test_workflow_pins.py enforces this and a fixture test pins the parser to the three permission shapes. VERIFIED at this commit: 160 tests pass under Python 3.12, ruff reports no issues, actionlint reports nothing, and zizmor --offline --persona pedantic reports no findings with 24 ignored, unchanged from the base. INFERRED from two observed hosted runs of the same caller across two pins: GitHub validates a called workflow's top-level permissions block against the caller job's grant before creating any job. UNKNOWN until a hosted run is observed: whether a caller granting only the scopes a job names now compiles.",
+      "evidence_paths": [
+        ".github/workflows/reusable-codeql.yml",
+        ".github/workflows/reusable-pr-title-lint.yml",
+        ".github/workflows/reusable-sbom-provenance.yml",
+        ".github/workflows/reusable-stale-incubations.yml",
+        "docs/governance/REUSABLE_WORKFLOWS.md",
+        "tests/test_workflow_pins.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/workflows/reusable-codeql.yml",
+      "state": "present",
+      "git_blob": "cefb78481ca7796616f5236232ba6b1bca8013ff",
+      "sha256": "sha256:fba88a97268265e1346d38acb632eed265855ad2294ecc6a29c642e9512db1f9"
+    },
+    {
+      "path": ".github/workflows/reusable-pr-title-lint.yml",
+      "state": "present",
+      "git_blob": "b52d3ce7059e54fd286ea465a842335593daaf5c",
+      "sha256": "sha256:19898cfb4543b3fa6e1dd8ba1388328d69183f8bedac70ec1f477f03e5060a1f"
+    },
+    {
+      "path": ".github/workflows/reusable-sbom-provenance.yml",
+      "state": "present",
+      "git_blob": "9a39e3f71375e37ebbb653e0d85a67f66b0d6677",
+      "sha256": "sha256:c27206c4f4cc9c25c94ea124ee8441e79305f66faa625279a18ea8817636a48f"
+    },
+    {
+      "path": ".github/workflows/reusable-stale-incubations.yml",
+      "state": "present",
+      "git_blob": "e44442b0f9ce561190c040b98bfce01602258219",
+      "sha256": "sha256:49325d8432d9e33a8336d6795c459ded2fe5e6559d49818784d797ea58ab65dc"
+    },
+    {
+      "path": "docs/governance/REUSABLE_WORKFLOWS.md",
+      "state": "present",
+      "git_blob": "8616d3134e3d3623a92baaed7e8a28ad7adaf30b",
+      "sha256": "sha256:bf9c23392004dc846f66fdf4c242e8ef5d49bc61e7760814317a6d53398adb7e"
+    },
+    {
+      "path": "tests/test_workflow_pins.py",
+      "state": "present",
+      "git_blob": "18424b893c8f045b05cf4d356f65f8ab39af62ad",
+      "sha256": "sha256:a1ea3a4401780ad5d1afa8a6b44943475d0a1b98dbb409feb373427d26d19616"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "uv run --no-project --python 3.12 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-21T12:31:43Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:36b4c543a4bd3c38f7bac25d2e282c29fabe3c6f9b907266d8c14f47e6bbd274"
+}

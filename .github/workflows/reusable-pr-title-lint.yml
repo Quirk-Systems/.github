@@ -3,9 +3,14 @@ name: Reusable PR title lint
 on:
   workflow_call:
 
-# Default to read-only; the one job below grants the single scope it needs.
+# A called workflow's workflow-level permissions are a contract with its
+# callers, not a local default: GitHub validates this block against the caller
+# job's `permissions:` grant before it creates any job. A scope named here that
+# no job below uses forces every caller to grant it too, and a caller that does
+# not sees its run end in `startup_failure` with no job and no log to read. The
+# job below checks out nothing; it reads the pull-request title.
 permissions:
-  contents: read
+  pull-requests: read # the action reads the pull-request title; it posts nothing
 
 concurrency:
   group: reusable-pr-title-lint-${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.sha }}
@@ -16,8 +21,6 @@ jobs:
     name: lint
     runs-on: ubuntu-24.04
     timeout-minutes: 5
-    permissions:
-      pull-requests: read # the action reads the pull-request title; it posts nothing
     steps:
       - name: Validate PR title against Conventional Commits
         uses: amannn/action-semantic-pull-request@0723387faaf9b38adef4775cd42cfd5155ed6017 # v5.5.3
