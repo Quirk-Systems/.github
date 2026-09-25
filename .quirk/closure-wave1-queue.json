@@ -1,0 +1,125 @@
+{
+  "schema_version": "pr-closure-queue.v0.1",
+  "owner_repository": "Quirk-Systems/.github",
+  "mode": "shadow_read_only",
+  "classification": "MATERIAL_SCOPE_CHANGE",
+  "authority_effect": "none",
+  "allowed_dispositions": [
+    "READY_FOR_MERGE",
+    "READY_FOR_HUMAN_ADMISSION",
+    "REVISE",
+    "HOLD_CANDIDATE",
+    "SUPERSEDE",
+    "CLOSE_AS_REDUNDANT"
+  ],
+  "wave_1": {
+    "scope": "Human-authored security, governance, admission, repository-ownership, evidence, runtime-boundary, and repository-safety PRs",
+    "items": [
+      {
+        "subject": {
+          "repository": "Quirk-Systems/.github",
+          "pull_request": 9,
+          "head_sha": "c848db6cbb83c5919ca19775295d1c534bbbceaf"
+        },
+        "target_disposition": "READY_FOR_HUMAN_ADMISSION",
+        "required_next": [
+          "verify exact-range governance spine",
+          "do not activate rulesets"
+        ]
+      },
+      {
+        "subject": {
+          "repository": "Quirk-Systems/Quirk",
+          "pull_request": 3,
+          "head_sha": "0d3415c5d507002bbb7f9f7b581e0b334f657c0f"
+        },
+        "target_disposition": "SUPERSEDE",
+        "required_next": [
+          "create extraction ledger by owning repository",
+          "preserve lineage"
+        ]
+      },
+      {
+        "subject": {
+          "repository": "Quirk-Systems/Quirk",
+          "pull_request": 4,
+          "head_sha": "fb728da472a39bcf29a25d1500fb80f989b6e63c"
+        },
+        "target_disposition": "REVISE",
+        "required_next": [
+          "retain Civic Surface registry/UI",
+          "remove installer/provider-acquisition behavior"
+        ]
+      },
+      {
+        "subject": {
+          "repository": "Quirk-Systems/Quirk",
+          "pull_request": 5,
+          "head_sha": "6a5139bb30fd9da4dcc8b099d6413fee12272504"
+        },
+        "target_disposition": "READY_FOR_HUMAN_ADMISSION",
+        "required_next": [
+          "resolve secret-scanning incident",
+          "create clean successor head",
+          "rerun exact-head consumer proof"
+        ]
+      },
+      {
+        "subject": {
+          "repository": "Quirk-Systems/quirk-os",
+          "pull_request": 70,
+          "head_sha": "0909ad85415bf860aa3c6008028c6b6f034e3743"
+        },
+        "target_disposition": "HOLD_CANDIDATE",
+        "required_next": [
+          "preserve APPROVE_CANON_BOUNDARY for boundary commit only",
+          "split candidate evidence before any Git admission discussion"
+        ]
+      },
+      {
+        "subject": {
+          "repository": "Quirk-Systems/quirk-os",
+          "pull_request": 71,
+          "head_sha": "381a2df04f6c1986f9d921459bdfbdeb869d2e8c"
+        },
+        "target_disposition": "HOLD_CANDIDATE",
+        "required_next": [
+          "resolve five review questions",
+          "run two-format bakeoff",
+          "remain candidate-only"
+        ]
+      },
+      {
+        "subject": {
+          "repository": "Quirk-Systems/quirk-run",
+          "pull_request": 2,
+          "head_sha": "850e5718377751d40cff68cde2db7c943b4b7e6b"
+        },
+        "target_disposition": "HOLD_CANDIDATE",
+        "required_next": [
+          "prove behavioral fixtures and independent review",
+          "no Cloudflare deployment"
+        ]
+      },
+      {
+        "subject": {
+          "repository": "Quirk-Systems/quirk-data",
+          "pull_request": 2,
+          "head_sha": "02599cd0014c49d8e4a9dcb372add9e00d54668f"
+        },
+        "target_disposition": "HOLD_CANDIDATE",
+        "required_next": [
+          "add missing negative pgTAP proof and independent review",
+          "no Supabase migration"
+        ]
+      }
+    ],
+    "required_sweep": {
+      "remaining_human_prs": "Sweep every remaining human-authored open PR through the same disposition contract"
+    }
+  },
+  "wave_2": {
+    "scope": "Dependabot majors, generated compatibility migrations, duplicated bot PRs, and framework/toolchain upgrade trains",
+    "start_condition": "Wave 1 has zero unclassified human-authored PRs"
+  }
+}
