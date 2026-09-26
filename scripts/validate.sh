@@ -38,7 +38,22 @@ done
 if [[ -f scripts/portfolio_report.py ]]; then run "$PY" scripts/portfolio_report.py --check; fi
 
 echo "==> JSON parse of .quirk/**/*.json and .claude/settings.json"
-find .quirk .claude -name '*.json' -print0 | xargs -0 -n1 "$PY" -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))'
+"$PY" -c '
+import json
+import sys
+from pathlib import Path
+
+for root in (Path(".quirk"), Path(".claude")):
+    if not root.is_dir():
+        raise SystemExit(f"Missing JSON root: {root}")
+    for path in sorted(root.rglob("*.json")):
+        try:
+            with path.open(encoding="utf-8") as source:
+                json.load(source)
+        except (OSError, UnicodeError, json.JSONDecodeError) as error:
+            print(f"{path}: {error}", file=sys.stderr)
+            raise SystemExit(1)
+'
 
 optional ruff check .
 # actionlint 1.7.x does not yet model the GitHub.com job.workflow_repository /
