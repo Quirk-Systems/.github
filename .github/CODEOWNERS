@@ -7,6 +7,9 @@
 # an inventory. Add a path here when a directory is added at the root.
 * @bryansayler
 
+# Development environment.
+/.devcontainer/ @bryansayler
+
 # Canonical state and governance.
 /.quirk/ @bryansayler
 /docs/ @bryansayler
