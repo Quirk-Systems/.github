@@ -1,0 +1,66 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.pr-closure-harness-plan-followup.1010b25a9fe4",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "ceefb2ae42e90e6bfb618c989470a38ac5d1eaa1",
+    "commit": "1010b25a9fe44bc752d30ebbc57993c091c5b8a8",
+    "changed_paths": [
+      "docs/superpowers/plans/2026-08-28-pr-closure-harness.md",
+      "docs/superpowers/specs/2026-08-28-pr-closure-harness-design.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.pr-closure-harness-plan-followup.1010b25a9fe4",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The cited PR Closure Harness design and plan files document the bounded admission-review follow-up: exact-head independent review is sufficient for READY_FOR_HUMAN_ADMISSION, exact-head approval remains required for READY_FOR_MERGE, and dismissed-review history cannot resurrect stale approvals. This claim is documentation evidence only and grants no admission, merge, runtime, or policy authority.",
+      "evidence_paths": [
+        "docs/superpowers/plans/2026-08-28-pr-closure-harness.md",
+        "docs/superpowers/specs/2026-08-28-pr-closure-harness-design.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/superpowers/plans/2026-08-28-pr-closure-harness.md",
+      "state": "present",
+      "git_blob": "87b8747c78407b14b3aed1345f32aa530dc332d9",
+      "sha256": "sha256:1fb21aa09a38e44b9aa22f18570255d921ddeae8ec0529b6d718dc05a5b2b9bf"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-08-28-pr-closure-harness-design.md",
+      "state": "present",
+      "git_blob": "6c4ecc207cc662447bb20fb16743c3bbe7e25fd7",
+      "sha256": "sha256:66215d08fd91f35ef2dcf23447f7169a9af96a63060343b78e795e472fbe036a"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "git diff --check ceefb2ae42e90e6bfb618c989470a38ac5d1eaa1..1010b25a9fe44bc752d30ebbc57993c091c5b8a8",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python -m unittest tests.test_evidence_receipts -v",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python scripts/validate_evidence_receipts.py --repository Quirk-Systems/.github --root . --receipts .quirk/evidence",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-11T16:13:00Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:41ca42e40d767ee34ec22a267db9ca8503e8d756f414071336c8318d7fa3daf2"
+}
