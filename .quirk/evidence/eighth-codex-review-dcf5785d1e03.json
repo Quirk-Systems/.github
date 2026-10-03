@@ -1,0 +1,74 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.eighth-codex-review.dcf5785d1e03",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "3ffe5c2243b11ecf47f894a5d652a8d8fbd46bbe",
+    "commit": "dcf5785d1e03932f8142912447ecc02ea67c453f",
+    "changed_paths": [
+      "docs/governance/WORKSPACE_TOOLING.md",
+      "scripts/quirk_workspace.py",
+      "tests/test_quirk_workspace.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.eighth-codex-review.dcf5785d1e03",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Addresses the eighth Codex review on PR #44: pins accepts an anchor or tag before the uses value; commands uses the runner declared in packageManager (npm, pnpm, yarn, bun; otherwise no command), else the lockfile's, else npm; scan treats a corrupt ref store as UNREADABLE rather than an unborn HEAD; drift's no-drift message reports how many UNREADABLE checkouts were not compared. Four new test cases fail on the previous script and pass on this one; the workspace survey, commands, and callers are unchanged. Owner review is not established.",
+      "evidence_paths": [
+        "docs/governance/WORKSPACE_TOOLING.md",
+        "scripts/quirk_workspace.py",
+        "tests/test_quirk_workspace.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/governance/WORKSPACE_TOOLING.md",
+      "state": "present",
+      "git_blob": "18224490b5247f4c0705ffd36a44a0582c3bbb15",
+      "sha256": "sha256:016415dad0afcadeac771ec33848a0881c5b89cbbcbc64f459529a6c754f2821"
+    },
+    {
+      "path": "scripts/quirk_workspace.py",
+      "state": "present",
+      "git_blob": "ab09012a68ae71e4ea5e39c31031b15f192fe4a2",
+      "sha256": "sha256:e5d758e489dc4bc43fc2c1aa85e122767ecde0b22786e9c8cecb09637d17f748"
+    },
+    {
+      "path": "tests/test_quirk_workspace.py",
+      "state": "present",
+      "git_blob": "bb4901516619af5e99486d8042a1ff0914df56c2",
+      "sha256": "sha256:f8d459d6b152c6b24cf3ef096a38066a6a918afd070cb488527cecd5f2f0a892"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "PYTHON=python3.12 scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py scan",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py commands",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T16:25:54Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:b7734e7dbc0f6316fc39f5bfc1a059e28abfebc36d0943eb2ceda6d65bfc44bb"
+}
