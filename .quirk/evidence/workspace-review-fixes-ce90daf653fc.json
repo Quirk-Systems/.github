@@ -1,0 +1,100 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.workspace-review-fixes.ce90daf653fc",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "16ac826540703e71d990370029fd114dfc4d3653",
+    "commit": "ce90daf653fcf20164da4e28e3675152caad565f",
+    "changed_paths": [
+      "AGENTS.md",
+      "docs/governance/WORKSPACE_TOOLING.md",
+      "docs/todos/2026-10-03-workspace-portfolio-plans.md",
+      "scripts/quirk_workspace.py",
+      "tests/test_quirk_workspace.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.workspace-review-fixes.ce90daf653fc",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Addresses the Copilot review on PR #44: pins audits single- and double-quoted uses: scalars; commands no longer infers python -m unittest from pyproject.toml plus tests/; commands --run reports a command that cannot launch per repository instead of aborting; AGENTS.md and the todo list each invocation separately and the todo separates scanner output from facts observed elsewhere. Three new tests fail on the previous script and pass on this one. The four survey invocations were re-run against the workspace; every declared validation command exited 0, including scripts/validate.sh here after the receipt repair. Owner review is not established.",
+      "evidence_paths": [
+        "AGENTS.md",
+        "docs/governance/WORKSPACE_TOOLING.md",
+        "docs/todos/2026-10-03-workspace-portfolio-plans.md",
+        "scripts/quirk_workspace.py",
+        "tests/test_quirk_workspace.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "AGENTS.md",
+      "state": "present",
+      "git_blob": "bfeb6910c4a3be139779570168a216fe62bc16ff",
+      "sha256": "sha256:c2cc6355e9027a328c18e0e32c37e0a60bd3df4f7d048f016d1044ffff6eafd7"
+    },
+    {
+      "path": "docs/governance/WORKSPACE_TOOLING.md",
+      "state": "present",
+      "git_blob": "1bb08d1277182783a4e44557788df311ecaaa458",
+      "sha256": "sha256:afc3be70b1aad1223c1c4b32f3343ce95a55052bb27c9597dab9da7cf699b1e8"
+    },
+    {
+      "path": "docs/todos/2026-10-03-workspace-portfolio-plans.md",
+      "state": "present",
+      "git_blob": "89a64127dce2651f3c14a94c2265333eaee4ae30",
+      "sha256": "sha256:e4ae2311492a874a9af055a38fab938c949d233361546326c7472cf389398199"
+    },
+    {
+      "path": "scripts/quirk_workspace.py",
+      "state": "present",
+      "git_blob": "2b5b396397605360cd4a87a2d87abfe049136ac7",
+      "sha256": "sha256:6cd4196d861b615852c3b31c5a26ad7ceee3b4591ced14514b49c0cf56adc60f"
+    },
+    {
+      "path": "tests/test_quirk_workspace.py",
+      "state": "present",
+      "git_blob": "88ddcf73a435b47dae7d5bb036d39869c13d4e5f",
+      "sha256": "sha256:c207cef30d8d34cfd89f470d930610764d583491cc62fa1c1c168cde5b890c80"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "PYTHON=python3.12 scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py scan",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py drift",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py pins --expect 92e5b2d928f25d0fedae87aaad2ef764a806065d",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py commands --run",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T15:04:07Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:99f4b75ae4e73c286cf7b14661378d4b9751468bbbfb017a8d03f65a42ece410"
+}
