@@ -113,17 +113,26 @@
       "owner": {
         "state": "open"
       },
-      "canonical_responsibility": "Candidate doctrine boundary for shared contracts, schemas, validators, and canonical-candidate definitions.",
+      "canonical_responsibility": "Owns the frozen constitutional and quality contract tranche (contracts/v0.2: nine contract schemas, a fixture set, and eight named invariants behind frozenDigest sha256:c0532f523ad415e3f996068486699d71b69c8b3aa0768e0c551ad25313c459b6), its conformance checker, and the preference-language canon document that .quirk/evidence/README.md anchors a projection to. Observed at b3162b0cd6dcc6c07570f240ca33c711ed860f0b on 2026-09-21.",
       "consumers_and_dependencies": [
-        "Repositories evaluating shared contracts before kernel admission.",
-        "Human review deciding whether this doctrine remains separate or folds into admitted kernel canon."
+        "None observed. project-scaffold at 18636ffe64b37fdd0a85dff9798b6a604b59a073 vendors no pin and its docs/ontology/ONTOLOGY.md defers extraction until a second independent consumer imports the contracts; quirk-os at f8cc12ed85e10b4cdee522cb3f32ab964f1e015b names quirk-core only in the prose ownership list of docs/skills/ARCHITECTURE.md. Read 2026-09-21.",
+        "Quirk-Systems/.github, which anchors an evidence-README projection to a quirk-core commit without pinning the contract tranche.",
+        "Human review deciding when the first contract consumer is built, which is the recorded gap rather than a reason to fold."
       ],
-      "extraction_or_retirement_rule": "Keep separate only while it has a distinct owned contract and consumer set; otherwise fold doctrine into the admitted kernel canon.",
+      "extraction_or_retirement_rule": "Keep separate while it owns a distinct, versioned, enforceable contract that no other repository owns. A consumer is not part of this test: canon precedes what is built against it, and requiring consumers would retire a constitution for being early rather than wrong — no sibling canon or kernel entry carries such a requirement. Fold into the admitted kernel canon when that contract is duplicated elsewhere, withdrawn, or no longer enforceable. Absence of a consumer is recorded and reviewed, never on its own a reason to fold.",
       "deployment_security_boundary": "Public contract/doctrine repository; inclusion here grants no runtime or canonical authority by itself.",
       "evidence_anchors": [
         {
           "label": "Repository",
           "url": "https://github.com/Quirk-Systems/quirk-core"
+        },
+        {
+          "label": "Frozen contract tranche v0.2 at the observed head",
+          "url": "https://github.com/Quirk-Systems/quirk-core/blob/b3162b0cd6dcc6c07570f240ca33c711ed860f0b/contracts/v0.2/TRANCHE.json"
+        },
+        {
+          "label": "Conformance workflow at the observed head",
+          "url": "https://github.com/Quirk-Systems/quirk-core/blob/b3162b0cd6dcc6c07570f240ca33c711ed860f0b/.github/workflows/quirk-contracts-conformance.yml"
         }
       ]
     },

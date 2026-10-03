@@ -1,0 +1,61 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.activation-inputs.19d3c1d5b800",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "70f556afd1c97db70b238fe749470925333e5a22",
+    "commit": "19d3c1d5b80054b506715091819ff8724d5b85e9",
+    "changed_paths": [
+      "docs/governance/OWNER_ACTIVATION_INPUTS.md",
+      "docs/roadmaps/2026-09-20-org-control-plane.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.activation-inputs.19d3c1d5b800",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "docs/governance/OWNER_ACTIVATION_INPUTS.md states the check-run contexts and per-job harden-runner egress destinations for this repository, each traced to the hosted run it was read from, and the roadmap reflects them. VERIFIED by reading hosted runs on 2026-09-21: on pull-request head 2136b88a97f4bfe5f6e01220d1256a90d7c14838 the contexts validate, review, analyze and zizmor reported, and analysis reported only on the push to main at 1263f5008838f743b16ee218046e26dac5c9edd8; egress destinations are the 'endpoint called' lines from runs 35600183459, 35602225653, 35602870628 and 35602870625. VERIFIED by reading the workflow files: workflow-lint.yml filters its pull_request trigger to .github/workflows/** and .github/zizmor.yml, and scorecard.yml has no pull_request trigger, so neither zizmor nor analysis can be required without blocking pull requests that never emit them. VERIFIED at this commit: 180 tests pass under Python 3.12 and scripts/validate.sh reports all executed checks passed. INFERRED, not verified: that each job's destination list is complete, since each rests on a single run; the document says so and recommends moving one workflow to block at a time. Reported not run: agent-task-dispatch.yml has no run to read, so its egress is absent; no ruleset or egress policy was changed by this commit, and nothing here can change one.",
+      "evidence_paths": [
+        "docs/governance/OWNER_ACTIVATION_INPUTS.md",
+        "docs/roadmaps/2026-09-20-org-control-plane.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/governance/OWNER_ACTIVATION_INPUTS.md",
+      "state": "present",
+      "git_blob": "f36c0cbd4201c14ca15dcef16827161b3fa2c177",
+      "sha256": "sha256:effd8dc12d6d03b020c1aff23d40298b0de76859f903b91988ceafa25ddd1324"
+    },
+    {
+      "path": "docs/roadmaps/2026-09-20-org-control-plane.md",
+      "state": "present",
+      "git_blob": "7e7ce83b8d5112aae829795e2503b83946e9f899",
+      "sha256": "sha256:15a157260d94fa2e3ea376219ed47bea70f0c1dfa5b49a5130e1b6b4f2a29b4a"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "uv run --no-project --python 3.12 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-21T17:11:57Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:43e26d6b3317e180e65dfdd0a680f51bad789cd60e08e79d392be89b6ca93d0c"
+}
