@@ -61,16 +61,17 @@ PINNED = "PINNED"
 OFF_TARGET = "OFF_TARGET"
 # `uses:` may be a plain, single-quoted, or double-quoted YAML scalar, optionally
 # carrying an anchor (`&name`) or tag (`!!str`), and GitHub
-# resolves the owner and repository case-insensitively.
+# resolves the owner and repository case-insensitively. A `#` belongs to the
+# ref (`@release#1`); a comment needs whitespace before it, which ends the ref.
 CALLER = re.compile(
-    r"""^\s*(?:-\s*)?(?:uses|"uses"|'uses')\s*:\s*(?:[&!]\S+\s+)*(["']?)(?i:Quirk-Systems/\.github/\.github/workflows/)([^@\s"']+)@([^\s#"']+)\1(?:\s|$)"""
+    r"""^\s*(?:-\s*)?(?:uses|"uses"|'uses')\s*:\s*(?:[&!]\S+\s+)*(["']?)(?i:Quirk-Systems/\.github/\.github/workflows/)([^@\s"']+)@([^\s"']+)\1(?:\s|$)"""
 )
 # The same caller inside a single-line flow mapping: `{call: {uses: ...@main}}`.
 # A plain value ends at `,` or `}`; a quoted one ends only at its closing quote,
 # so a ref such as `"...@release,1"` keeps its punctuation.
 FLOW_CALLER = re.compile(
     r"""[{,]\s*(?:uses|"uses"|'uses')\s*:\s*(?:[&!][^\s,{}]+\s+)*"""
-    r"""(?:()(?i:Quirk-Systems/\.github/\.github/workflows/)([^@\s"',{}]+)@([^\s#"',{}]+)"""
+    r"""(?:()(?i:Quirk-Systems/\.github/\.github/workflows/)([^@\s"',{}]+)@([^\s"',{}]+)"""
     r"""|(["'])(?i:Quirk-Systems/\.github/\.github/workflows/)([^@\s"']+)@([^\s"']+)\4)\s*[,}]"""
 )
 # A key whose value is a literal or folded block scalar (`run: |`, `script: >-`).
@@ -240,8 +241,9 @@ def observe(path):
         "manifest": (path / ".quirk" / "manifest.json").is_file(),
         "agent_files": [name for name in AGENT_FILES if (path / name).is_file()],
         "workflows": workflows,
-        # An unreadable checkout's working tree may still declare a command.
-        "validation_command": validation_command(path) if commits or counted is None else None,
+        # Any working tree may declare a command, including an unreadable
+        # checkout or one with no commits yet.
+        "validation_command": validation_command(path),
     }
 
 
@@ -315,37 +317,42 @@ def drift(observed, inventory):
 
 
 def mapping_lines(lines):
-    """Yield (number, line) for lines outside YAML block scalars.
+    """Yield (number, line, quote) for lines outside YAML block scalars, where
+    quote is the quoted scalar already open when the line starts, if any.
 
     Text inside `run: |` and similar is a script, not workflow keys, so a
     heredoc that prints `uses: ...` must not be audited as a caller. A block
     scalar that is itself the value of `uses` is still a caller: its first
-    content line is yielded as `uses: <value>`.
+    content line is yielded as `uses: <value>`. Inside a quoted scalar that
+    spans lines, `run: |` is text and starts no block.
     """
     block_indent = None
     uses_prefix = None
+    quote = None
     for number, line in enumerate(lines, start=1):
         indent = len(line) - len(line.lstrip())
         if block_indent is not None:
             if not line.strip() or indent > block_indent:
                 if uses_prefix is not None and line.strip():
-                    yield number, f"{uses_prefix}uses: {line.strip()}"
+                    yield number, f"{uses_prefix}uses: {line.strip()}", None
                     uses_prefix = None
                 continue
             block_indent = None
             uses_prefix = None
-        match = BLOCK_SCALAR.match(line)
+        match = None if quote else BLOCK_SCALAR.match(line)
         if match:
             block_indent = len(match.group(1))
             if match.group(2).strip().strip("\"'") == "uses":
                 uses_prefix = match.group(1)
-        yield number, line
+        yield number, line, quote
+        quote = quoted_spans(line, quote)[2]
 
 
 def opens_scalar(line, index):
     """True when a quote at `index` starts a quoted scalar rather than sitting
     inside a plain one (`name: Bob's job`). YAML opens a quoted scalar only at
-    line start or after `- `, `? `, `: `, `[`, `{`, or `,`, past any anchor or tag."""
+    line start or after `- `, `? `, `: `, `[`, `{`, `,`, or a quoted key's `:`,
+    past any anchor or tag."""
     before = line[:index].rstrip()
     while True:
         prop = PROPERTY.search(before)
@@ -356,7 +363,8 @@ def opens_scalar(line, index):
         return True
     gap = len(before) < index
     if before[-1] == ":":
-        return gap
+        # After a quoted (JSON-like) key, YAML lets the value follow `:` directly.
+        return gap or before[-2:-1] in ("\"", "'")
     return before[-1] in "-?" and gap and (len(before) == 1 or before[-2] in " \t[{,")
 
 
@@ -414,11 +422,10 @@ def caller_pins(workspace, observed, expect=None):
         workflows_dir = Path(workspace) / item["directory"] / ".github" / "workflows"
         for name in item.get("workflows", []):
             lines = (workflows_dir / name).read_text(encoding="utf-8", errors="replace").splitlines()
-            quote = None  # a quoted scalar left open by an earlier line
-            for number, line in mapping_lines(lines):
+            for number, line, quote in mapping_lines(lines):
+                # `quote` is a quoted scalar left open by an earlier line.
                 caller = None if quote else CALLER.match(line)
                 matches = [caller.groups()] if caller else flow_callers(line, quote)
-                quote = quoted_spans(line, quote)[2]
                 for _, workflow, ref in matches:
                     if not FULL_SHA.match(ref):
                         status = FLOATING

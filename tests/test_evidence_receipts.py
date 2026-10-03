@@ -466,6 +466,28 @@ class EvidenceReceiptTest(unittest.TestCase):
             )
             self.assertEqual(covered.returncode, 0, covered.stderr)
 
+    def test_merged_side_branch_that_restores_the_bytes_is_still_stale(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.fixture(directory)
+            self.assertEqual(fixture.generate().returncode, 0)
+            git_commit(fixture.root, "receipt")
+            git(fixture.root, "checkout", "-q", "-b", "side", fixture.base)
+            (fixture.root / "keep.txt").write_text("tampered\n", encoding="utf-8")
+            git_commit(fixture.root, "side change")
+            (fixture.root / "keep.txt").write_text("subject\n", encoding="utf-8")
+            git_commit(fixture.root, "side restores subject bytes")
+            git(fixture.root, "checkout", "-q", "main")
+            git(fixture.root, "merge", "-q", "--no-ff", "-m", "merge side", "side")
+            merged = git(fixture.root, "rev-parse", "HEAD").stdout.strip()
+            result = fixture.validate(
+                "--range-base", fixture.base,
+                "--range-head", merged,
+                "--require-covered-diff",
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("stale", result.stderr)
+            self.assertIn("keep.txt", result.stderr)
+
     def test_subject_equal_to_range_base_does_not_qualify(self):
         with tempfile.TemporaryDirectory() as directory:
             fixture = self.fixture(directory)

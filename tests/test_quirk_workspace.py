@@ -347,6 +347,32 @@ class WorkspacePinTests(unittest.TestCase):
         rows = [r for r in self.ws.caller_pins(self.root, self.ws.scan(self.root)) if r["repository"] == "Quirk-Systems/multiline"]
         self.assertEqual([(r["workflow"], r["file"]) for r in rows], [("y.yml", ".github/workflows/a.yml:9")])
 
+    def test_json_style_values_and_block_markers_inside_quotes_are_text(self):
+        workflow = (
+            '{"name":"{uses: Quirk-Systems/.github/.github/workflows/x.yml@main}", "on": "push"}\n'
+            'description: "first line\n'
+            "  run: |\n"
+            '  still quoted"\n'
+            "jobs:\n"
+            "  call:\n"
+            "    uses: Quirk-Systems/.github/.github/workflows/y.yml@main\n"
+        )
+        make_repo(self.root, "jsonish", {".github/workflows/a.yml": workflow})
+        rows = [r for r in self.ws.caller_pins(self.root, self.ws.scan(self.root)) if r["repository"] == "Quirk-Systems/jsonish"]
+        self.assertEqual([(r["workflow"], r["file"]) for r in rows], [("y.yml", ".github/workflows/a.yml:7")])
+
+    def test_hash_in_a_ref_is_part_of_the_ref(self):
+        workflow = (
+            "jobs:\n"
+            "  a:\n"
+            '    uses: "Quirk-Systems/.github/.github/workflows/x.yml@release#1"\n'
+            "  b:\n"
+            "    uses: Quirk-Systems/.github/.github/workflows/y.yml@main # trailing comment\n"
+        )
+        make_repo(self.root, "hashref", {".github/workflows/a.yml": workflow})
+        rows = [r for r in self.ws.caller_pins(self.root, self.ws.scan(self.root)) if r["repository"] == "Quirk-Systems/hashref"]
+        self.assertEqual([(r["workflow"], r["ref"]) for r in rows], [("x.yml", "release#1"), ("y.yml", "main")])
+
     def test_quoted_flow_refs_keep_punctuation(self):
         workflow = (
             'jobs: {call: {uses: "Quirk-Systems/.github/.github/workflows/x.yml@release,1"}, '
@@ -391,6 +417,16 @@ class WorkspaceCliTests(unittest.TestCase):
     def test_run_skips_repositories_without_a_command(self):
         results = self.ws.run_commands(self.root, self.ws.scan(self.root), timeout=5)
         self.assertEqual(results, [("Quirk-Systems/quirk-new", None, "no declared validation command")])
+
+    def test_unborn_checkout_keeps_its_declared_command(self):
+        unborn = Path(self.root) / "quirk-new" / "scripts"
+        unborn.mkdir()
+        (unborn / "validate.sh").write_text("#!/bin/sh\nexit 3\n", encoding="utf-8")
+        (unborn / "validate.sh").chmod(0o755)
+        item = self.ws.scan(self.root)[0]
+        self.assertEqual((item["state"], item["validation_command"]), (self.ws.EMPTY, "scripts/validate.sh"))
+        results = self.ws.run_commands(self.root, [item], timeout=5)
+        self.assertEqual(results[0][1], 3)
 
     def test_json_flag_works_before_or_after_the_subcommand(self):
         import contextlib

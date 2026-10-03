@@ -386,7 +386,9 @@ def _validate_coverage(root, receipt_records, receipt_paths, range_base, range_h
         if not subjects:
             continue
         literal_pathspec = ":(literal)" + path
-        if all(_git(root, "log", "--format=%H", subject + ".." + range_head, "--", literal_pathspec).stdout.strip() for subject in subjects):
+        # --full-history: default simplification prunes a merged side branch
+        # that changed the path and then restored it, hiding a later change.
+        if all(_git(root, "log", "--full-history", "--format=%H", subject + ".." + range_head, "--", literal_pathspec).stdout.strip() for subject in subjects):
             stale.add(path)
     extra = all_qualified_paths - required_paths - receipt_path_set - retired_receipts
     if missing or stale or extra:

@@ -83,11 +83,13 @@ lifecycle, and owner arrive only through a reviewed inventory change.
 a YAML parser. It finds a `uses` key (plain, `"uses"` or `'uses'`) whose value
 is a plain, quoted, anchored (`&name`) or tagged (`!!str`) scalar, a block
 scalar (`uses: >-`), or an entry in a single-line flow mapping
-(`{uses: ...}`, where a quoted value may hold `,` or `}`), and it ignores
-text inside script blocks such as `run: |`, comments, and quoted scalars,
-including a quoted scalar that continues onto later lines. A quote inside a
-plain scalar (`name: Bob's run`) opens nothing. It does not resolve aliases (`*name`), merge keys, or flow mappings that span
-several lines. Treat a clean `pins` result as "no floating caller in the forms
+(`{uses: ...}`, where a quoted value may hold `,` or `}`); a `#` with no
+whitespace before it is part of the ref (`@release#1`). It ignores text
+inside script blocks such as `run: |`, comments, and quoted scalars,
+including a quoted scalar that continues onto later lines (a `run: |` inside
+one starts no script block) and a JSON-style value (`"name":"..."`). A quote
+inside a plain scalar (`name: Bob's run`) opens nothing. It does not resolve
+aliases (`*name`), merge keys, or flow mappings that span several lines. Treat a clean `pins` result as "no floating caller in the forms
 above", not as proof that none exists.
 
 A checkout's identity is `owner/name` only when its `origin` is a GitHub URL
@@ -97,8 +99,8 @@ other remote, or none, leaves only the directory name. Such a checkout, like
 an `UNREADABLE` one, is never a basis for a drift finding and counts as
 present only for an inventory entry whose repository name equals its
 directory. An `UNREADABLE` checkout reports its commit and source counts as
-unknown (`null`, shown `-`), and still reports any validation command its
-working tree declares.
+unknown (`null`, shown `-`). Every checkout, an `UNREADABLE` or `EMPTY` one
+included, reports any validation command its working tree declares.
 
 `drift --json` returns `{"findings": [...], "not_compared": [...]}`, where each
 `not_compared` entry is `{"directory": ..., "reason": "unreadable" | "no GitHub

@@ -128,7 +128,9 @@ or deleted from the receipt directory within the range.
 
 A later unreceipted change fails closed, including a later modification to a
 path named by an older receipt. For every path, at least one qualifying receipt
-subject must be at or after its latest change in the range.
+subject must be at or after its latest change in the range. Changes are read
+with `git log --full-history`, so a merged side branch that changed a path and
+then restored its bytes still counts as a change after the subject.
 
 README, policy, workflow, schema, test, and documentation files are substantive
 paths. They are not silently exempted.
