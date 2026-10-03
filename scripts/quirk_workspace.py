@@ -26,6 +26,7 @@ the run; only a repository with no declared command is skipped. Standard library
 """
 
 import argparse
+import contextlib
 import json
 import os
 import re
@@ -315,10 +316,9 @@ def run_commands(workspace, observed, timeout):
         try:
             returncode = process.wait(timeout=timeout)
         except subprocess.TimeoutExpired:
-            try:
+            # The group may already be gone if every process exited at the deadline.
+            with contextlib.suppress(ProcessLookupError):
                 os.killpg(process.pid, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
             process.wait()
             results.append((item["repository"], 124, f"timed out after {timeout}s"))
             continue
