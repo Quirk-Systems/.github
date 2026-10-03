@@ -1,0 +1,77 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.workspace-codex-fixes.32ea2d0620f7",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "c91aa17ee8bf54a827db45034659c7db85df960a",
+    "commit": "32ea2d0620f76fcf4b7a085a96b6f34e76680e01",
+    "changed_paths": [
+      "docs/governance/WORKSPACE_TOOLING.md",
+      "docs/todos/2026-10-03-workspace-portfolio-plans.md",
+      "scripts/quirk_workspace.py",
+      "tests/test_quirk_workspace.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.workspace-codex-fixes.32ea2d0620f7",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Addresses the Codex review on PR #44: commands --run fails a declared validation command that times out (124) or cannot start (126/127) instead of skipping it; scan counts only Git-tracked source files outside dependency and build directories, so untracked virtual environments do not count; the docs and todo state both rules, and the todo records the squash-merge stranding risk as an owner decision. Three new tests fail on the previous script and pass on this one; re-running scan gives the same 2026-10-03 totals. commands --run was not re-run for this commit. Owner review is not established.",
+      "evidence_paths": [
+        "docs/governance/WORKSPACE_TOOLING.md",
+        "docs/todos/2026-10-03-workspace-portfolio-plans.md",
+        "scripts/quirk_workspace.py",
+        "tests/test_quirk_workspace.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/governance/WORKSPACE_TOOLING.md",
+      "state": "present",
+      "git_blob": "87cf14d7b60b5f5274ae0cdae6a34d3d841111fd",
+      "sha256": "sha256:678b31e0bb063b889a0fbd180a617271cda1d60cefe1abe53372726e2e4e4e1c"
+    },
+    {
+      "path": "docs/todos/2026-10-03-workspace-portfolio-plans.md",
+      "state": "present",
+      "git_blob": "649eb426b2d0732a6b3109eb673b5f331dc42d10",
+      "sha256": "sha256:aa7f2bc186cb670a73d1d672f7c83a698d9e0ae970974aeb6eeb1f9879ca4124"
+    },
+    {
+      "path": "scripts/quirk_workspace.py",
+      "state": "present",
+      "git_blob": "971e03590a46797d2ebfce4c705c6ccc6986082d",
+      "sha256": "sha256:ed1a5ab919ef97b6751b4b59da363d25b6d7692f791fa49fe22c21d96ab83cc3"
+    },
+    {
+      "path": "tests/test_quirk_workspace.py",
+      "state": "present",
+      "git_blob": "44a17567d4b1f2d5715be965088f3e24453b22b0",
+      "sha256": "sha256:943be50c8ba6bbb2c313a8bf14e23acd6c54c86f654162139cb0152c8722fd19"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "PYTHON=python3.12 scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py scan",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T15:06:43Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:23c5816bedd92e50682e5e97cc49e6782b6f9097c99ae47337a9b118563ee559"
+}
