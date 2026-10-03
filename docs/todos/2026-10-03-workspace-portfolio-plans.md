@@ -37,13 +37,13 @@ through a reviewed inventory change.
   pins Node 24), so those passes ran with an incomplete install.
   `scripts/validate.sh` here exited 2, for the reason in the first Open item.
 - **`main` is red here**: Governance Contracts run `37113795859` on `92e5b2d`
-  failed on "Validate evidence receipts on main".
+  failed on "Validate evidence receipts on main"; repaired in this change.
 
 ## Per-repository plans
 
 | Repository | Observed | Next bounded move | Gate |
 | --- | --- | --- | --- |
-| `.github` | CODE, 168 commits, receipt check red on `main` | Repair the receipt whose subject left history in the PR #14 squash merge; then extend `drift` into a scheduled report | owner: receipt correction is a receipt change |
+| `.github` | CODE, 168 commits, receipt check red on `main` until this change | Extend `drift` into a scheduled report | owner |
 | `.github-private` | DOCS_ONLY, 3 workflows pinned to `571ecd4` | Bump caller pins together with the other repositories (below) | owner merge there |
 | `project-scaffold` | CODE, `bun run validate` passes, 2 pinned callers on 2 different commits | Move both callers to one reviewed `.github` commit | owner merge |
 | `quirk-os` | CODE (Python), 121 commits, 9 workflows, no single local entrypoint | Add a `scripts/validate.sh` that runs what its workflows run, so people and agents can check it in one command | that repository's review |
@@ -59,7 +59,6 @@ through a reviewed inventory change.
 
 ## Open
 
-- [ ] Repair the red "Validate evidence receipts on main" step: `.quirk/evidence/pr-closure-harness-plan-followup-1010b25a9fe4.json` binds a subject commit that the PR #14 squash merge left out of `main`'s ancestry, so the full-history check fails on every push (owner: @bryansayler; proof: Governance Contracts on the next `main` push succeeds). The fix is a correction receipt or a change to how squash merges are receipted; either is a receipt change, so the owner chooses it
 - [ ] Merge the four caller-pin pull requests in `quirk-beauty`, `quirk-feed`, `quirk-generator`, and `quirk-town` (owner: @bryansayler; proof: `python scripts/quirk_workspace.py pins --fail-on-floating` exits 0)
 - [ ] Choose one reviewed `.github` commit and move every caller to it, `.github-private` and `project-scaffold` included (owner: @bryansayler; proof: `pins --expect <sha>` reports no `OFF_TARGET`)
 - [ ] Give `quirk-os` a single local validation entrypoint (owner: @bryansayler; proof: `commands` lists a command for `Quirk-Systems/quirk-os`)
@@ -75,5 +74,6 @@ through a reviewed inventory change.
 
 ## Done
 
+- [x] Repaired the receipt that the PR #14 squash merge stranded: `qreceipt.pr-closure-harness-plan-followup.1010b25a9fe4` replaced by `qreceipt.pr-closure-harness-plan-followup.92e5b2d928f2`, bound to the squash commit whose two document blobs are byte-identical; the coverage check now excludes a subject equal to the range base and treats a deleted receipt JSON like a present one (evidence: the receipt that covers the validator subject commit; full-history validation passes)
 - [x] Workspace scanner with `scan`, `drift`, `pins`, and `commands`, with tests (evidence: `scripts/quirk_workspace.py`, `tests/test_quirk_workspace.py`, and the receipt that covers this document's subject commit)
 - [x] Four floating `@main` callers pinned to `92e5b2d928f25d0fedae87aaad2ef764a806065d` with `contents: read`, as draft pull requests in each repository (evidence: commits `3037791` quirk-beauty, `ceb00e1` quirk-feed, `45cebae` quirk-generator, `600de1e` quirk-town on `claude/quirk-repo-tooling-automation-walwbu`; not merged)

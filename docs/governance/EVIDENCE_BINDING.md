@@ -121,8 +121,10 @@ No consequential claim may cover a mutable branch name alone.
 
 For pull-request enforcement, provide `--range-base`, `--range-head`, and
 `--require-covered-diff` together. The checked-out `HEAD` must equal the range
-head. The union of qualifying verified subject paths must cover every range path
-except discovered receipt JSON files.
+head. The range is `(base, head]`: a qualifying subject is a descendant of the
+base, never the base itself. The union of qualifying verified subject paths must
+cover every range path except receipt JSON files, whether discovered at the head
+or deleted from the receipt directory within the range.
 
 A later unreceipted change fails closed, including a later modification to a
 path named by an older receipt. For every path, at least one qualifying receipt
