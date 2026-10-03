@@ -5,8 +5,8 @@ Status: active
 Owner: @bryansayler  
 Repository: `Quirk-Systems/.github`  
 Observed head: `1263f5008838f743b16ee218046e26dac5c9edd8`  
-Reviewed: 2026-09-21  
-Review by: 2026-10-05  
+Reviewed: 2026-10-03  
+Review by: 2026-10-31  
 Derived from: `docs/intentions/2026-09-20-evidence-first-planning.md`, `docs/superpowers/plans/2026-09-20-org-control-plane.md`, `docs/governance/TRUTHFUL_TOPOLOGY_CUT_SPEC.md`  
 Authority effect: **none**
 
@@ -16,7 +16,8 @@ are never deleted. Each Done item names the evidence that closed it.
 
 ## Now
 
-- [ ] Fold the living-document review into the twice-weekly portfolio review in `docs/governance/AUTONOMOUS_OPERATIONS.md` so review dates are bumped by an existing cadence
+- [ ] Fold the living-document review into the twice-weekly portfolio review in `docs/governance/AUTONOMOUS_OPERATIONS.md` so review dates are bumped by an existing cadence. Now the most urgent item here: on 2026-10-03 both this roadmap and the rollout todo were one and three days from lapsing, and a lapse reddens the `validate` check on every open pull request, not only one that touches the document
+- [ ] Decide where living-document freshness should be enforced. `tests/test_living_docs.py` checks it against the real date and the `validate` check runs the whole suite, so the calendar can fail pull requests that changed nothing. The contract is right that staleness must bite; the open question is whether it should bite the stale document's own change, or a scheduled report, rather than every open pull request (owner: @bryansayler)
 - [ ] Add the living-document header to `docs/briefs/2026-09-20-poster-claim-binding.md` and the three plans under `docs/superpowers/plans/` in their next substantive edit
 
 ## Next
@@ -44,6 +45,7 @@ are never deleted. Each Done item names the evidence that closed it.
 - [x] PR #20 decided: closed, with its five org-default files re-landed and its duplicated workflow-hygiene validator dropped in favour of `tests/test_workflow_pins.py` (evidence: this pull request, receipt `qreceipt.org-defaults.ca693deef695`)
 - [x] The owner-only activation inputs compiled from observed runs rather than predicted: check contexts and per-job egress destinations (evidence: `docs/governance/OWNER_ACTIVATION_INPUTS.md`)
 - [x] `quirk-core` decided by tightening the test rather than the repository: a doctrine-class repository is kept separate for owning a distinct, versioned, enforceable contract, and a consumer is no longer part of that test, because canon precedes what is built against it and no sibling `canon` or `kernel` entry carries such a requirement. Re-applied, quirk-core passes on the frozen `contracts/v0.2` tranche; the absent consumer is recorded as an observation (evidence: `.quirk/repositories.json` and `docs/PORTFOLIO.md` at this head, anchored to quirk-core `b3162b0cd6dcc6c07570f240ca33c711ed860f0b`)
+- [x] `.github-private` carries the clarified `internal` rule: content stays internal, a bare cross-reference may be named in a public artifact (evidence: `.github-private` PR #5, merged 2026-09-25, receipt `qreceipt.internal-line.ca3d9ecb887d`; private `main` at `fe3ec1c978ee748d90c5645467eff3261af7b0c3`)
 
 ## Decisions awaiting an owner
 
