@@ -141,6 +141,32 @@ class WorkspaceScanTests(unittest.TestCase):
         item = self.by_name()["Quirk-Systems/badindex"]
         self.assertEqual((item["state"], item["source_files"]), (self.ws.UNREADABLE, None))
 
+    def test_unreadable_checkout_keeps_unknown_count_and_declared_command(self):
+        path = Path(self.root) / "broken"
+        (path / "scripts").mkdir(parents=True)
+        (path / "scripts" / "validate.sh").write_text("#!/bin/sh\n", encoding="utf-8")
+        (path / ".git").write_text("gitdir: /nonexistent/quirk\n", encoding="utf-8")
+        item = {i["directory"]: i for i in self.ws.scan(self.root)}["broken"]
+        self.assertEqual((item["state"], item["commits"], item["source_files"]), (self.ws.UNREADABLE, None, None))
+        self.assertEqual(item["validation_command"], "scripts/validate.sh")
+        self.assertIn("| UNREADABLE | - | - |", self.ws.render_scan([item]))
+
+    def test_only_github_origins_yield_an_owner(self):
+        path = make_repo(self.root, "quirk-feed", {"README.md": "x\n"})
+        git(path, "remote", "set-url", "origin", "/srv/remotes/quirk-feed.git")
+        item = {i["directory"]: i for i in self.ws.scan(self.root)}["quirk-feed"]
+        self.assertEqual((item["repository"], item["github_identity"]), ("quirk-feed", False))
+        registry = inventory([{"repository": "Quirk-Systems/quirk-feed", "lifecycle": "active"}])
+        self.assertEqual(self.ws.drift([item], registry), [])
+        for url, expected in (
+            ("git@github.com:Quirk-Systems/quirk-os.git", "Quirk-Systems/quirk-os"),
+            ("ssh://git@github.com/Quirk-Systems/quirk-os", "Quirk-Systems/quirk-os"),
+            ("https://token@github.com/Quirk-Systems/quirk-os.git", "Quirk-Systems/quirk-os"),
+            ("https://gitlab.example.com/Quirk-Systems/quirk-os.git", "quirk-feed"),
+        ):
+            git(path, "remote", "set-url", "origin", url)
+            self.assertEqual(self.ws.repository_name(path), expected, url)
+
     def test_non_git_directories_are_ignored(self):
         (Path(self.root) / "notes").mkdir()
         self.assertEqual(self.ws.scan(self.root), [])
@@ -284,6 +310,21 @@ class WorkspacePinTests(unittest.TestCase):
         make_repo(self.root, "foldeduses", {".github/workflows/a.yml": workflow})
         rows = [r for r in self.ws.caller_pins(self.root, self.ws.scan(self.root)) if r["repository"] == "Quirk-Systems/foldeduses"]
         self.assertEqual([(r["status"], r["file"]) for r in rows], [(self.ws.FLOATING, ".github/workflows/a.yml:4")])
+
+    def test_flow_callers_skip_comments_and_quoted_text_and_find_every_entry(self):
+        sha = self.SHA
+        workflow = (
+            'name: "{uses: Quirk-Systems/.github/.github/workflows/example.yml@main}"\n'
+            "on: push # {uses: Quirk-Systems/.github/.github/workflows/example.yml@main}\n"
+            f"jobs: {{a: {{uses: Quirk-Systems/.github/.github/workflows/x.yml@{sha}}}, "
+            "b: {uses: Quirk-Systems/.github/.github/workflows/y.yml@main}}\n"
+        )
+        make_repo(self.root, "flowmany", {".github/workflows/a.yml": workflow})
+        rows = [r for r in self.ws.caller_pins(self.root, self.ws.scan(self.root)) if r["repository"] == "Quirk-Systems/flowmany"]
+        self.assertEqual(
+            [(r["workflow"], r["status"], r["file"]) for r in rows],
+            [("x.yml", self.ws.PINNED, ".github/workflows/a.yml:3"), ("y.yml", self.ws.FLOATING, ".github/workflows/a.yml:3")],
+        )
 
     def test_expect_marks_other_shas_off_target(self):
         seen = self.statuses(self.SHA)

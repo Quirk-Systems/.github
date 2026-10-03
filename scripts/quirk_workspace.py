@@ -88,15 +88,28 @@ def git(path, *args):
     return result.returncode, result.stdout.strip()
 
 
-def repository_name(path):
-    """Return `owner/name` from the origin URL, or the directory name."""
+GITHUB_REMOTE = re.compile(
+    r"^(?:https?://(?:[^@/]+@)?github\.com/|ssh://git@github\.com/|git@github\.com:)"
+    r"([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+?)(?:\.git)?/?$"
+)
+
+
+def repository_identity(path):
+    """(`owner/name`, True) for a GitHub origin; otherwise (directory name, False).
+
+    Only a recognized GitHub URL yields an owner, so a local mirror or another
+    host is never mistaken for an inventoried repository.
+    """
     code, url = git(path, "remote", "get-url", "origin")
-    if code == 0 and url:
-        trimmed = url.rstrip("/").removesuffix(".git").replace(":", "/")
-        parts = [part for part in trimmed.split("/") if part]
-        if len(parts) >= 2:
-            return f"{parts[-2]}/{parts[-1]}"
-    return path.name
+    match = GITHUB_REMOTE.match(url) if code == 0 and url else None
+    if match:
+        return f"{match.group(1)}/{match.group(2)}", True
+    return path.name, False
+
+
+def repository_name(path):
+    """Return `owner/name` from a GitHub origin URL, or the directory name."""
+    return repository_identity(path)[0]
 
 
 def package_scripts(path):
@@ -188,8 +201,9 @@ def count_commits(path):
 
 
 def observe(path):
+    identity, on_github = repository_identity(path)
     counted = count_commits(path)
-    commits = counted or 0
+    commits = counted  # None when Git cannot read the checkout: unknown, not zero
     head = git(path, "rev-parse", "HEAD")[1] if commits else None
     entries = sorted(entry.name for entry in path.iterdir() if entry.name != ".git")
     toolchain = [name for name in TOOLCHAIN_FILES if (path / name).is_file()]
@@ -197,7 +211,7 @@ def observe(path):
     workflows = sorted(
         p.name for p in workflows_dir.iterdir() if p.is_file() and p.suffix in (".yml", ".yaml")
     ) if workflows_dir.is_dir() else []
-    sources = source_files(path) if commits else 0
+    sources = source_files(path) if commits else (None if counted is None else 0)
     if counted is None or sources is None:
         state = UNREADABLE
     elif commits == 0:
@@ -207,7 +221,8 @@ def observe(path):
     else:
         state = DOCS_ONLY
     return {
-        "repository": repository_name(path),
+        "repository": identity,
+        "github_identity": on_github,
         "directory": path.name,
         "state": state,
         "commits": commits,
@@ -218,7 +233,8 @@ def observe(path):
         "manifest": (path / ".quirk" / "manifest.json").is_file(),
         "agent_files": [name for name in AGENT_FILES if (path / name).is_file()],
         "workflows": workflows,
-        "validation_command": validation_command(path) if commits else None,
+        # An unreadable checkout's working tree may still declare a command.
+        "validation_command": validation_command(path) if commits or counted is None else None,
     }
 
 
@@ -239,11 +255,14 @@ def drift(observed, inventory):
     """Return findings sorted by kind then repository, comparing names case-insensitively."""
     # An unreadable checkout supports no finding: its identity may be only the
     # directory name, and its state is unknown. It still counts as present.
+    def comparable(item):
+        return item["state"] != UNREADABLE and item.get("github_identity", True)
+
     present = {item["repository"].lower() for item in observed}
     # Git cannot report an unreadable checkout's origin, so its identity may be
     # only the directory name; match that against the inventory's repo names.
-    unreadable_dirs = {item["directory"].lower() for item in observed if item["state"] == UNREADABLE}
-    by_name = {item["repository"].lower(): item for item in observed if item["state"] != UNREADABLE}
+    unreadable_dirs = {item["directory"].lower() for item in observed if not comparable(item)}
+    by_name = {item["repository"].lower(): item for item in observed if comparable(item)}
     listed = {name.lower(): entry for name, entry in inventory.items()}
     findings = []
     for key, item in by_name.items():
@@ -305,6 +324,36 @@ def mapping_lines(lines):
         yield number, line
 
 
+def quoted_spans(line):
+    """Return (code, inside) where code drops an unquoted `#` comment and
+    inside[i] is True when position i lies within a quoted scalar."""
+    inside = []
+    quote = None
+    for index, char in enumerate(line):
+        if quote is None and char == "#" and (index == 0 or line[index - 1].isspace()):
+            return line[:index], inside
+        if quote is None and char in "\"'":
+            quote = char
+            inside.append(False)
+            continue
+        if quote is not None and char == quote:
+            if quote == "'" and line[index + 1:index + 2] == "'":
+                inside.append(True)  # '' is an escaped quote inside a single-quoted scalar
+                continue
+            quote = None
+            inside.append(False)
+            continue
+        inside.append(quote is not None)
+    return line, inside
+
+
+def flow_callers(line):
+    """Every flow-mapping caller on the line that is a real key, not text in a
+    comment or inside a quoted scalar."""
+    code, inside = quoted_spans(line)
+    return [m for m in FLOW_CALLER.finditer(code) if not inside[m.start()]]
+
+
 def caller_pins(workspace, observed, expect=None):
     """Every call into a Quirk-Systems/.github reusable workflow, with its ref status."""
     rows = []
@@ -313,23 +362,22 @@ def caller_pins(workspace, observed, expect=None):
         for name in item.get("workflows", []):
             lines = (workflows_dir / name).read_text(encoding="utf-8", errors="replace").splitlines()
             for number, line in mapping_lines(lines):
-                match = CALLER.match(line) or FLOW_CALLER.search(line)
-                if not match:
-                    continue
-                _, workflow, ref = match.groups()
-                if not FULL_SHA.match(ref):
-                    status = FLOATING
-                elif expect and ref != expect:
-                    status = OFF_TARGET
-                else:
-                    status = PINNED
-                rows.append({
-                    "repository": item["repository"],
-                    "file": f".github/workflows/{name}:{number}",
-                    "workflow": workflow,
-                    "ref": ref,
-                    "status": status,
-                })
+                matches = [CALLER.match(line)] if CALLER.match(line) else flow_callers(line)
+                for match in matches:
+                    _, workflow, ref = match.groups()
+                    if not FULL_SHA.match(ref):
+                        status = FLOATING
+                    elif expect and ref != expect:
+                        status = OFF_TARGET
+                    else:
+                        status = PINNED
+                    rows.append({
+                        "repository": item["repository"],
+                        "file": f".github/workflows/{name}:{number}",
+                        "workflow": workflow,
+                        "ref": ref,
+                        "status": status,
+                    })
     return rows
 
 
@@ -351,7 +399,7 @@ def render_scan(observed):
     ]
     for item in observed:
         lines.append(
-            f"| `{item['repository']}` | {item['state']} | {item['commits']} | {'-' if item['source_files'] is None else item['source_files']} | "
+            f"| `{item['repository']}` | {item['state']} | {'-' if item['commits'] is None else item['commits']} | {'-' if item['source_files'] is None else item['source_files']} | "
             f"{', '.join(item['toolchain']) or '-'} | {'yes' if item['manifest'] else 'no'} | "
             f"{', '.join(item['agent_files']) or '-'} | {len(item['workflows'])} | "
             f"{'`' + item['validation_command'] + '`' if item['validation_command'] else '-'} |"
