@@ -104,6 +104,17 @@ class WorkspaceScanTests(unittest.TestCase):
         git(path, "remote", "set-url", "origin", "git@github.com:bryansayler/quirk-commerce.git")
         self.assertIn("bryansayler/quirk-commerce", self.by_name())
 
+    def test_unreadable_checkout_is_not_reported_empty(self):
+        path = Path(self.root) / "broken"
+        path.mkdir()
+        (path / ".git").write_text("gitdir: /nonexistent/quirk\n", encoding="utf-8")
+        make_repo(self.root, "unborn")
+        seen = {item["directory"]: item for item in self.ws.scan(self.root)}
+        self.assertEqual(seen["broken"]["state"], self.ws.UNREADABLE)
+        self.assertEqual(seen["unborn"]["state"], self.ws.EMPTY)
+        registry = inventory([{"repository": seen["broken"]["repository"], "lifecycle": "active"}])
+        self.assertEqual([f for f in self.ws.drift([seen["broken"]], registry) if f["kind"] == self.ws.STATE_MISMATCH], [])
+
     def test_non_git_directories_are_ignored(self):
         (Path(self.root) / "notes").mkdir()
         self.assertEqual(self.ws.scan(self.root), [])
@@ -170,6 +181,7 @@ class WorkspacePinTests(unittest.TestCase):
         make_repo(self.root, "local", {".github/workflows/a.yml": "jobs:\n  x:\n    uses: ./.github/workflows/reusable-validate.yml\n"})
         make_repo(self.root, "dquoted", {".github/workflows/a.yml": caller.format(w="quirk-semantic-governance.yml", ref="main").replace("uses: ", 'uses: "').replace(" # main", '" # main')})
         make_repo(self.root, "squoted", {".github/workflows/a.yml": caller.format(w="quirk-semantic-governance.yml", ref=self.SHA).replace("uses: ", "uses: '").replace(" # main", "' # main")})
+        make_repo(self.root, "spaced", {".github/workflows/a.yml": caller.format(w="reusable-evidence-binding.yml", ref="main").replace("uses: ", "uses : ")})
         make_repo(self.root, "lowercase", {".github/workflows/a.yml": caller.format(w="reusable-evidence-binding.yml", ref="main").replace("Quirk-Systems/", "quirk-systems/")})
         make_repo(self.root, "mismatched", {".github/workflows/a.yml": caller.format(w="quirk-semantic-governance.yml", ref="main").replace("uses: ", 'uses: "')})
 
@@ -188,6 +200,7 @@ class WorkspacePinTests(unittest.TestCase):
             "Quirk-Systems/dquoted": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
             "Quirk-Systems/squoted": (self.ws.PINNED, ".github/workflows/a.yml:3"),
             "Quirk-Systems/lowercase": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
+            "Quirk-Systems/spaced": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
         })
 
     def test_expect_marks_other_shas_off_target(self):
@@ -254,6 +267,14 @@ class WorkspaceCliTests(unittest.TestCase):
         (path / "scripts" / "validate.sh").chmod(0o755)
         results = {repo: code for repo, code, _ in self.ws.run_commands(self.root, self.ws.scan(self.root), timeout=1)}
         self.assertEqual(results["Quirk-Systems/spawner"], 124)
+        time.sleep(2.5)
+        self.assertFalse((path / "late-write").exists())
+
+    def test_success_stops_processes_the_check_left_behind(self):
+        path = make_repo(self.root, "leaver", {"scripts/validate.sh": "#!/bin/sh\n(sleep 2; touch late-write) &\nexit 0\n"})
+        (path / "scripts" / "validate.sh").chmod(0o755)
+        results = {repo: code for repo, code, _ in self.ws.run_commands(self.root, self.ws.scan(self.root), timeout=30)}
+        self.assertEqual(results["Quirk-Systems/leaver"], 0)
         time.sleep(2.5)
         self.assertFalse((path / "late-write").exists())
 

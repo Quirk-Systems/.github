@@ -41,6 +41,7 @@ REGISTRY = ROOT / ".quirk" / "repositories.json"
 EMPTY = "EMPTY"
 DOCS_ONLY = "DOCS_ONLY"
 CODE = "CODE"
+UNREADABLE = "UNREADABLE"
 
 OBSERVED_UNCLASSIFIED = "OBSERVED_UNCLASSIFIED"
 NOT_IN_WORKSPACE = "NOT_IN_WORKSPACE"
@@ -61,7 +62,7 @@ OFF_TARGET = "OFF_TARGET"
 # `uses:` may be a plain, single-quoted, or double-quoted YAML scalar, and GitHub
 # resolves the owner and repository case-insensitively.
 CALLER = re.compile(
-    r"""^\s*(?:-\s*)?uses:\s*(["']?)(?i:Quirk-Systems/\.github/\.github/workflows/)([^@\s"']+)@([^\s#"']+)\1(?:\s|$)"""
+    r"""^\s*(?:-\s*)?uses\s*:\s*(["']?)(?i:Quirk-Systems/\.github/\.github/workflows/)([^@\s"']+)@([^\s#"']+)\1(?:\s|$)"""
 )
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 
@@ -139,16 +140,29 @@ def validation_command(path):
     return None
 
 
-def observe(path):
+def count_commits(path):
+    """Commits reachable from HEAD: 0 for an unborn HEAD, None when Git cannot read the checkout."""
+    if git(path, "rev-parse", "--git-dir")[0]:
+        return None
+    if git(path, "rev-parse", "--verify", "--quiet", "HEAD")[0]:
+        # A readable repository whose HEAD names no commit yet is genuinely empty.
+        return 0
     code, count = git(path, "rev-list", "--count", "HEAD")
-    commits = int(count) if code == 0 and count.isdigit() else 0
+    return int(count) if code == 0 and count.isdigit() else None
+
+
+def observe(path):
+    counted = count_commits(path)
+    commits = counted or 0
     head = git(path, "rev-parse", "HEAD")[1] if commits else None
     entries = sorted(entry.name for entry in path.iterdir() if entry.name != ".git")
     toolchain = [name for name in TOOLCHAIN_FILES if (path / name).is_file()]
     workflows_dir = path / ".github" / "workflows"
     workflows = sorted(p.name for p in workflows_dir.glob("*.y*ml")) if workflows_dir.is_dir() else []
     sources = source_files(path) if commits else 0
-    if commits == 0:
+    if counted is None:
+        state = UNREADABLE
+    elif commits == 0:
         state = EMPTY
     elif sources:
         state = CODE
@@ -270,7 +284,7 @@ def render_scan(observed):
             f"{', '.join(item['agent_files']) or '-'} | {len(item['workflows'])} | "
             f"{'`' + item['validation_command'] + '`' if item['validation_command'] else '-'} |"
         )
-    counts = {state: sum(1 for item in observed if item["state"] == state) for state in (CODE, DOCS_ONLY, EMPTY)}
+    counts = {state: sum(1 for item in observed if item["state"] == state) for state in (CODE, DOCS_ONLY, EMPTY, UNREADABLE)}
     lines.append("")
     lines.append(f"Observed {len(observed)} checkouts: " + ", ".join(f"{counts[k]} {k}" for k in counts) + ".")
     return "\n".join(lines) + "\n"
@@ -331,6 +345,8 @@ def run_commands(workspace, observed, timeout):
             # Ctrl-C or any other abort: the detached group would outlive the runner.
             stop_group(process)
             raise
+        # The script may have exited while processes it backgrounded live on.
+        stop_group(process)
         results.append((item["repository"], returncode, command))
     return results
 
