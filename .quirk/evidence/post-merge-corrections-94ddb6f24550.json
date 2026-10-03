@@ -1,0 +1,99 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.post-merge-corrections.94ddb6f24550",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "77c8666184157f8ea0d16e025cb0802cc3d0f704",
+    "commit": "94ddb6f2455092611c2e3283722db77375c30e96",
+    "changed_paths": [
+      ".github/CODEOWNERS",
+      ".github/copilot-instructions.md",
+      "docs/goals/2026-09-20-living-documents-validated.md",
+      "docs/governance/OWNER_ACTIVATION_INPUTS.md",
+      "docs/intentions/2026-09-20-evidence-first-planning.md",
+      "docs/roadmaps/2026-09-20-org-control-plane.md",
+      "docs/todos/2026-09-20-living-document-rollout.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.post-merge-corrections.94ddb6f24550",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Eight defects introduced by PR #39 and found by a review that completed after it merged are corrected. VERIFIED by checking each against the repository before changing anything: no receipt_id in .quirk/evidence begins with 'qreceipt.living-documents', so the roadmap's cited locator resolved to nothing, and the five real identifiers begin 'qreceipt.living-document-'; .devcontainer exists at the repository root and CODEOWNERS omitted it while claiming to map every root surface; the review dates 2026-10-04 and 2026-10-05 are one and two days after 2026-10-03, not one and three; the second title-lint success is run 35602325469 on head b197032d06997f1045a6d9e30d100ae84f11e984, not the unresolvable '35601'; OWNER_ACTIVATION_INPUTS.md asserted in its opening that repository content cannot change egress block mode and asserted the opposite later in the same file; validate_living_docs.py reports a document stale only after its Review by date, so the todo had not lapsed when re-read one day early and the 'Lapse record' heading and its first sentence were both false. VERIFIED at this commit: 180 tests pass under Python 3.12, scripts/validate.sh reports all executed checks passed, and validate_living_docs.py --strict reports 4 documents and 0 stale. CORRECTION OF AN EARLIER RECEIPT: qreceipt.living-doc-relapse.4abe5a8d177f describes the same non-event as a lapse in a verified claim. Its bytes are deliberately unchanged, because a receipt records what was believed at its subject commit and editing one to read correctly afterwards would destroy the property that makes receipts worth having; this receipt is the correction of record. UNKNOWN: whether any further finding from that review remains unaddressed, since the review completed after the pull request was closed and no check re-ran against the merged result.",
+      "evidence_paths": [
+        ".github/CODEOWNERS",
+        ".github/copilot-instructions.md",
+        "docs/governance/OWNER_ACTIVATION_INPUTS.md",
+        "docs/roadmaps/2026-09-20-org-control-plane.md",
+        "docs/todos/2026-09-20-living-document-rollout.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/CODEOWNERS",
+      "state": "present",
+      "git_blob": "d57f1c05ffd77e9ee87a80d3e95f5a478c10e512",
+      "sha256": "sha256:1331318bfe3c20c283c81e945f0c805c6ed7cd3d7de99497049a279215ea0f8b"
+    },
+    {
+      "path": ".github/copilot-instructions.md",
+      "state": "present",
+      "git_blob": "b326a85ee0efbc3088caea2088a3d3eeff533159",
+      "sha256": "sha256:512a7478b52c169f6c5e2594e4d9f231892677eb2c1d7925736354d89a41a1ac"
+    },
+    {
+      "path": "docs/goals/2026-09-20-living-documents-validated.md",
+      "state": "present",
+      "git_blob": "364dced1221e4167fc99dc0d2265e0f924270928",
+      "sha256": "sha256:32f2e471b5bc3044a464475fe21be52e08cd92d9f12886bf3ef26ec01ecc4511"
+    },
+    {
+      "path": "docs/governance/OWNER_ACTIVATION_INPUTS.md",
+      "state": "present",
+      "git_blob": "ba61bb21fd875958320f1f713ba2d8345efc54c5",
+      "sha256": "sha256:f9395448bc444f89be5457884ea8f11a78dbcfe880fc629165def898ef63af76"
+    },
+    {
+      "path": "docs/intentions/2026-09-20-evidence-first-planning.md",
+      "state": "present",
+      "git_blob": "18f5b2d580d29ee627d897f3b189fe985c3ff169",
+      "sha256": "sha256:fd970ed99189b902ee818acde9f36c2122333917d988da4cf47ca3cf2fc41acb"
+    },
+    {
+      "path": "docs/roadmaps/2026-09-20-org-control-plane.md",
+      "state": "present",
+      "git_blob": "19d65cc616c6f6e71831955707c82b6fdb7d7076",
+      "sha256": "sha256:9068eb4d5e6936a336db44a712e558f8084dee4c110e823b7783e158c270d4c8"
+    },
+    {
+      "path": "docs/todos/2026-09-20-living-document-rollout.md",
+      "state": "present",
+      "git_blob": "fc5c34ff7b2012ae2385fc5e24f0cbb54087ff69",
+      "sha256": "sha256:982db414009f1842fa82f75acc85d1bfbf05f67261e20dca676536f792ee4022"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "uv run --no-project --python 3.12 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T09:27:30Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:b6a35c71f2275eb2a6486f6b4119d1bfd19bca3c6a313424caab304f21d7d8f6"
+}
