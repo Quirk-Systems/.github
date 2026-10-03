@@ -27,7 +27,9 @@ the run; only a repository with no declared command is skipped. Standard library
 
 import argparse
 import json
+import os
 import re
+import signal
 import subprocess
 import sys
 from pathlib import Path
@@ -55,9 +57,10 @@ SKIP_DIRS = {".git", "node_modules", ".next", "dist", "build", ".venv", "__pycac
 FLOATING = "FLOATING"
 PINNED = "PINNED"
 OFF_TARGET = "OFF_TARGET"
-# `uses:` may be a plain, single-quoted, or double-quoted YAML scalar.
+# `uses:` may be a plain, single-quoted, or double-quoted YAML scalar, and GitHub
+# resolves the owner and repository case-insensitively.
 CALLER = re.compile(
-    r"""^\s*(?:-\s*)?uses:\s*(["']?)Quirk-Systems/\.github/\.github/workflows/([^@\s"']+)@([^\s#"']+)\1(?:\s|$)"""
+    r"""^\s*(?:-\s*)?uses:\s*(["']?)(?i:Quirk-Systems/\.github/\.github/workflows/)([^@\s"']+)@([^\s#"']+)\1(?:\s|$)"""
 )
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 
@@ -292,27 +295,34 @@ def run_commands(workspace, observed, timeout):
         if not command:
             results.append((item["repository"], None, "no declared validation command"))
             continue
-        try:
-            completed = subprocess.run(
-                command.split(),
-                cwd=Path(workspace) / item["directory"],
-                capture_output=True,
-                text=True,
-                timeout=timeout,
-                check=False,
-            )
         # A declared check that never completes is a failure, not a skip; the
         # codes follow the shell's conventions so callers can tell them apart.
+        try:
+            # Its own session, so a timeout can stop every process the check started.
+            process = subprocess.Popen(
+                command.split(),
+                cwd=Path(workspace) / item["directory"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                start_new_session=True,
+            )
         except FileNotFoundError as error:
             results.append((item["repository"], 127, f"not run: {error.filename} not installed"))
             continue
         except OSError as error:
             results.append((item["repository"], 126, f"not run: {error.strerror or error}"))
             continue
+        try:
+            returncode = process.wait(timeout=timeout)
         except subprocess.TimeoutExpired:
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            process.wait()
             results.append((item["repository"], 124, f"timed out after {timeout}s"))
             continue
-        results.append((item["repository"], completed.returncode, command))
+        results.append((item["repository"], returncode, command))
     return results
 
 
@@ -331,7 +341,7 @@ def main(argv=None):
     pins_parser = sub.add_parser("pins", parents=[common], help="audit refs used to call Quirk-Systems/.github reusable workflows")
     pins_parser.add_argument("--expect", help="40-hex .github commit every caller should pin; others are OFF_TARGET")
     pins_parser.add_argument("--fail-on-floating", action="store_true", help="exit 1 when any caller uses a non-SHA ref")
-    commands_parser = sub.add_parser("commands", help="list or run each repository's declared validation command")
+    commands_parser = sub.add_parser("commands", parents=[common], help="list or run each repository's declared validation command")
     commands_parser.add_argument("--run", action="store_true", help="execute the commands and report exit codes")
     commands_parser.add_argument("--timeout", type=int, default=900, help="per-repository timeout in seconds")
     args = parser.parse_args(argv)
@@ -360,15 +370,21 @@ def main(argv=None):
         return 1 if args.fail_on_floating and any(row["status"] == FLOATING for row in rows) else 0
 
     if not args.run:
-        for item in observed:
-            if item["validation_command"]:
+        declared = [item for item in observed if item["validation_command"]]
+        if args.json:
+            print(json.dumps([{"repository": i["repository"], "command": i["validation_command"]} for i in declared], indent=2))
+        else:
+            for item in declared:
                 print(f"{item['directory']}: {item['validation_command']}")
         return 0
-    failed = False
-    for repository, code, note in run_commands(args.workspace, observed, args.timeout):
-        status = "skipped" if code is None else ("pass" if code == 0 else f"fail ({code})")
-        failed = failed or (code not in (None, 0))
-        print(f"{repository}: {status} — {note}")
+    results = run_commands(args.workspace, observed, args.timeout)
+    failed = any(code not in (None, 0) for _, code, _ in results)
+    if args.json:
+        print(json.dumps([{"repository": r, "exit_code": c, "note": n} for r, c, n in results], indent=2))
+    else:
+        for repository, code, note in results:
+            status = "skipped" if code is None else ("pass" if code == 0 else f"fail ({code})")
+            print(f"{repository}: {status} — {note}")
     return 1 if failed else 0
 
 

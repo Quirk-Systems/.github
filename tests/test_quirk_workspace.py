@@ -2,6 +2,7 @@ import importlib.util
 import json
 import subprocess
 import tempfile
+import time
 import unittest
 from pathlib import Path
 
@@ -168,6 +169,7 @@ class WorkspacePinTests(unittest.TestCase):
         make_repo(self.root, "local", {".github/workflows/a.yml": "jobs:\n  x:\n    uses: ./.github/workflows/reusable-validate.yml\n"})
         make_repo(self.root, "dquoted", {".github/workflows/a.yml": caller.format(w="quirk-semantic-governance.yml", ref="main").replace("uses: ", 'uses: "').replace(" # main", '" # main')})
         make_repo(self.root, "squoted", {".github/workflows/a.yml": caller.format(w="quirk-semantic-governance.yml", ref=self.SHA).replace("uses: ", "uses: '").replace(" # main", "' # main")})
+        make_repo(self.root, "lowercase", {".github/workflows/a.yml": caller.format(w="reusable-evidence-binding.yml", ref="main").replace("Quirk-Systems/", "quirk-systems/")})
         make_repo(self.root, "mismatched", {".github/workflows/a.yml": caller.format(w="quirk-semantic-governance.yml", ref="main").replace("uses: ", 'uses: "')})
 
     def tearDown(self):
@@ -184,6 +186,7 @@ class WorkspacePinTests(unittest.TestCase):
             "Quirk-Systems/other": (self.ws.PINNED, ".github/workflows/a.yml:3"),
             "Quirk-Systems/dquoted": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
             "Quirk-Systems/squoted": (self.ws.PINNED, ".github/workflows/a.yml:3"),
+            "Quirk-Systems/lowercase": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
         })
 
     def test_expect_marks_other_shas_off_target(self):
@@ -244,6 +247,30 @@ class WorkspaceCliTests(unittest.TestCase):
         results = {repo: (code, note) for repo, code, note in self.ws.run_commands(self.root, self.ws.scan(self.root), timeout=1)}
         self.assertEqual(results["Quirk-Systems/slow"], (124, "timed out after 1s"))
         self.assertEqual(results["Quirk-Systems/quirk-new"][0], None)
+
+    def test_timeout_stops_processes_the_check_started(self):
+        path = make_repo(self.root, "spawner", {"scripts/validate.sh": "#!/bin/sh\n(sleep 2; touch late-write) &\nsleep 30\n"})
+        (path / "scripts" / "validate.sh").chmod(0o755)
+        results = {repo: code for repo, code, _ in self.ws.run_commands(self.root, self.ws.scan(self.root), timeout=1)}
+        self.assertEqual(results["Quirk-Systems/spawner"], 124)
+        time.sleep(2.5)
+        self.assertFalse((path / "late-write").exists())
+
+    def test_commands_honours_json_in_either_position(self):
+        import contextlib
+        import io
+
+        make_repo(self.root, "app", {"package.json": json.dumps({"scripts": {"validate": "true"}})})
+        for argv in (["--json", "--workspace", self.root, "commands"], ["--workspace", self.root, "commands", "--json"]):
+            buffer = io.StringIO()
+            with contextlib.redirect_stdout(buffer):
+                self.assertEqual(self.ws.main(argv), 0)
+            self.assertEqual(json.loads(buffer.getvalue()), [{"repository": "Quirk-Systems/app", "command": "npm run validate"}])
+        buffer = io.StringIO()
+        with contextlib.redirect_stdout(buffer):
+            self.ws.main(["--workspace", self.root, "commands", "--run", "--json", "--timeout", "5"])
+        rows = {row["repository"]: row for row in json.loads(buffer.getvalue())}
+        self.assertIsNone(rows["Quirk-Systems/quirk-new"]["exit_code"])
 
     def test_bad_workspace_exits_two(self):
         self.assertEqual(self.ws.main(["--workspace", str(Path(self.root) / "nope"), "scan"]), 2)

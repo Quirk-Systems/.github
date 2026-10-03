@@ -357,10 +357,15 @@ def _validate_coverage(root, receipt_records, receipt_paths, range_base, range_h
     receipt_path_set = set(receipt_paths)
     # A receipt JSON deleted in the range is no longer discoverable, but it is
     # still a receipt file: like a present one, it is not a substantive path.
-    prefix = receipts_dir.rstrip("/") + "/" if receipts_dir else None
+    if receipts_dir is None:
+        prefix = None
+    elif receipts_dir in ("", "."):
+        prefix = ""  # the repository root is the receipt directory
+    else:
+        prefix = receipts_dir.rstrip("/") + "/"
     retired_receipts = {
         path for path, state in range_entries
-        if state == "deleted" and prefix and path.startswith(prefix) and path.endswith(".json")
+        if state == "deleted" and prefix is not None and path.startswith(prefix) and path.endswith(".json")
     }
     required_paths = {path for path, _ in range_entries if path not in receipt_path_set | retired_receipts}
     candidate_subjects = {path: [] for path in required_paths}

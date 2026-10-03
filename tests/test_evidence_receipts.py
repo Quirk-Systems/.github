@@ -512,6 +512,27 @@ class EvidenceReceiptTest(unittest.TestCase):
             self.assertIn("keep.txt", uncovered.stderr)
             self.assertIn("notes.json", uncovered.stderr)
 
+    def test_deleted_receipt_is_exempt_when_the_root_is_the_receipt_directory(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.fixture(directory)
+            fixture.receipt_path = fixture.root / "qreceipt.test.json"
+            self.assertEqual(fixture.generate().returncode, 0)
+            receipt_head = git_commit(fixture.root, "receipt at the root")
+            fixture.receipt_path.unlink()
+            retired_head = git_commit(fixture.root, "retire root receipt")
+            covered = run(
+                sys.executable, str(VALIDATOR),
+                "--repository", "owner/repository",
+                "--root", str(fixture.root),
+                "--receipts", ".",
+                "--range-base", receipt_head,
+                "--range-head", retired_head,
+                "--require-covered-diff",
+                cwd=fixture.root,
+                check=False,
+            )
+            self.assertEqual(covered.returncode, 0, covered.stderr)
+
     def test_git_pathspec_magic_filename_cannot_evade_freshness(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
