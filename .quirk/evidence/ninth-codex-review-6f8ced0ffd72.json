@@ -1,0 +1,74 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.ninth-codex-review.6f8ced0ffd72",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "41596d26cf9b8c0c4adde2a2ff22ee4db35735b6",
+    "commit": "6f8ced0ffd72b5470ab5d7b03fe747e62128025c",
+    "changed_paths": [
+      "docs/governance/WORKSPACE_TOOLING.md",
+      "scripts/quirk_workspace.py",
+      "tests/test_quirk_workspace.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.ninth-codex-review.6f8ced0ffd72",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Addresses the ninth Codex review on PR #44: pins finds callers in single-line flow mappings; commands --run rejects nonpositive timeouts; drift --json reports unreadable checkouts alongside findings; WORKSPACE_TOOLING.md states which YAML forms pins reads and which it does not. Three new tests fail on the previous script and pass on this one; workspace callers and drift findings are unchanged. pins remains a line-based scanner, not a YAML parser. Owner review is not established.",
+      "evidence_paths": [
+        "docs/governance/WORKSPACE_TOOLING.md",
+        "scripts/quirk_workspace.py",
+        "tests/test_quirk_workspace.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/governance/WORKSPACE_TOOLING.md",
+      "state": "present",
+      "git_blob": "d5f61439a86383c1e4164f2d74048569d9528fba",
+      "sha256": "sha256:7e52104f46298344a54f20a982a832f7640951ef92b3284265903e0b23885875"
+    },
+    {
+      "path": "scripts/quirk_workspace.py",
+      "state": "present",
+      "git_blob": "bd546dc4a007f58ff4af228373037f41f4aa1373",
+      "sha256": "sha256:6e91552ed80d3653e90f69d1d052ca2fa7f909433bb0696ef09143613252c0f1"
+    },
+    {
+      "path": "tests/test_quirk_workspace.py",
+      "state": "present",
+      "git_blob": "dbfc7923e22eafb9946c41f919e8dca96d079b2f",
+      "sha256": "sha256:1eb9607f6c0c1e629dcf26e7a253d64c88e85da8b24774908eb7315a32a16d1e"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "PYTHON=python3.12 scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py pins",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py drift --json",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T16:37:25Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:53408f70bc82d4034857054bf9fb3cb7c7960286061df2b13a613fe419ec6de8"
+}

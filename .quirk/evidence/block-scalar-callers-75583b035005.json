@@ -1,0 +1,61 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.block-scalar-callers.75583b035005",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "e6bd4b8ae80a15c6c659aa4eab8fabc6aedb4f35",
+    "commit": "75583b035005d1bc91e7ea8de2c1240c66422dac",
+    "changed_paths": [
+      "scripts/quirk_workspace.py",
+      "tests/test_quirk_workspace.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.block-scalar-callers.75583b035005",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "pins in scripts/quirk_workspace.py ignores lines inside YAML literal and folded block scalars, so script text such as a heredoc in run: | is no longer audited as a reusable-workflow caller. A new test fails on the previous script and passes on this one; every real workflow in the 2026-10-03 workspace yields the same caller lines as before. YAML is not fully parsed; flow-style or anchored callers remain out of scope.",
+      "evidence_paths": [
+        "scripts/quirk_workspace.py",
+        "tests/test_quirk_workspace.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "scripts/quirk_workspace.py",
+      "state": "present",
+      "git_blob": "99e7c8c6753a90a0abc1ffca7eb87ba9f2f5e63c",
+      "sha256": "sha256:56283af06a363a7fa786cf0361b1ac8b559cdcddec9caeb123e0ccced41fcf87"
+    },
+    {
+      "path": "tests/test_quirk_workspace.py",
+      "state": "present",
+      "git_blob": "1da855dcd343e2eb45937ef5ee5e1a03264f4329",
+      "sha256": "sha256:c3943328281aad0b80a317559befe35d9eb198df1fb9f6c0041cbcef9d7ef5d6"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "PYTHON=python3.12 scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py pins",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T15:53:05Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:64f16064bcfad5b95f41c8fb0b10bc89218d6acc4fd199eed1547ebaa88da0f0"
+}

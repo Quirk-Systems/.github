@@ -1,0 +1,48 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.empty-except.e8a4cf2c417e",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "d2e9d13d71dabb1e57e362f268e7e2f1138d5c0c",
+    "commit": "e8a4cf2c417e43bcaf99f5f2aeb37b7a602e28cf",
+    "changed_paths": [
+      "scripts/quirk_workspace.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.empty-except.e8a4cf2c417e",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Replaces the empty except ProcessLookupError around the timeout process-group kill in scripts/quirk_workspace.py with contextlib.suppress and an explanatory comment, resolving the CodeQL py/empty-except alert on PR #44. Behaviour is unchanged; the full suite, including the timeout test, passes. Hosted CodeQL re-analysis is not established by this receipt.",
+      "evidence_paths": [
+        "scripts/quirk_workspace.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "scripts/quirk_workspace.py",
+      "state": "present",
+      "git_blob": "cfe3c59a166cc88d1b421068ae2e3080486beda8",
+      "sha256": "sha256:766fe57237bc32de07128cf79f53bda2df636559a2c6ff96f79ae8dc2dc0c76d"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "PYTHON=python3.12 scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T15:20:12Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:49e8c24c483674854489e7e10ae410af4112b580745fda2ce0777838c51c3a33"
+}

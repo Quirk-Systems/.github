@@ -1,0 +1,72 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.second-codex-review.461a1b8ec9c5",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "6d996ea2b0b9f802c9f49a946b55b07401a463dc",
+    "commit": "461a1b8ec9c5c8c8e0e412e377893607b224a9ee",
+    "changed_paths": [
+      "scripts/quirk_workspace.py",
+      "scripts/validate_evidence_receipts.py",
+      "tests/test_evidence_receipts.py",
+      "tests/test_quirk_workspace.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.second-codex-review.461a1b8ec9c5",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Addresses the second Codex review on PR #44: pins matches the Quirk-Systems/.github owner and repository case-insensitively; commands honours --json in either position for listing and --run; commands --run starts each check in its own session and kills the process group on timeout; receipt coverage treats a deleted receipt as exempt when --receipts is the repository root. Four new tests fail on the previous code and pass on this one. Hosted CI and owner review are not established by this receipt.",
+      "evidence_paths": [
+        "scripts/quirk_workspace.py",
+        "scripts/validate_evidence_receipts.py",
+        "tests/test_evidence_receipts.py",
+        "tests/test_quirk_workspace.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "scripts/quirk_workspace.py",
+      "state": "present",
+      "git_blob": "a0452535a92443eecd0dd6989f77a04b64b066f9",
+      "sha256": "sha256:f67cccde66394bc6c814a98b0295ff8cea4a078ef7e0ee77e891c04216a548d3"
+    },
+    {
+      "path": "scripts/validate_evidence_receipts.py",
+      "state": "present",
+      "git_blob": "6f68e741e69076eaebcc4dd9020b8c1a686356df",
+      "sha256": "sha256:f9356d051becb60570507413a5077497b9bc13c87ea086d5717753cad5bb2c4c"
+    },
+    {
+      "path": "tests/test_evidence_receipts.py",
+      "state": "present",
+      "git_blob": "c1babc9bc118f6fd64498382612e21bdd5cd2a22",
+      "sha256": "sha256:528866cdb472558921a4ca907f9dd1b33b4db5083d6be06ac631f90c675e6fe0"
+    },
+    {
+      "path": "tests/test_quirk_workspace.py",
+      "state": "present",
+      "git_blob": "ccf1594888d52792d9258caa8a06f26895d01daa",
+      "sha256": "sha256:c2205925afc122d5a8bb8e054db866878eadb9ff61c52e176799c9af33e47dbc"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "PYTHON=python3.12 scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T15:18:03Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:06a8b69eb887005da5bbae2fa4401d705a4d90dc53e0ca62cf6ddb2e2624533d"
+}

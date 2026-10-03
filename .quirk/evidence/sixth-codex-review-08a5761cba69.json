@@ -1,0 +1,66 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.sixth-codex-review.08a5761cba69",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "c01c7d04fd7d01ced1c2dc16536e6cb46916c9b6",
+    "commit": "08a5761cba69a6f67c3c02f2591c9f23cf4e24f7",
+    "changed_paths": [
+      "scripts/quirk_workspace.py",
+      "tests/test_quirk_workspace.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.sixth-codex-review.08a5761cba69",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Addresses the sixth Codex review on PR #44: pins audits a block scalar used as the value of uses while still skipping script blocks; drift draws no finding from an UNREADABLE checkout and still treats it as present; scan reports UNREADABLE when git ls-files fails instead of zero source files. Three new tests fail on the previous script and pass on this one; real workflows in the workspace yield the same callers and the survey totals are unchanged. Owner review is not established.",
+      "evidence_paths": [
+        "scripts/quirk_workspace.py",
+        "tests/test_quirk_workspace.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "scripts/quirk_workspace.py",
+      "state": "present",
+      "git_blob": "06f54f57354e685e8f5095274ddb0fcae7486942",
+      "sha256": "sha256:97a20bb7ac4108560fba69976226e09aa3ce834141cf373e76eec2b4a52dcd89"
+    },
+    {
+      "path": "tests/test_quirk_workspace.py",
+      "state": "present",
+      "git_blob": "93c3bf4e0907a6f1abc63e25716351b3a924faa5",
+      "sha256": "sha256:b4570b8cb28502514b67e4a2374797fc955dc4f583500bc30a50fc48a8be64b6"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "PYTHON=python3.12 scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py scan",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py drift",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T16:04:26Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:8792be22ca6f7890390db0eb17c690c015fd6701c7a9f45d09fb3c45b07ef4ad"
+}

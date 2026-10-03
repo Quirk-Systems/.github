@@ -1,0 +1,77 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.receipt-range-edges.7e299b398f31",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "93cfeb3ea1326addfd2283fa5ba4bc9cd7d58fda",
+    "commit": "7e299b398f3125a23e7334aa419467b4cfac9888",
+    "changed_paths": [
+      "docs/governance/EVIDENCE_BINDING.md",
+      "docs/todos/2026-10-03-workspace-portfolio-plans.md",
+      "scripts/validate_evidence_receipts.py",
+      "tests/test_evidence_receipts.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.receipt-range-edges.7e299b398f31",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Pull-request coverage in scripts/validate_evidence_receipts.py no longer qualifies a receipt whose subject equals --range-base, and treats a receipt JSON deleted from the receipt directory within the range like a present one. Two new tests fail on the previous validator and pass on this one. EVIDENCE_BINDING.md states the (base, head] range and the exemption; the workspace todo marks the stranded-receipt repair done. Non-receipt deletions and later unreceipted changes still fail closed. Hosted CI and owner review are not established by this receipt.",
+      "evidence_paths": [
+        "docs/governance/EVIDENCE_BINDING.md",
+        "docs/todos/2026-10-03-workspace-portfolio-plans.md",
+        "scripts/validate_evidence_receipts.py",
+        "tests/test_evidence_receipts.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/governance/EVIDENCE_BINDING.md",
+      "state": "present",
+      "git_blob": "0fd8865b9cda7cab71a783828e78b4c590cb13a7",
+      "sha256": "sha256:1cc158c3f488887227174b2e7556dc8b71abcd7e5c6acbefd399ca59a211d70e"
+    },
+    {
+      "path": "docs/todos/2026-10-03-workspace-portfolio-plans.md",
+      "state": "present",
+      "git_blob": "5eb7cd2ca42f897548cf84cfafa279503ba73cef",
+      "sha256": "sha256:b19d33c3a3c41a18ccf72d1b33fa4a57ce8f85a8bfccb011f7785224e9378e72"
+    },
+    {
+      "path": "scripts/validate_evidence_receipts.py",
+      "state": "present",
+      "git_blob": "28b1e06b90f703664baf41c9f71eab491581fda2",
+      "sha256": "sha256:fabc039eb8e50eee5e3efc8342d5faf0d63547499ea81ff12b6ff2bc78176d7d"
+    },
+    {
+      "path": "tests/test_evidence_receipts.py",
+      "state": "present",
+      "git_blob": "baff01dce122adde39b0f92b2df0f231469e0b27",
+      "sha256": "sha256:6fa438685b24c029f9845cbfd0b6473d85996df99ca4a6d9d1bc1d15baab01fb"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "PYTHON=python3.12 scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 -m unittest tests.test_evidence_receipts",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T14:51:52Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:5846dd00628221e51564fab10ca64c3808f741a22050ddf6bfe4bcd2f1cbbde2"
+}

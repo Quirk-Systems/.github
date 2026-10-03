@@ -1,0 +1,98 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.thirteenth-codex-review.019031dcade8",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "f784063c7038a5c84c897a75c4f22edbf191bcda",
+    "commit": "019031dcade8b54941a3d9be24192adb3ad3fe18",
+    "changed_paths": [
+      "docs/governance/EVIDENCE_BINDING.md",
+      "docs/governance/WORKSPACE_TOOLING.md",
+      "scripts/quirk_workspace.py",
+      "scripts/validate_evidence_receipts.py",
+      "tests/test_evidence_receipts.py",
+      "tests/test_quirk_workspace.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.thirteenth-codex-review.019031dcade8",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "scripts/validate_evidence_receipts.py reads each subject-to-head path history with git log --full-history, so a merged side branch that changed a receipted path and restored its bytes makes the older receipt stale. scripts/quirk_workspace.py suppresses block-scalar detection inside multi-line quoted scalars, opens a quoted value after a quoted key's colon, keeps an unspaced # inside a ref, and reports the declared validation command of EMPTY checkouts. Four tests fail on the previous scripts and pass on this one; workspace scan, drift, pins and commands results are unchanged (11 callers, 7 commands). Owner review is not established.",
+      "evidence_paths": [
+        "docs/governance/EVIDENCE_BINDING.md",
+        "docs/governance/WORKSPACE_TOOLING.md",
+        "scripts/quirk_workspace.py",
+        "scripts/validate_evidence_receipts.py",
+        "tests/test_evidence_receipts.py",
+        "tests/test_quirk_workspace.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/governance/EVIDENCE_BINDING.md",
+      "state": "present",
+      "git_blob": "50de0ee4d69963de5c421c050e0de9b9e2f76dd3",
+      "sha256": "sha256:11b8f479565aab1326bd57eb7fd6edea677321fe810f3ae9562dc224d0e17e12"
+    },
+    {
+      "path": "docs/governance/WORKSPACE_TOOLING.md",
+      "state": "present",
+      "git_blob": "276bcb6177bc7d7664a9f7cfa540b824066bcb96",
+      "sha256": "sha256:5b02d269647c96259235688ab6a63e03b8595d3a780aab143898f23b7668a347"
+    },
+    {
+      "path": "scripts/quirk_workspace.py",
+      "state": "present",
+      "git_blob": "a4efe6c7f5124dac657eaf91ce26366d9e64b449",
+      "sha256": "sha256:cb1a6fe9917ac30595e3d042a6fcaf0b8f92e0c555061820efa1de9e25b7e2c6"
+    },
+    {
+      "path": "scripts/validate_evidence_receipts.py",
+      "state": "present",
+      "git_blob": "514b19624805510cb143fef12bd2b0aea36414b8",
+      "sha256": "sha256:a109a38e438bedc9a84bf65aeb9d4a09a53ce7c47a863039f2bd4c84501c0fd6"
+    },
+    {
+      "path": "tests/test_evidence_receipts.py",
+      "state": "present",
+      "git_blob": "20979e40faaa0dedbdd71c5de290c1f07c719c45",
+      "sha256": "sha256:949cd88661aa80c2a3cd608bed89b3936e214467b5b2a3bfbe4495b874d62022"
+    },
+    {
+      "path": "tests/test_quirk_workspace.py",
+      "state": "present",
+      "git_blob": "25809773769e3fb9a014827227242e1b2e533d3d",
+      "sha256": "sha256:5406b280055b0d02ebe5e8841c38100731ab4b40a2b67446834d423f86c534e4"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "PYTHON=python3.12 scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py pins",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py commands",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T17:40:14Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:41064c5086f998f4aac23f72f129d0f022e93e431135e514a1dfab4f699b047d"
+}

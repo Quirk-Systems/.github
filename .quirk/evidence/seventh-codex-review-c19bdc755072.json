@@ -1,0 +1,66 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.seventh-codex-review.c19bdc755072",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "d294d0d49aa7bfb73165b4f91d2a8f417258164a",
+    "commit": "c19bdc755072c718b3d132239e7dec3dc40cfd7c",
+    "changed_paths": [
+      "scripts/quirk_workspace.py",
+      "tests/test_quirk_workspace.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.seventh-codex-review.c19bdc755072",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Addresses the seventh Codex review on PR #44: pins accepts quoted uses keys; scan lists only .yml and .yaml workflow files; drift treats an unreadable checkout known only by its directory name as present for the inventory entry with that repository name. Three new test cases fail on the previous script and pass on this one; the workspace survey totals and the 11 observed callers are unchanged. Owner review is not established.",
+      "evidence_paths": [
+        "scripts/quirk_workspace.py",
+        "tests/test_quirk_workspace.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "scripts/quirk_workspace.py",
+      "state": "present",
+      "git_blob": "f52f572d7d122360f2f1e14dd602d92f666943f3",
+      "sha256": "sha256:9c10f182b8328cbbf6a28a400abe77f495583d45ed169182b9dc62bdacb5ce4a"
+    },
+    {
+      "path": "tests/test_quirk_workspace.py",
+      "state": "present",
+      "git_blob": "3875a5e99b16a1adb995c0c36c582b84a00faa68",
+      "sha256": "sha256:176702a4efe245ad9d39925284d8722d2c7eb7aac83a78d1974c874d4389ddaa"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "PYTHON=python3.12 scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py scan",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py pins",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T16:15:25Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:773127332fb740acecbeaf81316455adfce2eac2a1c5edc6abff24c8b1f82f4a"
+}
