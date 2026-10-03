@@ -315,6 +315,8 @@ class WorkspacePinTests(unittest.TestCase):
         sha = self.SHA
         workflow = (
             'name: "{uses: Quirk-Systems/.github/.github/workflows/example.yml@main}"\n'
+            "name: 'it''s {uses: Quirk-Systems/.github/.github/workflows/example.yml@main}'\n"
+            'name: "say \\"{uses: Quirk-Systems/.github/.github/workflows/example.yml@main}\\""\n'
             "on: push # {uses: Quirk-Systems/.github/.github/workflows/example.yml@main}\n"
             f"jobs: {{a: {{uses: Quirk-Systems/.github/.github/workflows/x.yml@{sha}}}, "
             "b: {uses: Quirk-Systems/.github/.github/workflows/y.yml@main}}\n"
@@ -323,7 +325,7 @@ class WorkspacePinTests(unittest.TestCase):
         rows = [r for r in self.ws.caller_pins(self.root, self.ws.scan(self.root)) if r["repository"] == "Quirk-Systems/flowmany"]
         self.assertEqual(
             [(r["workflow"], r["status"], r["file"]) for r in rows],
-            [("x.yml", self.ws.PINNED, ".github/workflows/a.yml:3"), ("y.yml", self.ws.FLOATING, ".github/workflows/a.yml:3")],
+            [("x.yml", self.ws.PINNED, ".github/workflows/a.yml:5"), ("y.yml", self.ws.FLOATING, ".github/workflows/a.yml:5")],
         )
 
     def test_expect_marks_other_shas_off_target(self):

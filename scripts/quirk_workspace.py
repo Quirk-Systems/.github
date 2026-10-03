@@ -326,24 +326,36 @@ def mapping_lines(lines):
 
 def quoted_spans(line):
     """Return (code, inside) where code drops an unquoted `#` comment and
-    inside[i] is True when position i lies within a quoted scalar."""
-    inside = []
+    inside[i] is True when position i lies within a quoted scalar.
+
+    Handles YAML's escapes: `''` inside a single-quoted scalar and a
+    backslash escape inside a double-quoted one never close the scalar.
+    """
+    inside = [False] * len(line)
     quote = None
-    for index, char in enumerate(line):
-        if quote is None and char == "#" and (index == 0 or line[index - 1].isspace()):
-            return line[:index], inside
-        if quote is None and char in "\"'":
-            quote = char
-            inside.append(False)
+    index = 0
+    while index < len(line):
+        char = line[index]
+        if quote is None:
+            if char == "#" and (index == 0 or line[index - 1].isspace()):
+                return line[:index], inside[:index]
+            if char in "\"'":
+                quote = char
+        elif quote == "'" and char == "'" and line[index + 1:index + 2] == "'":
+            inside[index] = inside[index + 1] = True
+            index += 2
             continue
-        if quote is not None and char == quote:
-            if quote == "'" and line[index + 1:index + 2] == "'":
-                inside.append(True)  # '' is an escaped quote inside a single-quoted scalar
-                continue
+        elif quote == '"' and char == "\\":
+            inside[index] = True
+            if index + 1 < len(line):
+                inside[index + 1] = True
+            index += 2
+            continue
+        elif char == quote:
             quote = None
-            inside.append(False)
-            continue
-        inside.append(quote is not None)
+        else:
+            inside[index] = True
+        index += 1
     return line, inside
 
 
