@@ -4,6 +4,7 @@ import subprocess
 import tempfile
 import time
 import unittest
+import unittest.mock
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -257,8 +258,6 @@ class WorkspaceCliTests(unittest.TestCase):
         self.assertFalse((path / "late-write").exists())
 
     def test_interrupt_stops_processes_the_check_started(self):
-        from unittest import mock
-
         path = make_repo(self.root, "spawner", {"scripts/validate.sh": "#!/bin/sh\n(sleep 2; touch late-write) &\nsleep 30\n"})
         (path / "scripts" / "validate.sh").chmod(0o755)
         real_wait = subprocess.Popen.wait
@@ -268,7 +267,7 @@ class WorkspaceCliTests(unittest.TestCase):
                 raise KeyboardInterrupt
             return real_wait(process)
 
-        with mock.patch.object(subprocess.Popen, "wait", interrupted):
+        with unittest.mock.patch.object(subprocess.Popen, "wait", interrupted):
             with self.assertRaises(KeyboardInterrupt):
                 self.ws.run_commands(self.root, self.ws.scan(self.root), timeout=60)
         time.sleep(2.5)
