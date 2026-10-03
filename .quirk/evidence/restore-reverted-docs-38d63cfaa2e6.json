@@ -1,0 +1,61 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.restore-reverted-docs.38d63cfaa2e6",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "95c8363d925aab122490e8db6947d9795fd9f952",
+    "commit": "38d63cfaa2e6330c0b75f0356d98808b0a1f680b",
+    "changed_paths": [
+      "docs/goals/2026-09-20-living-documents-validated.md",
+      "docs/intentions/2026-09-20-evidence-first-planning.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.restore-reverted-docs.38d63cfaa2e6",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The goal and intention documents that commit 94ddb6f2455092611c2e3283722db77375c30e96 reverted are restored to the content commit c3d3f36fc8764c41b7be6ae41651fcbdd748ba27 delivered. VERIFIED at this commit: git diff against c3d3f36fc8764c41b7be6ae41651fcbdd748ba27 restricted to docs/goals and docs/intentions is empty, so both files are byte-identical to the intended content; the goal carries Status: done and the intention carries the re-observed 48-receipt count; the five corrections from 94ddb6f2 are intact, with no occurrence of the unresolvable locator qreceipt.living-documents. or the phrase 'one and three' in the roadmap, run 35602325469 and the Near-lapse record heading present in the todo, /.devcontainer/ present in CODEOWNERS, and 'this repository only' present in copilot-instructions.md; 180 tests pass under Python 3.12 and scripts/validate.sh reports all executed checks passed. The reversion was found by validate_evidence_receipts.py --require-covered-diff, which failed closed because receipt qreceipt.living-doc-goal-closed.c3d3f36fc876 qualified for paths the pull-request range no longer contained; it was not found by review. No history is rewritten, so both the reversion and this restoration remain in the record.",
+      "evidence_paths": [
+        "docs/goals/2026-09-20-living-documents-validated.md",
+        "docs/intentions/2026-09-20-evidence-first-planning.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/goals/2026-09-20-living-documents-validated.md",
+      "state": "present",
+      "git_blob": "51749bd457962294ffb944326d74ab0c10325a01",
+      "sha256": "sha256:4e8140b65c2a246fd1e2234de407a16abe03c0b8fad61d3868c974d2fefa7894"
+    },
+    {
+      "path": "docs/intentions/2026-09-20-evidence-first-planning.md",
+      "state": "present",
+      "git_blob": "02908f1e711c498efa80f8d01da19ead4b8c1d7b",
+      "sha256": "sha256:0871216b76d01cecf79cc1c825dd462599ef69aabfe75dbdfad1c7244727d897"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "uv run --no-project --python 3.12 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T09:30:10Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:be1db847d85bcd3630900c7e3f50e59fda3df6dfd558ee3f3c7a0eb5e360ba44"
+}
