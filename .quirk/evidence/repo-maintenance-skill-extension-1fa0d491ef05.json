@@ -1,0 +1,77 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.repo-maintenance-skill-extension.1fa0d491ef05",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "1263f5008838f743b16ee218046e26dac5c9edd8",
+    "commit": "1fa0d491ef05b4be6fa756c01be1506525830a40",
+    "changed_paths": [
+      ".claude/skills/quirk-repo-maintenance/SKILL.md",
+      ".github/skills/quirk-repo-maintenance/SKILL.md",
+      "docs/copilot-maintenance/rubric.json",
+      "docs/copilot-maintenance/scenarios.json"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.repo-maintenance-skill-extension.1fa0d491ef05",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Extends the canonical quirk-repo-maintenance skill with GitHub Actions hardening, measured performance, and repository/portfolio management procedures, widens its Claude shim description, and adds two synthetic scenario/rubric pairs; structural validators and unit tests pass. Agent behavior under the new text, hosted CI on this head, and review are not established.",
+      "evidence_paths": [
+        ".claude/skills/quirk-repo-maintenance/SKILL.md",
+        ".github/skills/quirk-repo-maintenance/SKILL.md",
+        "docs/copilot-maintenance/rubric.json",
+        "docs/copilot-maintenance/scenarios.json"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".claude/skills/quirk-repo-maintenance/SKILL.md",
+      "state": "present",
+      "git_blob": "201c7d560afbe6bfc7d797f5d3d2e1902ce2f9bf",
+      "sha256": "sha256:0567458eea4bc34f6aeaa8c410aef0bdf0533d4a452716152d775f3f553a48d7"
+    },
+    {
+      "path": ".github/skills/quirk-repo-maintenance/SKILL.md",
+      "state": "present",
+      "git_blob": "a756e9310414461f7a63e90fddfcde4c4a0950ae",
+      "sha256": "sha256:0c096d647edf09d68b5ff90a6b62f9a77122b94aedb0d424399f80e0a535a9c8"
+    },
+    {
+      "path": "docs/copilot-maintenance/rubric.json",
+      "state": "present",
+      "git_blob": "73023db285c7f734ea1c2cc1020dfa6f7c02f25c",
+      "sha256": "sha256:fac42324d5f2b6437380b0e3dc5795459981f6a54b6cb04dbd8121adf0733f51"
+    },
+    {
+      "path": "docs/copilot-maintenance/scenarios.json",
+      "state": "present",
+      "git_blob": "21bcc0ca1604c9112ac6605e0589e4df2378e479",
+      "sha256": "sha256:a4ab04476adebfd3df34d5d6e146df84b2028b1e61fc85d1c9a47939e49465d9"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "uv run --no-project --python 3.12 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T08:17:21Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:36383fdb8a2d0c649d5942a83e73043dab1cd95a285b40fe4b4cd2497bbbb6e7"
+}
