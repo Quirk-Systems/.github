@@ -29,25 +29,37 @@ change only through a reviewed inventory change.
 
 ## What the workspace showed
 
-- **50 checkouts**: 11 `CODE`, 9 `DOCS_ONLY`, 30 `EMPTY` (no commits at all).
-- **Inventory drift**: 32 `OBSERVED_UNCLASSIFIED` (29 empty, plus
+- **VERIFIED (scanner) — 50 checkouts**: 11 `CODE`, 9 `DOCS_ONLY`, 30 `EMPTY` (no commits at all).
+- **VERIFIED (scanner) — inventory drift**: 32 `OBSERVED_UNCLASSIFIED` (29 empty, plus
   `quirk-arcade`, `quirk-design`, `quirk-skills`) and 1 `NOT_IN_WORKSPACE`
   (`bryansayler/quirk-beauty-store`, which this session could not reach,
   so this is not evidence it is gone). `.quirk/repositories.json` counts 17
   organization repositories; the session saw 49.
-- **Floating reusable-workflow refs**: 4 callers of
+- **VERIFIED (scanner, first survey) — floating reusable-workflow refs**: 4 callers of
   `quirk-semantic-governance.yml` used `@main` (`quirk-beauty`, `quirk-feed`,
   `quirk-generator`, `quirk-town`); the 7 pinned callers use 4 different
   `.github` commits.
-- **Validation**: `bun run validate` exited 0 in `project-scaffold`,
+- **VERIFIED (scanner) — validation**: `bun run validate` exited 0 in `project-scaffold`,
   `quirk-beauty`, `quirk-generator`, `quirk-pet`, `quirk-feed`, and
-  `quirk-town`. In the last two, `bun install --frozen-lockfile` failed
+  `quirk-town`. VERIFIED (observed outside the scanner): in the last two, `bun install --frozen-lockfile` failed
   building `better-sqlite3` in this container (Node 22 here; `quirk-feed`
-  pins Node 24), so those passes ran with an incomplete install.
+  pins Node 24), so those passes ran with an incomplete install; whether they
+  pass with a complete install is UNKNOWN here and left to their hosted CI.
   `scripts/validate.sh` here exited 2 on the first survey because of the
   stranded receipt below, and 0 on the re-run after its repair.
-- **`main` is red here**: Governance Contracts run `37113795859` on `92e5b2d`
+- **VERIFIED (hosted run, observed outside the scanner) — `main` was red**: Governance Contracts run `37113795859` on `92e5b2d`
   failed on "Validate evidence receipts on main"; repaired in this change.
+
+- **UNKNOWN — `bryansayler/quirk-beauty-store`**: not reachable from this
+  session, so nothing about it is observed here.
+- **INFERRED — the per-repository plans below**: each next move is a judgement
+  from the observations above, not an observation itself.
+
+Checks not run: `actionlint` (not installed in this container); validation
+in the 13 repositories with commits but no declared validation command,
+`quirk-os` and `quirk-core` among them (the scanner runs only declared
+commands); the commerce repositories' own CI; anything in the 30 empty
+repositories.
 
 ## Per-repository plans
 

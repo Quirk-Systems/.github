@@ -289,6 +289,14 @@ def render_drift(findings):
     return "\n".join(lines) + "\n"
 
 
+def stop_group(process):
+    """Kill every process in the check's session and reap the leader."""
+    # The group may already be gone if every process exited at the deadline.
+    with contextlib.suppress(ProcessLookupError):
+        os.killpg(process.pid, signal.SIGKILL)
+    process.wait()
+
+
 def run_commands(workspace, observed, timeout):
     results = []
     for item in observed:
@@ -316,12 +324,13 @@ def run_commands(workspace, observed, timeout):
         try:
             returncode = process.wait(timeout=timeout)
         except subprocess.TimeoutExpired:
-            # The group may already be gone if every process exited at the deadline.
-            with contextlib.suppress(ProcessLookupError):
-                os.killpg(process.pid, signal.SIGKILL)
-            process.wait()
+            stop_group(process)
             results.append((item["repository"], 124, f"timed out after {timeout}s"))
             continue
+        except BaseException:
+            # Ctrl-C or any other abort: the detached group would outlive the runner.
+            stop_group(process)
+            raise
         results.append((item["repository"], returncode, command))
     return results
 
