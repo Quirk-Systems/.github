@@ -23,6 +23,8 @@ python -m unittest tests.test_evidence_receipts -v
 scripts/validate.sh
 # Generate the receipt for an already-committed, already-tested subject
 python scripts/create_evidence_receipt.py --help
+# Inventory sibling checkouts, report topology drift and floating workflow pins
+python scripts/quirk_workspace.py scan | drift | pins --expect <40-hex>
 # Simulate the pull-request gate exactly as CI runs it
 python scripts/validate_evidence_receipts.py --repository Quirk-Systems/.github \
   --root . --receipts .quirk/evidence --range-base <base40> --range-head HEAD --require-covered-diff
@@ -91,6 +93,8 @@ python scripts/validate_evidence_receipts.py --repository Quirk-Systems/.github 
 - Introducing a named Quirk concept: read `docs/QUIRK_SEMANTIC_GOVERNANCE.md`
   and run `python scripts/quirk_concept.py inspect <name>` to avoid collisions.
 - Adding or consuming a workflow: read `docs/governance/REUSABLE_WORKFLOWS.md`.
+- Working across several repositories at once, or proposing org-wide
+  automation: read `docs/governance/WORKSPACE_TOOLING.md`.
 - Driving an agent task end to end: read `docs/governance/AUTONOMOUS_OPERATIONS.md`.
 - Writing or editing an intention, goal, roadmap, or todo: use the
   `quirk-living-doc` skill and run `python scripts/validate_living_docs.py --strict`;
