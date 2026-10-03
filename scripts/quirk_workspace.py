@@ -64,6 +64,8 @@ OFF_TARGET = "OFF_TARGET"
 CALLER = re.compile(
     r"""^\s*(?:-\s*)?uses\s*:\s*(["']?)(?i:Quirk-Systems/\.github/\.github/workflows/)([^@\s"']+)@([^\s#"']+)\1(?:\s|$)"""
 )
+# A key whose value is a literal or folded block scalar (`run: |`, `script: >-`).
+BLOCK_SCALAR = re.compile(r"^(\s*(?:-\s+)?)[^\s:#][^:#]*?\s*:\s*[|>][-+0-9]*\s*(?:#.*)?$")
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 
 
@@ -233,6 +235,25 @@ def drift(observed, inventory):
     return sorted(findings, key=lambda f: (f["kind"], f["repository"].lower()))
 
 
+def mapping_lines(lines):
+    """Yield (number, line) for lines outside YAML block scalars.
+
+    Text inside `run: |` and similar is a script, not workflow keys, so a
+    heredoc that prints `uses: ...` must not be audited as a caller.
+    """
+    block_indent = None
+    for number, line in enumerate(lines, start=1):
+        indent = len(line) - len(line.lstrip())
+        if block_indent is not None:
+            if not line.strip() or indent > block_indent:
+                continue
+            block_indent = None
+        match = BLOCK_SCALAR.match(line)
+        if match:
+            block_indent = len(match.group(1))
+        yield number, line
+
+
 def caller_pins(workspace, observed, expect=None):
     """Every call into a Quirk-Systems/.github reusable workflow, with its ref status."""
     rows = []
@@ -240,7 +261,7 @@ def caller_pins(workspace, observed, expect=None):
         workflows_dir = Path(workspace) / item["directory"] / ".github" / "workflows"
         for name in item.get("workflows", []):
             lines = (workflows_dir / name).read_text(encoding="utf-8", errors="replace").splitlines()
-            for number, line in enumerate(lines, start=1):
+            for number, line in mapping_lines(lines):
                 match = CALLER.match(line)
                 if not match:
                     continue

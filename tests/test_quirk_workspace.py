@@ -203,6 +203,25 @@ class WorkspacePinTests(unittest.TestCase):
             "Quirk-Systems/spaced": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
         })
 
+    def test_block_scalar_text_is_not_a_caller(self):
+        workflow = (
+            "jobs:\n"
+            "  gen:\n"
+            "    steps:\n"
+            "      - run: |\n"
+            "          cat <<'YAML' > out.yml\n"
+            "          uses: Quirk-Systems/.github/.github/workflows/reusable-evidence-binding.yml@main\n"
+            "          YAML\n"
+            "      - name: folded\n"
+            "        run: >-\n"
+            "          echo uses: Quirk-Systems/.github/.github/workflows/x.yml@main\n"
+            "  real:\n"
+            f"    uses: Quirk-Systems/.github/.github/workflows/reusable-evidence-binding.yml@{self.SHA}\n"
+        )
+        make_repo(self.root, "heredoc", {".github/workflows/a.yml": workflow})
+        rows = [r for r in self.ws.caller_pins(self.root, self.ws.scan(self.root)) if r["repository"] == "Quirk-Systems/heredoc"]
+        self.assertEqual([(r["status"], r["file"]) for r in rows], [(self.ws.PINNED, ".github/workflows/a.yml:12")])
+
     def test_expect_marks_other_shas_off_target(self):
         seen = self.statuses(self.SHA)
         self.assertEqual(seen["Quirk-Systems/pinned"][0], self.ws.PINNED)
