@@ -54,7 +54,10 @@ SKIP_DIRS = {".git", "node_modules", ".next", "dist", "build", ".venv", "__pycac
 FLOATING = "FLOATING"
 PINNED = "PINNED"
 OFF_TARGET = "OFF_TARGET"
-CALLER = re.compile(r"^\s*(?:-\s*)?uses:\s*Quirk-Systems/\.github/\.github/workflows/([^@\s]+)@([^\s#]+)")
+# `uses:` may be a plain, single-quoted, or double-quoted YAML scalar.
+CALLER = re.compile(
+    r"""^\s*(?:-\s*)?uses:\s*(["']?)Quirk-Systems/\.github/\.github/workflows/([^@\s"']+)@([^\s#"']+)\1(?:\s|$)"""
+)
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 
 
@@ -120,8 +123,6 @@ def validation_command(path):
         for name in ("validate", "check", "test"):
             if name in scripts:
                 return f"{runner} run {name}"
-    if (path / "pyproject.toml").is_file() and (path / "tests").is_dir():
-        return "python -m unittest discover -s tests"
     return None
 
 
@@ -216,7 +217,7 @@ def caller_pins(workspace, observed, expect=None):
                 match = CALLER.match(line)
                 if not match:
                     continue
-                workflow, ref = match.groups()
+                _, workflow, ref = match.groups()
                 if not FULL_SHA.match(ref):
                     status = FLOATING
                 elif expect and ref != expect:
@@ -293,6 +294,9 @@ def run_commands(workspace, observed, timeout):
             )
         except FileNotFoundError as error:
             results.append((item["repository"], None, f"not run: {error.filename} not installed"))
+            continue
+        except OSError as error:
+            results.append((item["repository"], None, f"not run: {error.strerror or error}"))
             continue
         except subprocess.TimeoutExpired:
             results.append((item["repository"], None, f"timed out after {timeout}s"))

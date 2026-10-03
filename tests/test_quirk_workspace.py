@@ -80,11 +80,13 @@ class WorkspaceScanTests(unittest.TestCase):
         make_repo(self.root, "b", {"package.json": json.dumps({"scripts": {"test": "vitest"}})})
         make_repo(self.root, "c", {"package.json": json.dumps({"scripts": {"dev": "next dev"}})})
         make_repo(self.root, "d", {"scripts/tool.py": "print(1)\n"})
+        make_repo(self.root, "e", {"pyproject.toml": "[tool.pytest.ini_options]\n", "tests/test_x.py": "\n"})
         seen = self.by_name()
         self.assertEqual(seen["Quirk-Systems/a"]["validation_command"], "scripts/validate.sh")
         self.assertEqual(seen["Quirk-Systems/b"]["validation_command"], "npm run test")
         self.assertIsNone(seen["Quirk-Systems/c"]["validation_command"])
         self.assertIsNone(seen["Quirk-Systems/d"]["validation_command"])
+        self.assertIsNone(seen["Quirk-Systems/e"]["validation_command"])
 
     def test_repository_name_comes_from_origin_not_directory(self):
         path = make_repo(self.root, "local-dir", {"README.md": "x\n"}, owner="bryansayler")
@@ -155,6 +157,9 @@ class WorkspacePinTests(unittest.TestCase):
         make_repo(self.root, "pinned", {".github/workflows/a.yml": caller.format(w="reusable-evidence-binding.yml", ref=self.SHA)})
         make_repo(self.root, "other", {".github/workflows/a.yml": caller.format(w="reusable-evidence-binding.yml", ref=self.OTHER)})
         make_repo(self.root, "local", {".github/workflows/a.yml": "jobs:\n  x:\n    uses: ./.github/workflows/reusable-validate.yml\n"})
+        make_repo(self.root, "dquoted", {".github/workflows/a.yml": caller.format(w="quirk-semantic-governance.yml", ref="main").replace("uses: ", 'uses: "').replace(" # main", '" # main')})
+        make_repo(self.root, "squoted", {".github/workflows/a.yml": caller.format(w="quirk-semantic-governance.yml", ref=self.SHA).replace("uses: ", "uses: '").replace(" # main", "' # main")})
+        make_repo(self.root, "mismatched", {".github/workflows/a.yml": caller.format(w="quirk-semantic-governance.yml", ref="main").replace("uses: ", 'uses: "')})
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -168,6 +173,8 @@ class WorkspacePinTests(unittest.TestCase):
             "Quirk-Systems/floating": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
             "Quirk-Systems/pinned": (self.ws.PINNED, ".github/workflows/a.yml:3"),
             "Quirk-Systems/other": (self.ws.PINNED, ".github/workflows/a.yml:3"),
+            "Quirk-Systems/dquoted": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
+            "Quirk-Systems/squoted": (self.ws.PINNED, ".github/workflows/a.yml:3"),
         })
 
     def test_expect_marks_other_shas_off_target(self):
@@ -212,6 +219,14 @@ class WorkspaceCliTests(unittest.TestCase):
             with contextlib.redirect_stdout(buffer):
                 self.assertEqual(self.ws.main(argv), 0)
             self.assertEqual(json.loads(buffer.getvalue())[0]["repository"], "Quirk-Systems/quirk-new")
+
+    def test_run_reports_a_command_that_cannot_launch(self):
+        path = make_repo(self.root, "noexec", {"scripts/validate.sh": "#!/bin/sh\nexit 0\n"})
+        (path / "scripts" / "validate.sh").chmod(0o644)
+        results = dict((repo, (code, note)) for repo, code, note in self.ws.run_commands(self.root, self.ws.scan(self.root), timeout=5))
+        code, note = results["Quirk-Systems/noexec"]
+        self.assertIsNone(code)
+        self.assertTrue(note.startswith("not run:"), note)
 
     def test_bad_workspace_exits_two(self):
         self.assertEqual(self.ws.main(["--workspace", str(Path(self.root) / "nope"), "scan"]), 2)

@@ -50,7 +50,7 @@ python scripts/quirk_workspace.py commands [--run --timeout 900]
 | `state` | `EMPTY` | the checkout has no commits |
 | | `DOCS_ONLY` | commits, but no source file (`.py .ts .tsx .js .mjs .cjs .sh .sql .go .rs`) outside dependency and build directories |
 | | `CODE` | at least one such source file |
-| `validation_command` | `scripts/validate.sh`; `bun\|npm run validate\|check\|test`; `python -m unittest discover -s tests`; none | first entrypoint the repository itself declares; none when it declares none |
+| `validation_command` | `scripts/validate.sh`; `bun\|npm run validate\|check\|test`; none | the first of these entry points the repository's own files define (a `scripts/validate.sh` file, or that script name in `package.json`); none otherwise. A test directory alone is not a declaration |
 | drift `kind` | `OBSERVED_UNCLASSIFIED` | a checkout the inventory does not list |
 | | `NOT_IN_WORKSPACE` | an inventory entry with no checkout here (not proof it is absent on GitHub) |
 | | `STATE_MISMATCH` | `active` with no commits, or `reserved` carrying a toolchain file |

@@ -24,10 +24,12 @@ scripts/validate.sh
 # Generate the receipt for an already-committed, already-tested subject
 python scripts/create_evidence_receipt.py --help
 # Inventory sibling checkouts, report topology drift and floating workflow pins
-python scripts/quirk_workspace.py scan | drift | pins --expect <40-hex>
+python scripts/quirk_workspace.py scan
+python scripts/quirk_workspace.py drift
+python scripts/quirk_workspace.py pins --expect <40-hex>
 # Simulate the pull-request gate exactly as CI runs it
 python scripts/validate_evidence_receipts.py --repository Quirk-Systems/.github \
-  --root . --receipts .quirk/evidence --range-base <base40> --range-head HEAD --require-covered-diff
+  --root . --receipts .quirk/evidence --range-base <base40> --range-head "$(git rev-parse HEAD)" --require-covered-diff
 ```
 
 ## Architecture

@@ -11,12 +11,21 @@ Derived from: `docs/roadmaps/2026-09-20-org-control-plane.md`, `docs/REPOSITORY_
 Authority effect: **none**
 
 One plan per repository, written from what a 50-repository workspace showed on
-2026-10-03, not from repository names. Every fact below is the output of
-`python scripts/quirk_workspace.py scan | drift | pins | commands --run` run
-against sibling checkouts of each repository's default branch that day; the
-receipt for this document cites those commands. A plan here is a next bounded
-move, not a classification: classes, lifecycles, and owners change only
-through a reviewed inventory change.
+2026-10-03, not from repository names. Counts, states, drift, pins, and
+validation exit codes are scanner output from these four invocations against
+sibling checkouts of each repository that day:
+
+```sh
+python scripts/quirk_workspace.py scan
+python scripts/quirk_workspace.py drift
+python scripts/quirk_workspace.py pins --expect 92e5b2d928f25d0fedae87aaad2ef764a806065d
+python scripts/quirk_workspace.py commands --run
+```
+
+The `bun install` failures, the hosted Governance Contracts run, and pull
+request numbers were observed separately, not by the scanner. A plan here is a
+next bounded move, not a classification: classes, lifecycles, and owners
+change only through a reviewed inventory change.
 
 ## What the workspace showed
 
@@ -35,7 +44,8 @@ through a reviewed inventory change.
   `quirk-town`. In the last two, `bun install --frozen-lockfile` failed
   building `better-sqlite3` in this container (Node 22 here; `quirk-feed`
   pins Node 24), so those passes ran with an incomplete install.
-  `scripts/validate.sh` here exited 2, for the reason in the first Open item.
+  `scripts/validate.sh` here exited 2 on the first survey because of the
+  stranded receipt below, and 0 on the re-run after its repair.
 - **`main` is red here**: Governance Contracts run `37113795859` on `92e5b2d`
   failed on "Validate evidence receipts on main"; repaired in this change.
 
