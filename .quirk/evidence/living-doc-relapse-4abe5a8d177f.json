@@ -1,0 +1,66 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.living-doc-relapse.4abe5a8d177f",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "5ff555ae676d474ee23a485837111b06309b3b6e",
+    "commit": "4abe5a8d177ff082829fdb29e3265c8d02804ada",
+    "changed_paths": [
+      "docs/roadmaps/2026-09-20-org-control-plane.md",
+      "docs/todos/2026-09-20-living-document-rollout.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.living-doc-relapse.4abe5a8d177f",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The rollout todo and the control-plane roadmap are re-read as of 2026-10-03 and carry Review by 2026-10-31, and the todo records the lapse and its blast radius. VERIFIED at this commit: scripts/validate_living_docs.py --strict reports 4 living documents and 0 stale; run forward with --today, the validator reports 0 stale at 2026-10-04 and 2026-10-06, the two dates on which the previous Review by values would have failed; 180 tests pass under Python 3.12; scripts/validate.sh reports all executed checks passed. VERIFIED by reading the previous heads: both documents were already on main at 1263f5008838f743b16ee218046e26dac5c9edd8, so the pending failure was not confined to this branch. VERIFIED from hosted runs recorded earlier: the private title-lint caller task is closed on the proof it specified. The goal and intention documents are deliberately untouched at Review by 2026-10-18, so 2026-10-19 is UNKNOWN-unless-acted-on as the next date the suite fails without a code change. This receipt records a document re-read; it admits nothing and grants no authority, and it does not assert that any task the documents list is complete beyond the evidence each item names.",
+      "evidence_paths": [
+        "docs/roadmaps/2026-09-20-org-control-plane.md",
+        "docs/todos/2026-09-20-living-document-rollout.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/roadmaps/2026-09-20-org-control-plane.md",
+      "state": "present",
+      "git_blob": "872064fa45afce189d866d0a0137480c767f4d73",
+      "sha256": "sha256:0cf03c22b194a76605bd20def35f228f73812354cf292b013f2c98baf0c4fa1d"
+    },
+    {
+      "path": "docs/todos/2026-09-20-living-document-rollout.md",
+      "state": "present",
+      "git_blob": "0fd37a401d495a2896fbc0f50a30e47b4b34e4ac",
+      "sha256": "sha256:5823d6bcafe44841eda619e6240528029b81204d052cd225d17d3cd85027b1b9"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python3 scripts/validate_living_docs.py --strict",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "uv run --no-project --python 3.12 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T08:37:28Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:b52b97b13a6ac589f2e784891ced0c49fa51851d0825e5ab001858a413fd3b02"
+}
