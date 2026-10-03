@@ -1,6 +1,6 @@
 ---
 name: quirk-repo-maintenance
-description: Bounded Quirk repository repairs, CI failures, dependency maintenance, and artifact updates that need traceable verification and an independent review handoff.
+description: Bounded Quirk repository repairs, CI failures, GitHub Actions hardening, dependency maintenance, measured performance work, portfolio and repository-registry upkeep, and artifact updates that need traceable verification and an independent review handoff.
 ---
 
 Read and follow the canonical skill body at
