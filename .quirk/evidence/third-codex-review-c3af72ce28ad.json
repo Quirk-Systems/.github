@@ -1,0 +1,69 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.third-codex-review.c3af72ce28ad",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "aefcf198c9c15df0fa4d5ea3bc17fff7c888acb6",
+    "commit": "c3af72ce28add3d5fffe9f382436fc5c03460a83",
+    "changed_paths": [
+      "docs/todos/2026-10-03-workspace-portfolio-plans.md",
+      "scripts/quirk_workspace.py",
+      "tests/test_quirk_workspace.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.third-codex-review.c3af72ce28ad",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Addresses the third Codex review on PR #44: commands --run kills the check's detached process group before re-raising when its wait is interrupted, sharing one kill-and-reap helper with the timeout path, with a test that fails on the previous script; the workspace todo labels each observation VERIFIED, INFERRED, or UNKNOWN and lists checks not run. The labels describe how each fact was obtained; they do not establish that the per-repository plans are correct. Owner review is not established.",
+      "evidence_paths": [
+        "docs/todos/2026-10-03-workspace-portfolio-plans.md",
+        "scripts/quirk_workspace.py",
+        "tests/test_quirk_workspace.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/todos/2026-10-03-workspace-portfolio-plans.md",
+      "state": "present",
+      "git_blob": "d87550ee227ec87c025360059c2374dd61aeb435",
+      "sha256": "sha256:7c6906a060e66fe894dfcdf4e1696cd624d34a4528a9aa03c7610a78b92087a7"
+    },
+    {
+      "path": "scripts/quirk_workspace.py",
+      "state": "present",
+      "git_blob": "2bd788799045d5652d1fe2485423d2e5900056f1",
+      "sha256": "sha256:478496bd2b143b2dd63b68d0f9606e03de1899bff8338d9684fe5a1a6902c8ee"
+    },
+    {
+      "path": "tests/test_quirk_workspace.py",
+      "state": "present",
+      "git_blob": "43d1a9f38d0df78c1627a248ff1af2fdb84e999c",
+      "sha256": "sha256:bea04cfb426975037618da9788e99e832140b39dadfa2540cbd444af7c68af55"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "PYTHON=python3.12 scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/validate_living_docs.py --strict",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T15:32:34Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:aa1ddf68db057206772468de1e95f9dbe5c105dd3ee5554d037c506d6ae0686c"
+}

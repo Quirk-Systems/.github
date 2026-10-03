@@ -1,0 +1,74 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.twelfth-codex-review.76236f8eb7eb",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "08c907fac5966a08a60fb27f41f639b8bdd05c91",
+    "commit": "76236f8eb7eb3c96fcc4a2f189c74cef5b1983b4",
+    "changed_paths": [
+      "docs/governance/WORKSPACE_TOOLING.md",
+      "scripts/quirk_workspace.py",
+      "tests/test_quirk_workspace.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.twelfth-codex-review.76236f8eb7eb",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "scripts/quirk_workspace.py carries quoted-scalar state across lines and opens a quote only where YAML starts a quoted scalar; reads quoted flow-mapping refs containing ',' or '}'; matches GitHub remote schemes and hosts case-insensitively; and drift reports every checkout it did not compare (unreadable or no GitHub origin) as not_compared in JSON and by name in Markdown. Six tests fail on the previous script and pass on this one; workspace scan, drift and pins results are unchanged (11 callers, 32 OBSERVED_UNCLASSIFIED, 1 NOT_IN_WORKSPACE). Owner review is not established.",
+      "evidence_paths": [
+        "docs/governance/WORKSPACE_TOOLING.md",
+        "scripts/quirk_workspace.py",
+        "tests/test_quirk_workspace.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/governance/WORKSPACE_TOOLING.md",
+      "state": "present",
+      "git_blob": "7b33439af99c59e4c70aafacc85dee032d4d5cdf",
+      "sha256": "sha256:0203ff9f40cfba795360aa2d1a46def646b167d69a9f910d30dc622933659611"
+    },
+    {
+      "path": "scripts/quirk_workspace.py",
+      "state": "present",
+      "git_blob": "8b8b1e7d6582564e4f5c4294fd1fe3e8c159d93a",
+      "sha256": "sha256:7e6eb785d5551ec620b1dde0b72253077cf5d78368cdb9d2f5d0ee823587269b"
+    },
+    {
+      "path": "tests/test_quirk_workspace.py",
+      "state": "present",
+      "git_blob": "b1f04df8c2a61082ebf0ca1a5e3b89a09a462043",
+      "sha256": "sha256:3f8a9127d7c76f79be49c5ea30cff9023722884a76eee2ef0b7d32ab19241f04"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "PYTHON=python3.12 scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py pins",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py drift --json",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T17:19:57Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:5011a762119b8c53151a75bdd2f512ae1a3049b46674fb3a49561518a6c4e0fe"
+}

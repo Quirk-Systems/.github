@@ -1,0 +1,61 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.yaml-quote-escapes.335513147cfd",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "d37eb79efd80515d7e367d37d4d42c681740f5b3",
+    "commit": "335513147cfd06d5bde500bc758a17fc973ddc0a",
+    "changed_paths": [
+      "scripts/quirk_workspace.py",
+      "tests/test_quirk_workspace.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.yaml-quote-escapes.335513147cfd",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "quoted_spans in scripts/quirk_workspace.py keeps YAML's '' escape inside single-quoted scalars and backslash escapes inside double-quoted scalars, so flow-shaped text after an escape is no longer reported as a caller. The extended flow-caller test fails on the previous script and passes on this one; workspace callers are unchanged. Owner review is not established.",
+      "evidence_paths": [
+        "scripts/quirk_workspace.py",
+        "tests/test_quirk_workspace.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "scripts/quirk_workspace.py",
+      "state": "present",
+      "git_blob": "2e3a1dd48922da67b0b1093aab37c5e8f87d1f5c",
+      "sha256": "sha256:70d448570cd727c56583c677c33af8f8bf4fc802af2d2072e8b7c78b0cf28cda"
+    },
+    {
+      "path": "tests/test_quirk_workspace.py",
+      "state": "present",
+      "git_blob": "e27e517e69e47f0422c6cd5515f18e42fb518e91",
+      "sha256": "sha256:09a12c778109a1a4cae6a9d7b11e4eda70b4450f7b570037e26b8d191e7a3f8d"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "PYTHON=python3.12 scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py pins",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T16:59:54Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:d20af0cbf4613f7b16a0c91896965e11df03a6d118e5c5aa49710f39b0a97f25"
+}

@@ -466,6 +466,95 @@ class EvidenceReceiptTest(unittest.TestCase):
             )
             self.assertEqual(covered.returncode, 0, covered.stderr)
 
+    def test_merged_side_branch_that_restores_the_bytes_is_still_stale(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.fixture(directory)
+            self.assertEqual(fixture.generate().returncode, 0)
+            git_commit(fixture.root, "receipt")
+            git(fixture.root, "checkout", "-q", "-b", "side", fixture.base)
+            (fixture.root / "keep.txt").write_text("tampered\n", encoding="utf-8")
+            git_commit(fixture.root, "side change")
+            (fixture.root / "keep.txt").write_text("subject\n", encoding="utf-8")
+            git_commit(fixture.root, "side restores subject bytes")
+            git(fixture.root, "checkout", "-q", "main")
+            git(fixture.root, "merge", "-q", "--no-ff", "-m", "merge side", "side")
+            merged = git(fixture.root, "rev-parse", "HEAD").stdout.strip()
+            result = fixture.validate(
+                "--range-base", fixture.base,
+                "--range-head", merged,
+                "--require-covered-diff",
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("stale", result.stderr)
+            self.assertIn("keep.txt", result.stderr)
+
+    def test_subject_equal_to_range_base_does_not_qualify(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.fixture(directory)
+            self.assertEqual(fixture.generate().returncode, 0)
+            receipt_head = git_commit(fixture.root, "receipt bound to the range base")
+            covered = fixture.validate(
+                "--range-base", fixture.subject,
+                "--range-head", receipt_head,
+                "--require-covered-diff",
+            )
+            self.assertEqual(covered.returncode, 0, covered.stderr)
+            (fixture.root / "later.txt").write_text("not receipted\n", encoding="utf-8")
+            later_head = git_commit(fixture.root, "later")
+            uncovered = fixture.validate(
+                "--range-base", fixture.subject,
+                "--range-head", later_head,
+                "--require-covered-diff",
+            )
+            self.assertNotEqual(uncovered.returncode, 0)
+            self.assertIn("uncovered paths: later.txt", uncovered.stderr)
+
+    def test_deleted_receipt_json_is_not_a_substantive_path(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.fixture(directory)
+            self.assertEqual(fixture.generate().returncode, 0)
+            receipt_head = git_commit(fixture.root, "receipt")
+            fixture.receipt_path.unlink()
+            retired_head = git_commit(fixture.root, "retire receipt")
+            covered = fixture.validate(
+                "--range-base", receipt_head,
+                "--range-head", retired_head,
+                "--require-covered-diff",
+            )
+            self.assertEqual(covered.returncode, 0, covered.stderr)
+            (fixture.root / "keep.txt").unlink()
+            (fixture.root / "notes.json").write_text("{}\n", encoding="utf-8")
+            outside_head = git_commit(fixture.root, "delete a non-receipt path")
+            uncovered = fixture.validate(
+                "--range-base", receipt_head,
+                "--range-head", outside_head,
+                "--require-covered-diff",
+            )
+            self.assertNotEqual(uncovered.returncode, 0)
+            self.assertIn("keep.txt", uncovered.stderr)
+            self.assertIn("notes.json", uncovered.stderr)
+
+    def test_deleted_receipt_is_exempt_when_the_root_is_the_receipt_directory(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.fixture(directory)
+            fixture.receipt_path = fixture.root / "qreceipt.test.json"
+            self.assertEqual(fixture.generate().returncode, 0)
+            receipt_head = git_commit(fixture.root, "receipt at the root")
+            fixture.receipt_path.unlink()
+            retired_head = git_commit(fixture.root, "retire root receipt")
+            covered = run(
+                sys.executable, str(VALIDATOR),
+                "--repository", "owner/repository",
+                "--root", str(fixture.root),
+                "--receipts", ".",
+                "--range-base", receipt_head,
+                "--range-head", retired_head,
+                "--require-covered-diff",
+                cwd=fixture.root,
+                check=False,
+            )
+            self.assertEqual(covered.returncode, 0, covered.stderr)
+
     def test_git_pathspec_magic_filename_cannot_evade_freshness(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

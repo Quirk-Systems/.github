@@ -1,0 +1,548 @@
+import importlib.util
+import json
+import subprocess
+import tempfile
+import time
+import unittest
+import unittest.mock
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def load(name):
+    spec = importlib.util.spec_from_file_location(name, ROOT / "scripts" / f"{name}.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def git(path, *args):
+    subprocess.run(
+        ["git", "-C", str(path), "-c", "user.name=t", "-c", "user.email=t@example.invalid", *args],
+        check=True,
+        capture_output=True,
+    )
+
+
+def make_repo(workspace, name, files=None, owner="Quirk-Systems"):
+    path = Path(workspace) / name
+    path.mkdir()
+    git(path, "init", "-q", "-b", "main")
+    git(path, "remote", "add", "origin", f"https://github.com/{owner}/{name}.git")
+    for relative, content in (files or {}).items():
+        target = path / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(content, encoding="utf-8")
+    if files:
+        git(path, "add", "-A")
+        git(path, "commit", "-q", "-m", "init")
+    return path
+
+
+def inventory(entries):
+    return {entry["repository"]: entry for entry in entries}
+
+
+class WorkspaceScanTests(unittest.TestCase):
+    def setUp(self):
+        self.ws = load("quirk_workspace")
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = self.tmp.name
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def by_name(self):
+        return {item["repository"]: item for item in self.ws.scan(self.root)}
+
+    def test_classifies_empty_docs_and_code(self):
+        make_repo(self.root, "quirk-empty")
+        make_repo(self.root, "quirk-docs", {"README.md": "# docs\n"})
+        make_repo(self.root, "quirk-app", {
+            "package.json": json.dumps({"scripts": {"validate": "x", "test": "y"}}),
+            "bun.lock": "",
+            "src/index.ts": "export {}\n",
+        })
+        seen = self.by_name()
+        self.assertEqual(seen["Quirk-Systems/quirk-empty"]["state"], self.ws.EMPTY)
+        self.assertIsNone(seen["Quirk-Systems/quirk-empty"]["head"])
+        self.assertEqual(seen["Quirk-Systems/quirk-docs"]["state"], self.ws.DOCS_ONLY)
+        app = seen["Quirk-Systems/quirk-app"]
+        self.assertEqual(app["state"], self.ws.CODE)
+        self.assertEqual(app["validation_command"], "bun run validate")
+        self.assertEqual(len(app["head"]), 40)
+
+    def test_dependency_directories_do_not_count_as_source(self):
+        make_repo(self.root, "quirk-docs", {"README.md": "x\n", "node_modules/pkg/index.js": "x\n"})
+        self.assertEqual(self.by_name()["Quirk-Systems/quirk-docs"]["state"], self.ws.DOCS_ONLY)
+
+    def test_untracked_environments_do_not_count_as_source(self):
+        path = make_repo(self.root, "quirk-docs", {"README.md": "x\n"})
+        for env in ("venv", "env", ".tox/py312"):
+            target = path / env / "lib" / "site.py"
+            target.parent.mkdir(parents=True)
+            target.write_text("x = 1\n", encoding="utf-8")
+        seen = self.by_name()["Quirk-Systems/quirk-docs"]
+        self.assertEqual((seen["state"], seen["source_files"]), (self.ws.DOCS_ONLY, 0))
+
+    def test_validation_command_uses_only_declared_entrypoints(self):
+        make_repo(self.root, "a", {"scripts/validate.sh": "#!/bin/sh\n", "package.json": "{}"})
+        make_repo(self.root, "b", {"package.json": json.dumps({"scripts": {"test": "vitest"}})})
+        make_repo(self.root, "c", {"package.json": json.dumps({"scripts": {"dev": "next dev"}})})
+        make_repo(self.root, "d", {"scripts/tool.py": "print(1)\n"})
+        make_repo(self.root, "e", {"pyproject.toml": "[tool.pytest.ini_options]\n", "tests/test_x.py": "\n"})
+        seen = self.by_name()
+        self.assertEqual(seen["Quirk-Systems/a"]["validation_command"], "scripts/validate.sh")
+        self.assertEqual(seen["Quirk-Systems/b"]["validation_command"], "npm run test")
+        self.assertIsNone(seen["Quirk-Systems/c"]["validation_command"])
+        self.assertIsNone(seen["Quirk-Systems/d"]["validation_command"])
+        self.assertIsNone(seen["Quirk-Systems/e"]["validation_command"])
+
+    def test_runner_follows_declared_package_manager(self):
+        scripts = {"validate": "x"}
+        make_repo(self.root, "pnpmdecl", {"package.json": json.dumps({"packageManager": "pnpm@10.0.0", "scripts": scripts})})
+        make_repo(self.root, "yarnlock", {"package.json": json.dumps({"scripts": scripts}), "yarn.lock": ""})
+        make_repo(self.root, "unknown", {"package.json": json.dumps({"packageManager": "deno@2", "scripts": scripts})})
+        seen = self.by_name()
+        self.assertEqual(seen["Quirk-Systems/pnpmdecl"]["validation_command"], "pnpm run validate")
+        self.assertEqual(seen["Quirk-Systems/yarnlock"]["validation_command"], "yarn run validate")
+        self.assertIsNone(seen["Quirk-Systems/unknown"]["validation_command"])
+
+    def test_corrupt_ref_store_is_not_reported_empty(self):
+        path = make_repo(self.root, "badrefs", {"README.md": "x\n"})
+        git(path, "pack-refs", "--all")
+        (path / ".git" / "packed-refs").write_text("not a ref line\n", encoding="utf-8")
+        loose = path / ".git" / "refs" / "heads" / "main"
+        if loose.exists():
+            loose.unlink()
+        seen = {item["directory"]: item for item in self.ws.scan(self.root)}
+        self.assertEqual(seen["badrefs"]["state"], self.ws.UNREADABLE)
+
+    def test_repository_name_comes_from_origin_not_directory(self):
+        path = make_repo(self.root, "local-dir", {"README.md": "x\n"}, owner="bryansayler")
+        git(path, "remote", "set-url", "origin", "git@github.com:bryansayler/quirk-commerce.git")
+        self.assertIn("bryansayler/quirk-commerce", self.by_name())
+
+    def test_unreadable_checkout_is_not_reported_empty(self):
+        path = Path(self.root) / "broken"
+        path.mkdir()
+        (path / ".git").write_text("gitdir: /nonexistent/quirk\n", encoding="utf-8")
+        make_repo(self.root, "unborn")
+        seen = {item["directory"]: item for item in self.ws.scan(self.root)}
+        self.assertEqual(seen["broken"]["state"], self.ws.UNREADABLE)
+        self.assertEqual(seen["unborn"]["state"], self.ws.EMPTY)
+        registry = inventory([{"repository": seen["broken"]["repository"], "lifecycle": "active"}])
+        self.assertEqual([f for f in self.ws.drift([seen["broken"]], registry) if f["kind"] == self.ws.STATE_MISMATCH], [])
+
+    def test_unreadable_index_is_not_reported_docs_only(self):
+        path = make_repo(self.root, "badindex", {"src/app.ts": "export {}\n"})
+        (path / ".git" / "index").write_bytes(b"corrupt")
+        item = self.by_name()["Quirk-Systems/badindex"]
+        self.assertEqual((item["state"], item["source_files"]), (self.ws.UNREADABLE, None))
+
+    def test_unreadable_checkout_keeps_unknown_count_and_declared_command(self):
+        path = Path(self.root) / "broken"
+        (path / "scripts").mkdir(parents=True)
+        (path / "scripts" / "validate.sh").write_text("#!/bin/sh\n", encoding="utf-8")
+        (path / ".git").write_text("gitdir: /nonexistent/quirk\n", encoding="utf-8")
+        item = {i["directory"]: i for i in self.ws.scan(self.root)}["broken"]
+        self.assertEqual((item["state"], item["commits"], item["source_files"]), (self.ws.UNREADABLE, None, None))
+        self.assertEqual(item["validation_command"], "scripts/validate.sh")
+        self.assertIn("| UNREADABLE | - | - |", self.ws.render_scan([item]))
+
+    def test_only_github_origins_yield_an_owner(self):
+        path = make_repo(self.root, "quirk-feed", {"README.md": "x\n"})
+        git(path, "remote", "set-url", "origin", "/srv/remotes/quirk-feed.git")
+        item = {i["directory"]: i for i in self.ws.scan(self.root)}["quirk-feed"]
+        self.assertEqual((item["repository"], item["github_identity"]), ("quirk-feed", False))
+        registry = inventory([{"repository": "Quirk-Systems/quirk-feed", "lifecycle": "active"}])
+        self.assertEqual(self.ws.drift([item], registry), [])
+        for url, expected in (
+            ("git@github.com:Quirk-Systems/quirk-os.git", "Quirk-Systems/quirk-os"),
+            ("ssh://git@github.com/Quirk-Systems/quirk-os", "Quirk-Systems/quirk-os"),
+            ("https://token@github.com/Quirk-Systems/quirk-os.git", "Quirk-Systems/quirk-os"),
+            ("https://gitlab.example.com/Quirk-Systems/quirk-os.git", "quirk-feed"),
+            ("HTTPS://GitHub.com/Quirk-Systems/quirk-os.git", "Quirk-Systems/quirk-os"),
+            ("git@GITHUB.COM:Quirk-Systems/quirk-os.git", "Quirk-Systems/quirk-os"),
+        ):
+            git(path, "remote", "set-url", "origin", url)
+            self.assertEqual(self.ws.repository_name(path), expected, url)
+
+    def test_non_git_directories_are_ignored(self):
+        (Path(self.root) / "notes").mkdir()
+        self.assertEqual(self.ws.scan(self.root), [])
+
+    def test_missing_workspace_is_an_error(self):
+        with self.assertRaises(self.ws.WorkspaceError):
+            self.ws.scan(Path(self.root) / "absent")
+
+
+class WorkspaceDriftTests(unittest.TestCase):
+    def setUp(self):
+        self.ws = load("quirk_workspace")
+
+    def observed(self, name, state, toolchain=()):
+        return {"repository": name, "state": state, "commits": 0 if state == self.ws.EMPTY else 1, "toolchain": list(toolchain)}
+
+    def test_reports_each_finding_kind(self):
+        observed = [
+            self.observed("Quirk-Systems/quirk-new", self.ws.EMPTY),
+            self.observed("Quirk-Systems/quirk-live", self.ws.EMPTY),
+            self.observed("Quirk-Systems/quirk-held", self.ws.CODE, ["package.json"]),
+        ]
+        registry = inventory([
+            {"repository": "Quirk-Systems/quirk-live", "lifecycle": "active"},
+            {"repository": "Quirk-Systems/quirk-held", "lifecycle": "reserved"},
+            {"repository": "bryansayler/quirk-elsewhere", "lifecycle": "candidate"},
+        ])
+        kinds = {(f["kind"], f["repository"]) for f in self.ws.drift(observed, registry)}
+        self.assertEqual(kinds, {
+            (self.ws.OBSERVED_UNCLASSIFIED, "Quirk-Systems/quirk-new"),
+            (self.ws.STATE_MISMATCH, "Quirk-Systems/quirk-live"),
+            (self.ws.STATE_MISMATCH, "Quirk-Systems/quirk-held"),
+            (self.ws.NOT_IN_WORKSPACE, "bryansayler/quirk-elsewhere"),
+        })
+
+    def test_unreadable_checkouts_produce_no_findings(self):
+        unreadable = {"repository": "broken", "directory": "broken", "state": self.ws.UNREADABLE, "commits": 0, "toolchain": []}
+        listed_unreadable = dict(unreadable, repository="Quirk-Systems/listed", directory="listed")
+        registry = inventory([{"repository": "Quirk-Systems/listed", "lifecycle": "active"}])
+        self.assertEqual(self.ws.drift([unreadable, listed_unreadable], registry), [])
+
+    def test_unreadable_checkout_known_only_by_directory_is_not_missing(self):
+        unreadable = {"repository": "quirk-feed", "directory": "quirk-feed", "state": self.ws.UNREADABLE, "commits": 0, "toolchain": []}
+        registry = inventory([{"repository": "Quirk-Systems/quirk-feed", "lifecycle": "active"}])
+        self.assertEqual(self.ws.drift([unreadable], registry), [])
+
+    def test_no_drift_message_admits_unreadable_checkouts(self):
+        self.assertIn("No drift: every checkout", self.ws.render_drift([]))
+        message = self.ws.render_drift([], [{"directory": "a", "reason": "unreadable"}, {"directory": "b", "reason": "no GitHub origin"}])
+        self.assertNotIn("every checkout is inventoried", message)
+        self.assertIn("2 checkouts could not be compared", message)
+        self.assertIn("`b` (no GitHub origin)", message)
+
+    def test_names_compare_case_insensitively(self):
+        observed = [self.observed("quirk-systems/quirk", self.ws.DOCS_ONLY)]
+        registry = inventory([{"repository": "Quirk-Systems/Quirk", "lifecycle": "reserved"}])
+        self.assertEqual(self.ws.drift(observed, registry), [])
+
+    def test_findings_are_deterministic(self):
+        observed = [self.observed(f"Quirk-Systems/q{i}", self.ws.EMPTY) for i in (3, 1, 2)]
+        first = self.ws.drift(observed, {})
+        self.assertEqual(first, self.ws.drift(list(reversed(observed)), {}))
+        self.assertEqual([f["repository"] for f in first], ["Quirk-Systems/q1", "Quirk-Systems/q2", "Quirk-Systems/q3"])
+
+    def test_real_inventory_loads(self):
+        entries = self.ws.load_inventory()
+        self.assertIn("Quirk-Systems/.github", entries)
+
+
+class WorkspacePinTests(unittest.TestCase):
+    SHA = "a" * 40
+    OTHER = "b" * 40
+
+    def setUp(self):
+        self.ws = load("quirk_workspace")
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = self.tmp.name
+        caller = "jobs:\n  semantic:\n    uses: Quirk-Systems/.github/.github/workflows/{w}@{ref} # main\n"
+        make_repo(self.root, "floating", {".github/workflows/a.yml": caller.format(w="quirk-semantic-governance.yml", ref="main")})
+        make_repo(self.root, "pinned", {".github/workflows/a.yml": caller.format(w="reusable-evidence-binding.yml", ref=self.SHA)})
+        make_repo(self.root, "other", {".github/workflows/a.yml": caller.format(w="reusable-evidence-binding.yml", ref=self.OTHER)})
+        make_repo(self.root, "local", {".github/workflows/a.yml": "jobs:\n  x:\n    uses: ./.github/workflows/reusable-validate.yml\n"})
+        make_repo(self.root, "dquoted", {".github/workflows/a.yml": caller.format(w="quirk-semantic-governance.yml", ref="main").replace("uses: ", 'uses: "').replace(" # main", '" # main')})
+        make_repo(self.root, "squoted", {".github/workflows/a.yml": caller.format(w="quirk-semantic-governance.yml", ref=self.SHA).replace("uses: ", "uses: '").replace(" # main", "' # main")})
+        make_repo(self.root, "flow", {".github/workflows/a.yml": "jobs: {call: {uses: Quirk-Systems/.github/.github/workflows/reusable-evidence-binding.yml@main}}\n"})
+        make_repo(self.root, "anchored", {".github/workflows/a.yml": caller.format(w="reusable-evidence-binding.yml", ref="main").replace("uses: ", "uses: &shared ")})
+        make_repo(self.root, "quotedkey", {".github/workflows/a.yml": caller.format(w="reusable-evidence-binding.yml", ref="main").replace("uses: ", '"uses": ')})
+        make_repo(self.root, "notworkflow", {".github/workflows/a.yxml": caller.format(w="reusable-evidence-binding.yml", ref="main")})
+        make_repo(self.root, "spaced", {".github/workflows/a.yml": caller.format(w="reusable-evidence-binding.yml", ref="main").replace("uses: ", "uses : ")})
+        make_repo(self.root, "lowercase", {".github/workflows/a.yml": caller.format(w="reusable-evidence-binding.yml", ref="main").replace("Quirk-Systems/", "quirk-systems/")})
+        make_repo(self.root, "mismatched", {".github/workflows/a.yml": caller.format(w="quirk-semantic-governance.yml", ref="main").replace("uses: ", 'uses: "')})
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def statuses(self, expect=None):
+        rows = self.ws.caller_pins(self.root, self.ws.scan(self.root), expect)
+        return {row["repository"]: (row["status"], row["file"]) for row in rows}
+
+    def test_classifies_refs(self):
+        self.assertEqual(self.statuses(), {
+            "Quirk-Systems/floating": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
+            "Quirk-Systems/pinned": (self.ws.PINNED, ".github/workflows/a.yml:3"),
+            "Quirk-Systems/other": (self.ws.PINNED, ".github/workflows/a.yml:3"),
+            "Quirk-Systems/dquoted": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
+            "Quirk-Systems/squoted": (self.ws.PINNED, ".github/workflows/a.yml:3"),
+            "Quirk-Systems/lowercase": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
+            "Quirk-Systems/spaced": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
+            "Quirk-Systems/quotedkey": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
+            "Quirk-Systems/anchored": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
+            "Quirk-Systems/flow": (self.ws.FLOATING, ".github/workflows/a.yml:1"),
+        })
+
+    def test_block_scalar_text_is_not_a_caller(self):
+        workflow = (
+            "jobs:\n"
+            "  gen:\n"
+            "    steps:\n"
+            "      - run: |\n"
+            "          cat <<'YAML' > out.yml\n"
+            "          uses: Quirk-Systems/.github/.github/workflows/reusable-evidence-binding.yml@main\n"
+            "          YAML\n"
+            "      - name: folded\n"
+            "        run: >-\n"
+            "          echo uses: Quirk-Systems/.github/.github/workflows/x.yml@main\n"
+            "  real:\n"
+            f"    uses: Quirk-Systems/.github/.github/workflows/reusable-evidence-binding.yml@{self.SHA}\n"
+        )
+        make_repo(self.root, "heredoc", {".github/workflows/a.yml": workflow})
+        rows = [r for r in self.ws.caller_pins(self.root, self.ws.scan(self.root)) if r["repository"] == "Quirk-Systems/heredoc"]
+        self.assertEqual([(r["status"], r["file"]) for r in rows], [(self.ws.PINNED, ".github/workflows/a.yml:12")])
+
+    def test_block_scalar_uses_value_is_still_a_caller(self):
+        workflow = (
+            "jobs:\n"
+            "  folded:\n"
+            "    uses: >-\n"
+            "      Quirk-Systems/.github/.github/workflows/reusable-evidence-binding.yml@main\n"
+            "  after:\n"
+            "    runs-on: ubuntu-latest\n"
+        )
+        make_repo(self.root, "foldeduses", {".github/workflows/a.yml": workflow})
+        rows = [r for r in self.ws.caller_pins(self.root, self.ws.scan(self.root)) if r["repository"] == "Quirk-Systems/foldeduses"]
+        self.assertEqual([(r["status"], r["file"]) for r in rows], [(self.ws.FLOATING, ".github/workflows/a.yml:4")])
+
+    def test_flow_callers_skip_comments_and_quoted_text_and_find_every_entry(self):
+        sha = self.SHA
+        workflow = (
+            'name: "{uses: Quirk-Systems/.github/.github/workflows/example.yml@main}"\n'
+            "name: 'it''s {uses: Quirk-Systems/.github/.github/workflows/example.yml@main}'\n"
+            'name: "say \\"{uses: Quirk-Systems/.github/.github/workflows/example.yml@main}\\""\n'
+            "on: push # {uses: Quirk-Systems/.github/.github/workflows/example.yml@main}\n"
+            f"jobs: {{a: {{uses: Quirk-Systems/.github/.github/workflows/x.yml@{sha}}}, "
+            "b: {uses: Quirk-Systems/.github/.github/workflows/y.yml@main}}\n"
+        )
+        make_repo(self.root, "flowmany", {".github/workflows/a.yml": workflow})
+        rows = [r for r in self.ws.caller_pins(self.root, self.ws.scan(self.root)) if r["repository"] == "Quirk-Systems/flowmany"]
+        self.assertEqual(
+            [(r["workflow"], r["status"], r["file"]) for r in rows],
+            [("x.yml", self.ws.PINNED, ".github/workflows/a.yml:5"), ("y.yml", self.ws.FLOATING, ".github/workflows/a.yml:5")],
+        )
+
+    def test_quoted_scalars_spanning_lines_hide_their_text(self):
+        workflow = (
+            'name: "hello\n'
+            '  {uses: Quirk-Systems/.github/.github/workflows/x.yml@main}"\n'
+            "description: 'multi\n"
+            "  uses: Quirk-Systems/.github/.github/workflows/x.yml@main'\n"
+            "on: push\n"
+            "run-name: Bob's run\n"
+            "jobs:\n"
+            "  call:\n"
+            "    uses: Quirk-Systems/.github/.github/workflows/y.yml@main\n"
+        )
+        make_repo(self.root, "multiline", {".github/workflows/a.yml": workflow})
+        rows = [r for r in self.ws.caller_pins(self.root, self.ws.scan(self.root)) if r["repository"] == "Quirk-Systems/multiline"]
+        self.assertEqual([(r["workflow"], r["file"]) for r in rows], [("y.yml", ".github/workflows/a.yml:9")])
+
+    def test_json_style_values_and_block_markers_inside_quotes_are_text(self):
+        workflow = (
+            '{"name":"{uses: Quirk-Systems/.github/.github/workflows/x.yml@main}", "on": "push"}\n'
+            'description: "first line\n'
+            "  run: |\n"
+            '  still quoted"\n'
+            "jobs:\n"
+            "  call:\n"
+            "    uses: Quirk-Systems/.github/.github/workflows/y.yml@main\n"
+        )
+        make_repo(self.root, "jsonish", {".github/workflows/a.yml": workflow})
+        rows = [r for r in self.ws.caller_pins(self.root, self.ws.scan(self.root)) if r["repository"] == "Quirk-Systems/jsonish"]
+        self.assertEqual([(r["workflow"], r["file"]) for r in rows], [("y.yml", ".github/workflows/a.yml:7")])
+
+    def test_hash_in_a_ref_is_part_of_the_ref(self):
+        workflow = (
+            "jobs:\n"
+            "  a:\n"
+            '    uses: "Quirk-Systems/.github/.github/workflows/x.yml@release#1"\n'
+            "  b:\n"
+            "    uses: Quirk-Systems/.github/.github/workflows/y.yml@main # trailing comment\n"
+        )
+        make_repo(self.root, "hashref", {".github/workflows/a.yml": workflow})
+        rows = [r for r in self.ws.caller_pins(self.root, self.ws.scan(self.root)) if r["repository"] == "Quirk-Systems/hashref"]
+        self.assertEqual([(r["workflow"], r["ref"]) for r in rows], [("x.yml", "release#1"), ("y.yml", "main")])
+
+    def test_quoted_flow_refs_keep_punctuation(self):
+        workflow = (
+            'jobs: {call: {uses: "Quirk-Systems/.github/.github/workflows/x.yml@release,1"}, '
+            "other: {uses: 'Quirk-Systems/.github/.github/workflows/y.yml@v1}2'}}\n"
+        )
+        make_repo(self.root, "flowpunct", {".github/workflows/a.yml": workflow})
+        rows = [r for r in self.ws.caller_pins(self.root, self.ws.scan(self.root)) if r["repository"] == "Quirk-Systems/flowpunct"]
+        self.assertEqual(
+            [(r["workflow"], r["ref"], r["status"]) for r in rows],
+            [("x.yml", "release,1", self.ws.FLOATING), ("y.yml", "v1}2", self.ws.FLOATING)],
+        )
+
+    def test_expect_marks_other_shas_off_target(self):
+        seen = self.statuses(self.SHA)
+        self.assertEqual(seen["Quirk-Systems/pinned"][0], self.ws.PINNED)
+        self.assertEqual(seen["Quirk-Systems/other"][0], self.ws.OFF_TARGET)
+
+    def test_cli_exit_codes(self):
+        base = ["--workspace", self.root]
+        self.assertEqual(self.ws.main([*base, "pins"]), 0)
+        self.assertEqual(self.ws.main([*base, "pins", "--fail-on-floating"]), 1)
+        self.assertEqual(self.ws.main([*base, "pins", "--expect", "main"]), 2)
+
+
+class WorkspaceCliTests(unittest.TestCase):
+    def setUp(self):
+        self.ws = load("quirk_workspace")
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = self.tmp.name
+        make_repo(self.root, "quirk-new")
+        self.registry = Path(self.root) / "inventory.json"
+        self.registry.write_text(json.dumps({"repositories": []}), encoding="utf-8")
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_fail_on_drift_sets_exit_code(self):
+        base = ["--workspace", self.root, "--registry", str(self.registry)]
+        self.assertEqual(self.ws.main([*base, "drift"]), 0)
+        self.assertEqual(self.ws.main([*base, "drift", "--fail-on-drift"]), 1)
+
+    def test_run_skips_repositories_without_a_command(self):
+        results = self.ws.run_commands(self.root, self.ws.scan(self.root), timeout=5)
+        self.assertEqual(results, [("Quirk-Systems/quirk-new", None, "no declared validation command")])
+
+    def test_unborn_checkout_keeps_its_declared_command(self):
+        unborn = Path(self.root) / "quirk-new" / "scripts"
+        unborn.mkdir()
+        (unborn / "validate.sh").write_text("#!/bin/sh\nexit 3\n", encoding="utf-8")
+        (unborn / "validate.sh").chmod(0o755)
+        item = self.ws.scan(self.root)[0]
+        self.assertEqual((item["state"], item["validation_command"]), (self.ws.EMPTY, "scripts/validate.sh"))
+        results = self.ws.run_commands(self.root, [item], timeout=5)
+        self.assertEqual(results[0][1], 3)
+
+    def test_json_flag_works_before_or_after_the_subcommand(self):
+        import contextlib
+        import io
+
+        for argv in (["--json", "--workspace", self.root, "scan"], ["--workspace", self.root, "scan", "--json"]):
+            buffer = io.StringIO()
+            with contextlib.redirect_stdout(buffer):
+                self.assertEqual(self.ws.main(argv), 0)
+            self.assertEqual(json.loads(buffer.getvalue())[0]["repository"], "Quirk-Systems/quirk-new")
+
+    def test_run_reports_a_command_that_cannot_launch(self):
+        path = make_repo(self.root, "noexec", {"scripts/validate.sh": "#!/bin/sh\nexit 0\n"})
+        (path / "scripts" / "validate.sh").chmod(0o644)
+        results = dict((repo, (code, note)) for repo, code, note in self.ws.run_commands(self.root, self.ws.scan(self.root), timeout=5))
+        code, note = results["Quirk-Systems/noexec"]
+        self.assertEqual(code, 126)
+        self.assertTrue(note.startswith("not run:"), note)
+        self.assertEqual(self.ws.main(["--workspace", self.root, "commands", "--run", "--timeout", "5"]), 1)
+
+    def test_run_treats_a_timeout_as_a_failure(self):
+        make_repo(self.root, "slow", {"scripts/validate.sh": "#!/bin/sh\nsleep 5\n"})
+        (Path(self.root) / "slow" / "scripts" / "validate.sh").chmod(0o755)
+        results = {repo: (code, note) for repo, code, note in self.ws.run_commands(self.root, self.ws.scan(self.root), timeout=1)}
+        self.assertEqual(results["Quirk-Systems/slow"], (124, "timed out after 1s"))
+        self.assertEqual(results["Quirk-Systems/quirk-new"][0], None)
+
+    def test_timeout_stops_processes_the_check_started(self):
+        path = make_repo(self.root, "spawner", {"scripts/validate.sh": "#!/bin/sh\n(sleep 2; touch late-write) &\nsleep 30\n"})
+        (path / "scripts" / "validate.sh").chmod(0o755)
+        results = {repo: code for repo, code, _ in self.ws.run_commands(self.root, self.ws.scan(self.root), timeout=1)}
+        self.assertEqual(results["Quirk-Systems/spawner"], 124)
+        time.sleep(2.5)
+        self.assertFalse((path / "late-write").exists())
+
+    def test_success_stops_processes_the_check_left_behind(self):
+        path = make_repo(self.root, "leaver", {"scripts/validate.sh": "#!/bin/sh\n(sleep 2; touch late-write) &\nexit 0\n"})
+        (path / "scripts" / "validate.sh").chmod(0o755)
+        results = {repo: code for repo, code, _ in self.ws.run_commands(self.root, self.ws.scan(self.root), timeout=30)}
+        self.assertEqual(results["Quirk-Systems/leaver"], 0)
+        time.sleep(2.5)
+        self.assertFalse((path / "late-write").exists())
+
+    def test_interrupt_stops_processes_the_check_started(self):
+        path = make_repo(self.root, "spawner", {"scripts/validate.sh": "#!/bin/sh\n(sleep 2; touch late-write) &\nsleep 30\n"})
+        (path / "scripts" / "validate.sh").chmod(0o755)
+        real_wait = subprocess.Popen.wait
+
+        def interrupted(process, timeout=None):
+            if timeout is not None:
+                raise KeyboardInterrupt
+            return real_wait(process)
+
+        with unittest.mock.patch.object(subprocess.Popen, "wait", interrupted):
+            with self.assertRaises(KeyboardInterrupt):
+                self.ws.run_commands(self.root, self.ws.scan(self.root), timeout=60)
+        time.sleep(2.5)
+        self.assertFalse((path / "late-write").exists())
+
+    def test_commands_honours_json_in_either_position(self):
+        import contextlib
+        import io
+
+        make_repo(self.root, "app", {"package.json": json.dumps({"scripts": {"validate": "true"}})})
+        for argv in (["--json", "--workspace", self.root, "commands"], ["--workspace", self.root, "commands", "--json"]):
+            buffer = io.StringIO()
+            with contextlib.redirect_stdout(buffer):
+                self.assertEqual(self.ws.main(argv), 0)
+            self.assertEqual(json.loads(buffer.getvalue()), [{"repository": "Quirk-Systems/app", "command": "npm run validate"}])
+        buffer = io.StringIO()
+        with contextlib.redirect_stdout(buffer):
+            self.ws.main(["--workspace", self.root, "commands", "--run", "--json", "--timeout", "5"])
+        rows = {row["repository"]: row for row in json.loads(buffer.getvalue())}
+        self.assertIsNone(rows["Quirk-Systems/quirk-new"]["exit_code"])
+
+    def test_drift_json_reports_unreadable_checkouts(self):
+        import contextlib
+        import io
+
+        broken = Path(self.root) / "broken"
+        broken.mkdir()
+        (broken / ".git").write_text("gitdir: /nonexistent/quirk\n", encoding="utf-8")
+        buffer = io.StringIO()
+        with contextlib.redirect_stdout(buffer):
+            self.ws.main(["--workspace", self.root, "--registry", str(self.registry), "drift", "--json"])
+        result = json.loads(buffer.getvalue())
+        self.assertEqual(result["not_compared"], [{"directory": "broken", "reason": "unreadable"}])
+        self.assertEqual([f["repository"] for f in result["findings"]], ["Quirk-Systems/quirk-new"])
+
+    def test_drift_reports_readable_checkouts_without_a_github_origin(self):
+        import contextlib
+        import io
+
+        mirror = make_repo(self.root, "mirror", {"README.md": "x\n"})
+        git(mirror, "remote", "set-url", "origin", "/srv/remotes/mirror.git")
+        buffer = io.StringIO()
+        with contextlib.redirect_stdout(buffer):
+            self.ws.main(["--workspace", self.root, "--registry", str(self.registry), "drift", "--json"])
+        self.assertEqual(json.loads(buffer.getvalue())["not_compared"], [{"directory": "mirror", "reason": "no GitHub origin"}])
+        buffer = io.StringIO()
+        with contextlib.redirect_stdout(buffer):
+            self.ws.main(["--workspace", self.root, "--registry", str(self.registry), "drift"])
+        self.assertIn("`mirror` (no GitHub origin)", buffer.getvalue())
+
+    def test_nonpositive_timeout_is_rejected(self):
+        import contextlib
+        import io
+
+        for value in ("0", "-1"):
+            with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as caught:
+                self.ws.main(["--workspace", self.root, "commands", "--run", "--timeout", value])
+            self.assertEqual(caught.exception.code, 2)
+
+    def test_bad_workspace_exits_two(self):
+        self.assertEqual(self.ws.main(["--workspace", str(Path(self.root) / "nope"), "scan"]), 2)
+
+
+if __name__ == "__main__":
+    unittest.main()

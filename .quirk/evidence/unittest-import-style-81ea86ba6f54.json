@@ -1,0 +1,48 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.unittest-import-style.81ea86ba6f54",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "2f0a4c072032ea2382b9ce5e431bcda95d762215",
+    "commit": "81ea86ba6f5456cc15ff6349de05a311aee0d8fd",
+    "changed_paths": [
+      "tests/test_quirk_workspace.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.unittest-import-style.81ea86ba6f54",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "tests/test_quirk_workspace.py imports unittest.mock at module level instead of 'from unittest import mock' inside a test, resolving the CodeQL py/import-and-import-from alert on PR #44. Test behaviour is unchanged. Hosted CodeQL re-analysis is not established by this receipt.",
+      "evidence_paths": [
+        "tests/test_quirk_workspace.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "tests/test_quirk_workspace.py",
+      "state": "present",
+      "git_blob": "395fd85504a5d9c3e21dd0d23b8234f65903a96f",
+      "sha256": "sha256:a489c1b2d47cd2d639965e27599f98baeabbe961faca29cd3304d26193d5aca3"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "PYTHON=python3.12 scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T15:34:47Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:0d839a44bb012b9c6c21d61847934518d1f32037dc544b2ab6702a1b8db71983"
+}

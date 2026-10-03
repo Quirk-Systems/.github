@@ -1,0 +1,115 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.workspace-tooling.f97e4cf0b45f",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "92e5b2d928f25d0fedae87aaad2ef764a806065d",
+    "commit": "f97e4cf0b45f1ef6300e85fc0dc7bfd23ef61b31",
+    "changed_paths": [
+      "AGENTS.md",
+      "docs/governance/WORKSPACE_TOOLING.md",
+      "docs/todos/2026-10-03-workspace-portfolio-plans.md",
+      "scripts/quirk_workspace.py",
+      "tests/test_quirk_workspace.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.workspace-tooling.f97e4cf0b45f",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Adds scripts/quirk_workspace.py (scan, drift, pins, commands) with 17 unit tests, docs/governance/WORKSPACE_TOOLING.md, a candidate living todo of per-repository plans recorded from a 50-checkout survey on 2026-10-03, and two AGENTS.md pointers. The todo records what the tool observed; it does not establish that its plans are correct, classify any repository, change the inventory or schema, build the proposed scheduled loops, or authorize merge. The full-history receipt check was not run because it already fails on main (Governance Contracts run 37113795859).",
+      "evidence_paths": [
+        "AGENTS.md",
+        "docs/governance/WORKSPACE_TOOLING.md",
+        "docs/todos/2026-10-03-workspace-portfolio-plans.md",
+        "scripts/quirk_workspace.py",
+        "tests/test_quirk_workspace.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "AGENTS.md",
+      "state": "present",
+      "git_blob": "20ffe545a627b332015d704813f603586bc8c7f1",
+      "sha256": "sha256:9d5d71d79d07d2c0f65de66eec2a7107ae46aa2fcb4d82cc63e4e69dde9b0dff"
+    },
+    {
+      "path": "docs/governance/WORKSPACE_TOOLING.md",
+      "state": "present",
+      "git_blob": "115994da1a55e45ba7e8d4bc50bb4a2fdfd4b63d",
+      "sha256": "sha256:c74cd6dcc6181afb7b7fcb15aa9fd195e3ce2ffa1365477514ed2753ce80b7d6"
+    },
+    {
+      "path": "docs/todos/2026-10-03-workspace-portfolio-plans.md",
+      "state": "present",
+      "git_blob": "95e3d1eb00551c9977d8cf87b339e9f57caafb8b",
+      "sha256": "sha256:bffb5a4b55a9e01f791bfdc07aa6f0372c37d3387356c13a83887753a3823996"
+    },
+    {
+      "path": "scripts/quirk_workspace.py",
+      "state": "present",
+      "git_blob": "006888b30f1075f7ea2dc9e9dace7a877fc31f1c",
+      "sha256": "sha256:255c57ddde0232d647a190dd314bae0af0b697794faa076474e578317cf2b149"
+    },
+    {
+      "path": "tests/test_quirk_workspace.py",
+      "state": "present",
+      "git_blob": "18c787642fe5bd3a53994028876de8c11c41c7ca",
+      "sha256": "sha256:726802336038c11a8e393c8c7a6109d85842931ae1a5c03707d237b5092bfe44"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python3.12 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/validate_living_docs.py --strict",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/portfolio_report.py --check",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "ruff check .",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "uv tool run --quiet zizmor --offline --persona pedantic .github/workflows",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py scan",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py drift",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py pins --expect 92e5b2d928f25d0fedae87aaad2ef764a806065d",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T14:38:59Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:96cf3f96ff72f98464bbd0b89a63beebcff7be109035272c0435af53c3062985"
+}

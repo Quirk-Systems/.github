@@ -345,7 +345,7 @@ def discover_receipts(root, receipts):
     return sorted(path for path in receipts.rglob("*.json") if path.is_file())
 
 
-def _validate_coverage(root, receipt_records, receipt_paths, range_base, range_head):
+def _validate_coverage(root, receipt_records, receipt_paths, range_base, range_head, receipts_dir=None):
     require_commit(root, range_base, "range base")
     require_commit(root, range_head, "range head")
     if not is_ancestor(root, range_base, range_head):
@@ -355,14 +355,27 @@ def _validate_coverage(root, receipt_records, receipt_paths, range_base, range_h
         raise ReceiptError("checked-out HEAD must equal --range-head")
     range_entries = derive_diff(root, range_base, range_head)
     receipt_path_set = set(receipt_paths)
-    required_paths = {path for path, _ in range_entries if path not in receipt_path_set}
+    # A receipt JSON deleted in the range is no longer discoverable, but it is
+    # still a receipt file: like a present one, it is not a substantive path.
+    if receipts_dir is None:
+        prefix = None
+    elif receipts_dir in ("", "."):
+        prefix = ""  # the repository root is the receipt directory
+    else:
+        prefix = receipts_dir.rstrip("/") + "/"
+    retired_receipts = {
+        path for path, state in range_entries
+        if state == "deleted" and prefix is not None and path.startswith(prefix) and path.endswith(".json")
+    }
+    required_paths = {path for path, _ in range_entries if path not in receipt_path_set | retired_receipts}
     candidate_subjects = {path: [] for path in required_paths}
     all_qualified_paths = set()
     for receipt in receipt_records:
         if receipt["status"] != "verified":
             continue
         subject = receipt["subject"]["commit"]
-        if is_ancestor(root, range_base, subject) and is_ancestor(root, subject, range_head):
+        # The range is (base, head]: a subject equal to the base changed nothing in it.
+        if subject != range_base and is_ancestor(root, range_base, subject) and is_ancestor(root, subject, range_head):
             subject_paths = set(receipt["subject"]["changed_paths"])
             all_qualified_paths.update(subject_paths)
             for path in required_paths.intersection(subject_paths):
@@ -373,9 +386,11 @@ def _validate_coverage(root, receipt_records, receipt_paths, range_base, range_h
         if not subjects:
             continue
         literal_pathspec = ":(literal)" + path
-        if all(_git(root, "log", "--format=%H", subject + ".." + range_head, "--", literal_pathspec).stdout.strip() for subject in subjects):
+        # --full-history: default simplification prunes a merged side branch
+        # that changed the path and then restored it, hiding a later change.
+        if all(_git(root, "log", "--full-history", "--format=%H", subject + ".." + range_head, "--", literal_pathspec).stdout.strip() for subject in subjects):
             stale.add(path)
-    extra = all_qualified_paths - required_paths - receipt_path_set
+    extra = all_qualified_paths - required_paths - receipt_path_set - retired_receipts
     if missing or stale or extra:
         messages = []
         if missing:
@@ -421,7 +436,9 @@ def validate_directory(repository, root, receipts, range_base=None, range_head=N
         claim_ids.update(current_claim_ids)
         records.append(receipt)
     if require_covered_diff:
-        _validate_coverage(root, records, relative_receipt_paths, range_base, range_head)
+        receipts_dir = Path(receipts) if Path(receipts).is_absolute() else root / receipts
+        receipts_dir = receipts_dir.resolve().relative_to(root).as_posix()
+        _validate_coverage(root, records, relative_receipt_paths, range_base, range_head, receipts_dir)
     return len(records)
 
 

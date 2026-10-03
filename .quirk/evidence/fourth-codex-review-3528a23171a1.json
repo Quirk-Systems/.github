@@ -1,0 +1,69 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.fourth-codex-review.3528a23171a1",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "34dd97036954ea5f3a95175376b18e0363893698",
+    "commit": "3528a23171a1f5a7345bc4888d3db34edb077601",
+    "changed_paths": [
+      "docs/governance/WORKSPACE_TOOLING.md",
+      "scripts/quirk_workspace.py",
+      "tests/test_quirk_workspace.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.fourth-codex-review.3528a23171a1",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Addresses the fourth Codex review on PR #44: commands --run kills processes a check left in its session after a normal exit; pins accepts whitespace before the uses colon; scan reports UNREADABLE for a checkout Git cannot read instead of EMPTY, and drift draws no finding from it. Three new tests fail on the previous script and pass on this one; re-running scan gives the same 2026-10-03 totals with 0 UNREADABLE. Owner review is not established.",
+      "evidence_paths": [
+        "docs/governance/WORKSPACE_TOOLING.md",
+        "scripts/quirk_workspace.py",
+        "tests/test_quirk_workspace.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/governance/WORKSPACE_TOOLING.md",
+      "state": "present",
+      "git_blob": "ffe4a77156bb38dd518b6048c73370e56ba48513",
+      "sha256": "sha256:1928d1f69885b04a4851c3beab000c8c76e51d42ae03df4b173d2a7f5e59a179"
+    },
+    {
+      "path": "scripts/quirk_workspace.py",
+      "state": "present",
+      "git_blob": "bf0f0dfe3a895881f6229c7321d17c9cbba0c04b",
+      "sha256": "sha256:1acf11b3efd2584bb03257a13d66f23554d78821c7f8a006c379a86118016334"
+    },
+    {
+      "path": "tests/test_quirk_workspace.py",
+      "state": "present",
+      "git_blob": "089830a63139dc6c30e24cd4fb0d791489fcc159",
+      "sha256": "sha256:f091c83e730389020f20d67df9cce3a5361f6049e781f87f7d89f12d4f9e228a"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "PYTHON=python3.12 scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3.12 scripts/quirk_workspace.py scan",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T15:44:54Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:4da9dd89f04bac0925ee12f07294ae48e58f231dd17c463d3d8b9d7ae9adc36f"
+}
