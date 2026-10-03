@@ -53,6 +53,16 @@ automated, and states what is deliberately not.
 - **Merge, canon, release, deploy, publish.** Owner-only, through rulesets
   and environment protections that repository files cannot change.
 
+## Local validation handoff
+
+An agent preparing a review handoff runs `scripts/validate.sh --require-tools`
+when claiming complete local validation. Missing tools stop the run before
+tests start; the host owner provisions approved versions. Record the exact
+subject SHA, command, observed result, and tool versions in the handoff.
+If only default `scripts/validate.sh` can run, list every skipped tool and
+describe validation as partial. A local pass remains separate from hosted
+workflow execution and human approval. This changes no dispatch or permissions.
+
 ## Kill switch
 
 Remove the `agent-task` label or close the issue. Any host running the task
