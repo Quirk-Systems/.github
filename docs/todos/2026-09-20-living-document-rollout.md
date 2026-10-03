@@ -34,21 +34,24 @@ task, recorded in the receipt that ships it.
 ## Near-lapse record
 
 This document did **not** lapse. Its review date was 2026-10-04 and it was
-re-read on 2026-10-03, one day before `validate_living_docs.py` would have
-reported it stale — the validator reports a document stale only after its
-`Review by` date, so nothing was ever red. The first version of this section
-called it a lapse and said the document "went unreviewed past 2026-10-04",
-which was false on both counts and is corrected here.
+re-read on 2026-10-03 — one day before that date, and **two** days before any
+red, because `validate_living_docs.py` reports a document stale only when
+`review_by < today`, which for 2026-10-04 first happens on 2026-10-05. The
+first version of this section called it a lapse, said the document "went
+unreviewed past 2026-10-04", and then conflated the review date with the first
+stale day; all three are corrected here.
 
 What is true is thirteen days unread: nothing in it had been re-read since
 2026-09-20, while four of its items had in fact moved. That is the drift worth
 recording, and it was caught with a day to spare by an unrelated check rather
 than by any cadence.
 
-The cost is not cosmetic. `tests/test_living_docs.py` checks freshness against
-the real date, and the `validate` check runs the whole suite, so a lapsed
-document here turns **every open pull request** against `main` red, not only a
-pull request that touches the document. That is a wide blast radius for a
-planning document nobody is reading, and it is why the checklist item above is
-first: the cadence has to carry the re-read, or the calendar will carry it
-into CI instead.
+The cost is not cosmetic, though it is narrower than the first version of this
+section claimed. `tests/test_living_docs.py` checks freshness against the real
+date and the `validate` check runs the whole suite, so a stale document here
+fails the `validate` check on any pull request whose checks run or re-run while the document is stale, including pull requests that changed nothing related. It does not reach back: `governance-contracts.yml` has no
+scheduled trigger, so no check already completed turns red on the calendar, and
+the first version's "turns every open pull request red" overstated it. The
+blast radius is still wide for a planning document nobody is reading, and it is
+why the checklist item above is first: the cadence has to carry the re-read, or
+the calendar will carry it into CI instead.
