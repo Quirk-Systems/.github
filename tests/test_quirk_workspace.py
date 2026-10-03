@@ -99,6 +99,26 @@ class WorkspaceScanTests(unittest.TestCase):
         self.assertIsNone(seen["Quirk-Systems/d"]["validation_command"])
         self.assertIsNone(seen["Quirk-Systems/e"]["validation_command"])
 
+    def test_runner_follows_declared_package_manager(self):
+        scripts = {"validate": "x"}
+        make_repo(self.root, "pnpmdecl", {"package.json": json.dumps({"packageManager": "pnpm@10.0.0", "scripts": scripts})})
+        make_repo(self.root, "yarnlock", {"package.json": json.dumps({"scripts": scripts}), "yarn.lock": ""})
+        make_repo(self.root, "unknown", {"package.json": json.dumps({"packageManager": "deno@2", "scripts": scripts})})
+        seen = self.by_name()
+        self.assertEqual(seen["Quirk-Systems/pnpmdecl"]["validation_command"], "pnpm run validate")
+        self.assertEqual(seen["Quirk-Systems/yarnlock"]["validation_command"], "yarn run validate")
+        self.assertIsNone(seen["Quirk-Systems/unknown"]["validation_command"])
+
+    def test_corrupt_ref_store_is_not_reported_empty(self):
+        path = make_repo(self.root, "badrefs", {"README.md": "x\n"})
+        git(path, "pack-refs", "--all")
+        (path / ".git" / "packed-refs").write_text("not a ref line\n", encoding="utf-8")
+        loose = path / ".git" / "refs" / "heads" / "main"
+        if loose.exists():
+            loose.unlink()
+        seen = {item["directory"]: item for item in self.ws.scan(self.root)}
+        self.assertEqual(seen["badrefs"]["state"], self.ws.UNREADABLE)
+
     def test_repository_name_comes_from_origin_not_directory(self):
         path = make_repo(self.root, "local-dir", {"README.md": "x\n"}, owner="bryansayler")
         git(path, "remote", "set-url", "origin", "git@github.com:bryansayler/quirk-commerce.git")
@@ -167,6 +187,12 @@ class WorkspaceDriftTests(unittest.TestCase):
         registry = inventory([{"repository": "Quirk-Systems/quirk-feed", "lifecycle": "active"}])
         self.assertEqual(self.ws.drift([unreadable], registry), [])
 
+    def test_no_drift_message_admits_unreadable_checkouts(self):
+        self.assertIn("No drift: every checkout", self.ws.render_drift([]))
+        message = self.ws.render_drift([], unreadable=2)
+        self.assertNotIn("every checkout is inventoried", message)
+        self.assertIn("2 UNREADABLE checkouts could not be compared", message)
+
     def test_names_compare_case_insensitively(self):
         observed = [self.observed("quirk-systems/quirk", self.ws.DOCS_ONLY)]
         registry = inventory([{"repository": "Quirk-Systems/Quirk", "lifecycle": "reserved"}])
@@ -198,6 +224,7 @@ class WorkspacePinTests(unittest.TestCase):
         make_repo(self.root, "local", {".github/workflows/a.yml": "jobs:\n  x:\n    uses: ./.github/workflows/reusable-validate.yml\n"})
         make_repo(self.root, "dquoted", {".github/workflows/a.yml": caller.format(w="quirk-semantic-governance.yml", ref="main").replace("uses: ", 'uses: "').replace(" # main", '" # main')})
         make_repo(self.root, "squoted", {".github/workflows/a.yml": caller.format(w="quirk-semantic-governance.yml", ref=self.SHA).replace("uses: ", "uses: '").replace(" # main", "' # main")})
+        make_repo(self.root, "anchored", {".github/workflows/a.yml": caller.format(w="reusable-evidence-binding.yml", ref="main").replace("uses: ", "uses: &shared ")})
         make_repo(self.root, "quotedkey", {".github/workflows/a.yml": caller.format(w="reusable-evidence-binding.yml", ref="main").replace("uses: ", '"uses": ')})
         make_repo(self.root, "notworkflow", {".github/workflows/a.yxml": caller.format(w="reusable-evidence-binding.yml", ref="main")})
         make_repo(self.root, "spaced", {".github/workflows/a.yml": caller.format(w="reusable-evidence-binding.yml", ref="main").replace("uses: ", "uses : ")})
@@ -221,6 +248,7 @@ class WorkspacePinTests(unittest.TestCase):
             "Quirk-Systems/lowercase": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
             "Quirk-Systems/spaced": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
             "Quirk-Systems/quotedkey": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
+            "Quirk-Systems/anchored": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
         })
 
     def test_block_scalar_text_is_not_a_caller(self):

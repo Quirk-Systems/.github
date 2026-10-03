@@ -59,10 +59,11 @@ SKIP_DIRS = {".git", "node_modules", ".next", "dist", "build", ".venv", "__pycac
 FLOATING = "FLOATING"
 PINNED = "PINNED"
 OFF_TARGET = "OFF_TARGET"
-# `uses:` may be a plain, single-quoted, or double-quoted YAML scalar, and GitHub
+# `uses:` may be a plain, single-quoted, or double-quoted YAML scalar, optionally
+# carrying an anchor (`&name`) or tag (`!!str`), and GitHub
 # resolves the owner and repository case-insensitively.
 CALLER = re.compile(
-    r"""^\s*(?:-\s*)?(?:uses|"uses"|'uses')\s*:\s*(["']?)(?i:Quirk-Systems/\.github/\.github/workflows/)([^@\s"']+)@([^\s#"']+)\1(?:\s|$)"""
+    r"""^\s*(?:-\s*)?(?:uses|"uses"|'uses')\s*:\s*(?:[&!]\S+\s+)*(["']?)(?i:Quirk-Systems/\.github/\.github/workflows/)([^@\s"']+)@([^\s#"']+)\1(?:\s|$)"""
 )
 # A key whose value is a literal or folded block scalar (`run: |`, `script: >-`).
 BLOCK_SCALAR = re.compile(r"^(\s*(?:-\s+)?)([^\s:#][^:#]*?)\s*:\s*[|>][-+0-9]*\s*(?:#.*)?$")
@@ -129,13 +130,38 @@ def source_files(path):
     return count
 
 
+RUNNERS = ("npm", "pnpm", "yarn", "bun")
+LOCKFILES = (("bun.lock", "bun"), ("bun.lockb", "bun"), ("pnpm-lock.yaml", "pnpm"), ("yarn.lock", "yarn"))
+
+
+def package_runner(path):
+    """The package manager the repository declares, else the one its lockfile implies, else npm.
+
+    None when `packageManager` names a runner this tool does not know, so it
+    never substitutes a different one.
+    """
+    try:
+        declared = json.loads((path / "package.json").read_text(encoding="utf-8")).get("packageManager")
+    except (OSError, json.JSONDecodeError, AttributeError):
+        declared = None
+    if isinstance(declared, str) and declared.strip():
+        name = declared.split("@", 1)[0].strip()
+        return name if name in RUNNERS else None
+    for lockfile, runner in LOCKFILES:
+        if (path / lockfile).is_file():
+            return runner
+    return "npm"
+
+
 def validation_command(path):
     """The validation command the repository's own files declare, or None."""
     if (path / "scripts" / "validate.sh").is_file():
         return "scripts/validate.sh"
     scripts = package_scripts(path)
     if scripts:
-        runner = "bun" if (path / "bun.lock").is_file() or (path / "bun.lockb").is_file() else "npm"
+        runner = package_runner(path)
+        if runner is None:
+            return None
         for name in ("validate", "check", "test"):
             if name in scripts:
                 return f"{runner} run {name}"
@@ -146,9 +172,13 @@ def count_commits(path):
     """Commits reachable from HEAD: 0 for an unborn HEAD, None when Git cannot read the checkout."""
     if git(path, "rev-parse", "--git-dir")[0]:
         return None
-    if git(path, "rev-parse", "--verify", "--quiet", "HEAD")[0]:
-        # A readable repository whose HEAD names no commit yet is genuinely empty.
-        return 0
+    verified = git(path, "rev-parse", "--verify", "--quiet", "HEAD")[0]
+    if verified:
+        # Unborn only when HEAD is a symbolic ref and verification merely found
+        # no target (exit 1); a corrupt ref store exits 128 and is unreadable.
+        if verified == 1 and git(path, "symbolic-ref", "--quiet", "HEAD")[0] == 0:
+            return 0
+        return None
     code, count = git(path, "rev-list", "--count", "HEAD")
     return int(count) if code == 0 and count.isdigit() else None
 
@@ -328,8 +358,15 @@ def render_scan(observed):
     return "\n".join(lines) + "\n"
 
 
-def render_drift(findings):
+def render_drift(findings, unreadable=0):
+    skipped = (
+        f"{unreadable} UNREADABLE checkout{'' if unreadable == 1 else 's'} could not be compared and "
+        f"{'is' if unreadable == 1 else 'are'} not covered by this result.\n"
+        if unreadable else ""
+    )
     if not findings:
+        if unreadable:
+            return "No determinable drift among readable checkouts.\n" + skipped
         return "No drift: every checkout is inventoried and every inventory entry is checked out.\n"
     lines = ["| Finding | Repository | Detail |", "| --- | --- | --- |"]
     lines += [f"| {f['kind']} | `{f['repository']}` | {f['detail']} |" for f in findings]
@@ -338,7 +375,7 @@ def render_drift(findings):
         totals[f["kind"]] = totals.get(f["kind"], 0) + 1
     lines.append("")
     lines.append("Totals: " + ", ".join(f"{totals[k]} {k}" for k in sorted(totals)) + ".")
-    return "\n".join(lines) + "\n"
+    return "\n".join(lines) + "\n" + skipped
 
 
 def stop_group(process):
@@ -421,7 +458,7 @@ def main(argv=None):
 
     if args.command == "drift":
         findings = drift(observed, load_inventory(args.registry))
-        print(json.dumps(findings, indent=2) if args.json else render_drift(findings), end="" if not args.json else "\n")
+        print(json.dumps(findings, indent=2) if args.json else render_drift(findings, sum(1 for i in observed if i["state"] == UNREADABLE)), end="" if not args.json else "\n")
         return 1 if findings and args.fail_on_drift else 0
 
     if args.command == "pins":

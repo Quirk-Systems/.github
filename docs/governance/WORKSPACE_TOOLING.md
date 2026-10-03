@@ -52,7 +52,7 @@ python scripts/quirk_workspace.py commands [--run --timeout 900]
 | | `DOCS_ONLY` | commits, but no Git-tracked source file (`.py .ts .tsx .js .mjs .cjs .sh .sql .go .rs`) outside dependency and build directories; untracked virtual environments and build output never count |
 | | `CODE` | at least one such tracked source file |
 | | `UNREADABLE` | Git cannot read the checkout (corrupt, wrong owner, broken `.git` file); reported instead of guessing `EMPTY`, and never a basis for drift findings |
-| `validation_command` | `scripts/validate.sh`; `bun\|npm run validate\|check\|test`; none | the first of these entry points the repository's own files define (a `scripts/validate.sh` file, or that script name in `package.json`); none otherwise. A test directory alone is not a declaration |
+| `validation_command` | `scripts/validate.sh`; `<runner> run validate\|check\|test`; none | the first of these entry points the repository's own files define (a `scripts/validate.sh` file, or that script name in `package.json`); none otherwise. `<runner>` is the `packageManager` that `package.json` declares (`npm`, `pnpm`, `yarn` or `bun`; any other means no command), else the one a lockfile implies, else `npm`. A test directory alone is not a declaration |
 | drift `kind` | `OBSERVED_UNCLASSIFIED` | a checkout the inventory does not list |
 | | `NOT_IN_WORKSPACE` | an inventory entry with no checkout here (not proof it is absent on GitHub) |
 | | `STATE_MISMATCH` | `active` with no commits, or `reserved` carrying a toolchain file |
