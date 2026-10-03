@@ -75,6 +75,15 @@ class WorkspaceScanTests(unittest.TestCase):
         make_repo(self.root, "quirk-docs", {"README.md": "x\n", "node_modules/pkg/index.js": "x\n"})
         self.assertEqual(self.by_name()["Quirk-Systems/quirk-docs"]["state"], self.ws.DOCS_ONLY)
 
+    def test_untracked_environments_do_not_count_as_source(self):
+        path = make_repo(self.root, "quirk-docs", {"README.md": "x\n"})
+        for env in ("venv", "env", ".tox/py312"):
+            target = path / env / "lib" / "site.py"
+            target.parent.mkdir(parents=True)
+            target.write_text("x = 1\n", encoding="utf-8")
+        seen = self.by_name()["Quirk-Systems/quirk-docs"]
+        self.assertEqual((seen["state"], seen["source_files"]), (self.ws.DOCS_ONLY, 0))
+
     def test_validation_command_uses_only_declared_entrypoints(self):
         make_repo(self.root, "a", {"scripts/validate.sh": "#!/bin/sh\n", "package.json": "{}"})
         make_repo(self.root, "b", {"package.json": json.dumps({"scripts": {"test": "vitest"}})})
@@ -225,8 +234,16 @@ class WorkspaceCliTests(unittest.TestCase):
         (path / "scripts" / "validate.sh").chmod(0o644)
         results = dict((repo, (code, note)) for repo, code, note in self.ws.run_commands(self.root, self.ws.scan(self.root), timeout=5))
         code, note = results["Quirk-Systems/noexec"]
-        self.assertIsNone(code)
+        self.assertEqual(code, 126)
         self.assertTrue(note.startswith("not run:"), note)
+        self.assertEqual(self.ws.main(["--workspace", self.root, "commands", "--run", "--timeout", "5"]), 1)
+
+    def test_run_treats_a_timeout_as_a_failure(self):
+        make_repo(self.root, "slow", {"scripts/validate.sh": "#!/bin/sh\nsleep 5\n"})
+        (Path(self.root) / "slow" / "scripts" / "validate.sh").chmod(0o755)
+        results = {repo: (code, note) for repo, code, note in self.ws.run_commands(self.root, self.ws.scan(self.root), timeout=1)}
+        self.assertEqual(results["Quirk-Systems/slow"], (124, "timed out after 1s"))
+        self.assertEqual(results["Quirk-Systems/quirk-new"][0], None)
 
     def test_bad_workspace_exits_two(self):
         self.assertEqual(self.ws.main(["--workspace", str(Path(self.root) / "nope"), "scan"]), 2)

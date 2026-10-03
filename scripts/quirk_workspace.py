@@ -21,7 +21,8 @@ not the reviewed commit the organization is moving callers to (`OFF_TARGET`).
 `commands` prints each repository's own validation command. With `--run` it
 executes them, one repository at a time, and reports exit codes; it runs only
 commands the repository itself declares, and nothing for repositories without
-one. Standard library only; deterministic output.
+one. A declared command that cannot start (127, 126) or times out (124) fails
+the run; only a repository with no declared command is skipped. Standard library only; deterministic output.
 """
 
 import argparse
@@ -99,17 +100,25 @@ def package_scripts(path):
 
 
 def source_files(path):
-    """Count source files outside dependency and build directories."""
+    """Count tracked source files outside dependency and build directories.
+
+    Only files Git tracks count, so a local virtual environment, build output,
+    or other ignored directory never turns a docs-only repository into code.
+    """
+    result = subprocess.run(
+        ["git", "-C", str(path), "ls-files", "-z"],
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode:
+        return 0
     count = 0
-    stack = [path]
-    while stack:
-        current = stack.pop()
-        for entry in current.iterdir():
-            if entry.is_dir():
-                if entry.name not in SKIP_DIRS and not entry.is_symlink():
-                    stack.append(entry)
-            elif entry.suffix in SOURCE_SUFFIXES:
-                count += 1
+    for raw in result.stdout.split(b"\0"):
+        if not raw:
+            continue
+        relative = Path(raw.decode("utf-8", "replace"))
+        if relative.suffix in SOURCE_SUFFIXES and not SKIP_DIRS.intersection(relative.parts[:-1]):
+            count += 1
     return count
 
 
@@ -292,14 +301,16 @@ def run_commands(workspace, observed, timeout):
                 timeout=timeout,
                 check=False,
             )
+        # A declared check that never completes is a failure, not a skip; the
+        # codes follow the shell's conventions so callers can tell them apart.
         except FileNotFoundError as error:
-            results.append((item["repository"], None, f"not run: {error.filename} not installed"))
+            results.append((item["repository"], 127, f"not run: {error.filename} not installed"))
             continue
         except OSError as error:
-            results.append((item["repository"], None, f"not run: {error.strerror or error}"))
+            results.append((item["repository"], 126, f"not run: {error.strerror or error}"))
             continue
         except subprocess.TimeoutExpired:
-            results.append((item["repository"], None, f"timed out after {timeout}s"))
+            results.append((item["repository"], 124, f"timed out after {timeout}s"))
             continue
         results.append((item["repository"], completed.returncode, command))
     return results

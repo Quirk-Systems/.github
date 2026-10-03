@@ -80,6 +80,7 @@ change only through a reviewed inventory change.
 - [ ] Admit the 32 `OBSERVED_UNCLASSIFIED` repositories to `.quirk/repositories.json` (blocked on: the inventory schema pins the snapshot `2026-08-21`, exactly 19 entries, and 17 organization repositories, so any admission is a schema version change, which `AGENTS.md` puts under Ask first; who can unblock: @bryansayler)
 - [ ] Build the scheduled `portfolio-drift.yml` report proposed in `docs/governance/WORKSPACE_TOOLING.md` (blocked on: read access to private repositories from Actions, which means a token or GitHub App the owner provisions, plus a brief naming its kill switch; who can unblock: @bryansayler)
 - [ ] Automate caller pin bumps across repositories (blocked on: a workflow with `contents: write` and `pull-requests: write` in other repositories, which is Ask first; who can unblock: @bryansayler)
+- [ ] Stop receipts being stranded by squash merges: the PR #14 squash is what broke the receipt check on `main`, and squashing this pull request would strand its own four subject commits the same way. Merge with a merge commit, as PRs #39 and #41 were, and either restrict the repository to merge commits or teach the receipt protocol to re-bind after a squash (blocked on: a repository merge-method setting or a protocol decision; who can unblock: @bryansayler)
 - [ ] Decide each empty repository: keep reserved, or archive (blocked on: owner judgement at the quarterly topology review; who can unblock: @bryansayler)
 
 ## Done

@@ -39,7 +39,8 @@ python scripts/quirk_workspace.py scan            # Markdown table; add --json f
 python scripts/quirk_workspace.py drift [--fail-on-drift]
 # Every caller of a .github reusable workflow, with FLOATING / OFF_TARGET refs flagged
 python scripts/quirk_workspace.py pins --expect <40-hex .github main commit> [--fail-on-floating]
-# Each repository's own declared validation command; --run executes them one by one
+# Each repository's own declared validation command; --run executes them one by one and
+# exits 1 if any declared command fails, cannot start (126/127), or times out (124)
 python scripts/quirk_workspace.py commands [--run --timeout 900]
 ```
 
@@ -48,8 +49,8 @@ python scripts/quirk_workspace.py commands [--run --timeout 900]
 | Field | Values | Rule |
 | --- | --- | --- |
 | `state` | `EMPTY` | the checkout has no commits |
-| | `DOCS_ONLY` | commits, but no source file (`.py .ts .tsx .js .mjs .cjs .sh .sql .go .rs`) outside dependency and build directories |
-| | `CODE` | at least one such source file |
+| | `DOCS_ONLY` | commits, but no Git-tracked source file (`.py .ts .tsx .js .mjs .cjs .sh .sql .go .rs`) outside dependency and build directories; untracked virtual environments and build output never count |
+| | `CODE` | at least one such tracked source file |
 | `validation_command` | `scripts/validate.sh`; `bun\|npm run validate\|check\|test`; none | the first of these entry points the repository's own files define (a `scripts/validate.sh` file, or that script name in `package.json`); none otherwise. A test directory alone is not a declaration |
 | drift `kind` | `OBSERVED_UNCLASSIFIED` | a checkout the inventory does not list |
 | | `NOT_IN_WORKSPACE` | an inventory entry with no checkout here (not proof it is absent on GitHub) |
