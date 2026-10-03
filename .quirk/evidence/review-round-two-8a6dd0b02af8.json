@@ -1,0 +1,77 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.review-round-two.8a6dd0b02af8",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "7aa3d96ecdb3610af5c518ee2a339db1438fc615",
+    "commit": "8a6dd0b02af805eb87d6fc97df45e9b67866a243",
+    "changed_paths": [
+      "docs/goals/2026-09-20-living-documents-validated.md",
+      "docs/intentions/2026-09-20-evidence-first-planning.md",
+      "docs/roadmaps/2026-09-20-org-control-plane.md",
+      "docs/todos/2026-09-20-living-document-rollout.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.review-round-two.8a6dd0b02af8",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Seven findings from this pull request's review are corrected across the four living documents. VERIFIED by reading primary sources before changing anything: GitHub Actions run 35531136510, the Governance Contracts run on PR #6 head 8d9945bf, concluded failure at 2026-09-20T19:05:08Z and PR #6 merged at 2026-09-20T19:17:08Z, so #6 merged over a red gate and both the claim that it merged through the gate and the claim that the organization refuses to merge without binding were false; the list held eleven entries while stating ten, and removing #6 reconciles it. VERIFIED: no file in .github/workflows invokes scripts/validate.sh, so freshness reaches the pull-request gate through test_repository_documents_are_fresh_today in the unit suite that governance-contracts.yml runs, not through validate.sh. VERIFIED: governance-contracts.yml triggers only on pull_request and push to main with no schedule, so a stale document cannot turn an already-completed check red and the earlier 'every open pull request' phrasing in four documents overstated it. VERIFIED: validate_living_docs.py returns a stale message when review_by < today, so a document due 2026-10-04 first reports stale on 2026-10-05, and the earlier 'one and three days from lapsing' both miscounted and conflated the review date with the first stale day. VERIFIED: the intention lists one done goal and three unwritten, not one of three. VERIFIED at this commit: 180 tests pass under Python 3.12, scripts/validate.sh reports all executed checks passed, and validate_living_docs.py --strict reports 4 documents and 0 stale. The corrections are written into the documents rather than removed, including the merge over a red gate, because the strength being claimed was partly false and the record should say so.",
+      "evidence_paths": [
+        "docs/goals/2026-09-20-living-documents-validated.md",
+        "docs/intentions/2026-09-20-evidence-first-planning.md",
+        "docs/roadmaps/2026-09-20-org-control-plane.md",
+        "docs/todos/2026-09-20-living-document-rollout.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/goals/2026-09-20-living-documents-validated.md",
+      "state": "present",
+      "git_blob": "abfa5104afbc70430f4ce7d520c175ed5b662883",
+      "sha256": "sha256:f7757e012b62c0453b94b0fb24eb33b8ce04b524130985f0c3cfbaebdb967acc"
+    },
+    {
+      "path": "docs/intentions/2026-09-20-evidence-first-planning.md",
+      "state": "present",
+      "git_blob": "b2fc0c79d5bf12639aa20dffe8c6a0a66e195192",
+      "sha256": "sha256:28b14c04dd4c38d5ea64511dffa81cc32a138fc27614c5b9b5df4562a864cded"
+    },
+    {
+      "path": "docs/roadmaps/2026-09-20-org-control-plane.md",
+      "state": "present",
+      "git_blob": "1e90ae3d271c713bd6beee0ae12c714cccd03007",
+      "sha256": "sha256:dfd69bd6987a6b7e1dd488a4d6f71e1d89239116b84c27d767a4b35a0cd938f2"
+    },
+    {
+      "path": "docs/todos/2026-09-20-living-document-rollout.md",
+      "state": "present",
+      "git_blob": "c472b3ad65d4965b4dbe6cdb5f4cb035178ece85",
+      "sha256": "sha256:d39f9bf59fab985cafb1ac161f375d1aeb4ff02a499ec63f602a1be6ee01721c"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "uv run --no-project --python 3.12 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T09:51:28Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:411bb0f8339e9b9215cf6f972b2e6141743de87e722129bdee2389a252d52209"
+}
