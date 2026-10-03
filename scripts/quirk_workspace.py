@@ -65,7 +65,7 @@ CALLER = re.compile(
     r"""^\s*(?:-\s*)?uses\s*:\s*(["']?)(?i:Quirk-Systems/\.github/\.github/workflows/)([^@\s"']+)@([^\s#"']+)\1(?:\s|$)"""
 )
 # A key whose value is a literal or folded block scalar (`run: |`, `script: >-`).
-BLOCK_SCALAR = re.compile(r"^(\s*(?:-\s+)?)[^\s:#][^:#]*?\s*:\s*[|>][-+0-9]*\s*(?:#.*)?$")
+BLOCK_SCALAR = re.compile(r"^(\s*(?:-\s+)?)([^\s:#][^:#]*?)\s*:\s*[|>][-+0-9]*\s*(?:#.*)?$")
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 
 
@@ -118,7 +118,7 @@ def source_files(path):
         check=False,
     )
     if result.returncode:
-        return 0
+        return None  # an unreadable index is not the same as no tracked files
     count = 0
     for raw in result.stdout.split(b"\0"):
         if not raw:
@@ -162,7 +162,7 @@ def observe(path):
     workflows_dir = path / ".github" / "workflows"
     workflows = sorted(p.name for p in workflows_dir.glob("*.y*ml")) if workflows_dir.is_dir() else []
     sources = source_files(path) if commits else 0
-    if counted is None:
+    if counted is None or sources is None:
         state = UNREADABLE
     elif commits == 0:
         state = EMPTY
@@ -201,7 +201,10 @@ def load_inventory(path=REGISTRY):
 
 def drift(observed, inventory):
     """Return findings sorted by kind then repository, comparing names case-insensitively."""
-    by_name = {item["repository"].lower(): item for item in observed}
+    # An unreadable checkout supports no finding: its identity may be only the
+    # directory name, and its state is unknown. It still counts as present.
+    present = {item["repository"].lower() for item in observed}
+    by_name = {item["repository"].lower(): item for item in observed if item["state"] != UNREADABLE}
     listed = {name.lower(): entry for name, entry in inventory.items()}
     findings = []
     for key, item in by_name.items():
@@ -226,7 +229,7 @@ def drift(observed, inventory):
                 "detail": f"inventory lifecycle is reserved but the checkout carries {', '.join(item['toolchain'])}",
             })
     for key, entry in listed.items():
-        if key not in by_name:
+        if key not in present:
             findings.append({
                 "kind": NOT_IN_WORKSPACE,
                 "repository": entry["repository"],
@@ -239,18 +242,27 @@ def mapping_lines(lines):
     """Yield (number, line) for lines outside YAML block scalars.
 
     Text inside `run: |` and similar is a script, not workflow keys, so a
-    heredoc that prints `uses: ...` must not be audited as a caller.
+    heredoc that prints `uses: ...` must not be audited as a caller. A block
+    scalar that is itself the value of `uses` is still a caller: its first
+    content line is yielded as `uses: <value>`.
     """
     block_indent = None
+    uses_prefix = None
     for number, line in enumerate(lines, start=1):
         indent = len(line) - len(line.lstrip())
         if block_indent is not None:
             if not line.strip() or indent > block_indent:
+                if uses_prefix is not None and line.strip():
+                    yield number, f"{uses_prefix}uses: {line.strip()}"
+                    uses_prefix = None
                 continue
             block_indent = None
+            uses_prefix = None
         match = BLOCK_SCALAR.match(line)
         if match:
             block_indent = len(match.group(1))
+            if match.group(2).strip().strip("\"'") == "uses":
+                uses_prefix = match.group(1)
         yield number, line
 
 
@@ -300,7 +312,7 @@ def render_scan(observed):
     ]
     for item in observed:
         lines.append(
-            f"| `{item['repository']}` | {item['state']} | {item['commits']} | {item['source_files']} | "
+            f"| `{item['repository']}` | {item['state']} | {item['commits']} | {'-' if item['source_files'] is None else item['source_files']} | "
             f"{', '.join(item['toolchain']) or '-'} | {'yes' if item['manifest'] else 'no'} | "
             f"{', '.join(item['agent_files']) or '-'} | {len(item['workflows'])} | "
             f"{'`' + item['validation_command'] + '`' if item['validation_command'] else '-'} |"

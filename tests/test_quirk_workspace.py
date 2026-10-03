@@ -115,6 +115,12 @@ class WorkspaceScanTests(unittest.TestCase):
         registry = inventory([{"repository": seen["broken"]["repository"], "lifecycle": "active"}])
         self.assertEqual([f for f in self.ws.drift([seen["broken"]], registry) if f["kind"] == self.ws.STATE_MISMATCH], [])
 
+    def test_unreadable_index_is_not_reported_docs_only(self):
+        path = make_repo(self.root, "badindex", {"src/app.ts": "export {}\n"})
+        (path / ".git" / "index").write_bytes(b"corrupt")
+        item = self.by_name()["Quirk-Systems/badindex"]
+        self.assertEqual((item["state"], item["source_files"]), (self.ws.UNREADABLE, None))
+
     def test_non_git_directories_are_ignored(self):
         (Path(self.root) / "notes").mkdir()
         self.assertEqual(self.ws.scan(self.root), [])
@@ -149,6 +155,12 @@ class WorkspaceDriftTests(unittest.TestCase):
             (self.ws.STATE_MISMATCH, "Quirk-Systems/quirk-held"),
             (self.ws.NOT_IN_WORKSPACE, "bryansayler/quirk-elsewhere"),
         })
+
+    def test_unreadable_checkouts_produce_no_findings(self):
+        unreadable = {"repository": "broken", "state": self.ws.UNREADABLE, "commits": 0, "toolchain": []}
+        listed_unreadable = dict(unreadable, repository="Quirk-Systems/listed")
+        registry = inventory([{"repository": "Quirk-Systems/listed", "lifecycle": "active"}])
+        self.assertEqual(self.ws.drift([unreadable, listed_unreadable], registry), [])
 
     def test_names_compare_case_insensitively(self):
         observed = [self.observed("quirk-systems/quirk", self.ws.DOCS_ONLY)]
@@ -221,6 +233,19 @@ class WorkspacePinTests(unittest.TestCase):
         make_repo(self.root, "heredoc", {".github/workflows/a.yml": workflow})
         rows = [r for r in self.ws.caller_pins(self.root, self.ws.scan(self.root)) if r["repository"] == "Quirk-Systems/heredoc"]
         self.assertEqual([(r["status"], r["file"]) for r in rows], [(self.ws.PINNED, ".github/workflows/a.yml:12")])
+
+    def test_block_scalar_uses_value_is_still_a_caller(self):
+        workflow = (
+            "jobs:\n"
+            "  folded:\n"
+            "    uses: >-\n"
+            "      Quirk-Systems/.github/.github/workflows/reusable-evidence-binding.yml@main\n"
+            "  after:\n"
+            "    runs-on: ubuntu-latest\n"
+        )
+        make_repo(self.root, "foldeduses", {".github/workflows/a.yml": workflow})
+        rows = [r for r in self.ws.caller_pins(self.root, self.ws.scan(self.root)) if r["repository"] == "Quirk-Systems/foldeduses"]
+        self.assertEqual([(r["status"], r["file"]) for r in rows], [(self.ws.FLOATING, ".github/workflows/a.yml:4")])
 
     def test_expect_marks_other_shas_off_target(self):
         seen = self.statuses(self.SHA)
