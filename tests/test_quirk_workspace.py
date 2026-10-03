@@ -163,6 +163,8 @@ class WorkspaceScanTests(unittest.TestCase):
             ("ssh://git@github.com/Quirk-Systems/quirk-os", "Quirk-Systems/quirk-os"),
             ("https://token@github.com/Quirk-Systems/quirk-os.git", "Quirk-Systems/quirk-os"),
             ("https://gitlab.example.com/Quirk-Systems/quirk-os.git", "quirk-feed"),
+            ("HTTPS://GitHub.com/Quirk-Systems/quirk-os.git", "Quirk-Systems/quirk-os"),
+            ("git@GITHUB.COM:Quirk-Systems/quirk-os.git", "Quirk-Systems/quirk-os"),
         ):
             git(path, "remote", "set-url", "origin", url)
             self.assertEqual(self.ws.repository_name(path), expected, url)
@@ -215,9 +217,10 @@ class WorkspaceDriftTests(unittest.TestCase):
 
     def test_no_drift_message_admits_unreadable_checkouts(self):
         self.assertIn("No drift: every checkout", self.ws.render_drift([]))
-        message = self.ws.render_drift([], unreadable=2)
+        message = self.ws.render_drift([], [{"directory": "a", "reason": "unreadable"}, {"directory": "b", "reason": "no GitHub origin"}])
         self.assertNotIn("every checkout is inventoried", message)
-        self.assertIn("2 UNREADABLE checkouts could not be compared", message)
+        self.assertIn("2 checkouts could not be compared", message)
+        self.assertIn("`b` (no GitHub origin)", message)
 
     def test_names_compare_case_insensitively(self):
         observed = [self.observed("quirk-systems/quirk", self.ws.DOCS_ONLY)]
@@ -326,6 +329,34 @@ class WorkspacePinTests(unittest.TestCase):
         self.assertEqual(
             [(r["workflow"], r["status"], r["file"]) for r in rows],
             [("x.yml", self.ws.PINNED, ".github/workflows/a.yml:5"), ("y.yml", self.ws.FLOATING, ".github/workflows/a.yml:5")],
+        )
+
+    def test_quoted_scalars_spanning_lines_hide_their_text(self):
+        workflow = (
+            'name: "hello\n'
+            '  {uses: Quirk-Systems/.github/.github/workflows/x.yml@main}"\n'
+            "description: 'multi\n"
+            "  uses: Quirk-Systems/.github/.github/workflows/x.yml@main'\n"
+            "on: push\n"
+            "run-name: Bob's run\n"
+            "jobs:\n"
+            "  call:\n"
+            "    uses: Quirk-Systems/.github/.github/workflows/y.yml@main\n"
+        )
+        make_repo(self.root, "multiline", {".github/workflows/a.yml": workflow})
+        rows = [r for r in self.ws.caller_pins(self.root, self.ws.scan(self.root)) if r["repository"] == "Quirk-Systems/multiline"]
+        self.assertEqual([(r["workflow"], r["file"]) for r in rows], [("y.yml", ".github/workflows/a.yml:9")])
+
+    def test_quoted_flow_refs_keep_punctuation(self):
+        workflow = (
+            'jobs: {call: {uses: "Quirk-Systems/.github/.github/workflows/x.yml@release,1"}, '
+            "other: {uses: 'Quirk-Systems/.github/.github/workflows/y.yml@v1}2'}}\n"
+        )
+        make_repo(self.root, "flowpunct", {".github/workflows/a.yml": workflow})
+        rows = [r for r in self.ws.caller_pins(self.root, self.ws.scan(self.root)) if r["repository"] == "Quirk-Systems/flowpunct"]
+        self.assertEqual(
+            [(r["workflow"], r["ref"], r["status"]) for r in rows],
+            [("x.yml", "release,1", self.ws.FLOATING), ("y.yml", "v1}2", self.ws.FLOATING)],
         )
 
     def test_expect_marks_other_shas_off_target(self):
@@ -446,8 +477,23 @@ class WorkspaceCliTests(unittest.TestCase):
         with contextlib.redirect_stdout(buffer):
             self.ws.main(["--workspace", self.root, "--registry", str(self.registry), "drift", "--json"])
         result = json.loads(buffer.getvalue())
-        self.assertEqual(result["unreadable"], ["broken"])
+        self.assertEqual(result["not_compared"], [{"directory": "broken", "reason": "unreadable"}])
         self.assertEqual([f["repository"] for f in result["findings"]], ["Quirk-Systems/quirk-new"])
+
+    def test_drift_reports_readable_checkouts_without_a_github_origin(self):
+        import contextlib
+        import io
+
+        mirror = make_repo(self.root, "mirror", {"README.md": "x\n"})
+        git(mirror, "remote", "set-url", "origin", "/srv/remotes/mirror.git")
+        buffer = io.StringIO()
+        with contextlib.redirect_stdout(buffer):
+            self.ws.main(["--workspace", self.root, "--registry", str(self.registry), "drift", "--json"])
+        self.assertEqual(json.loads(buffer.getvalue())["not_compared"], [{"directory": "mirror", "reason": "no GitHub origin"}])
+        buffer = io.StringIO()
+        with contextlib.redirect_stdout(buffer):
+            self.ws.main(["--workspace", self.root, "--registry", str(self.registry), "drift"])
+        self.assertIn("`mirror` (no GitHub origin)", buffer.getvalue())
 
     def test_nonpositive_timeout_is_rejected(self):
         import contextlib

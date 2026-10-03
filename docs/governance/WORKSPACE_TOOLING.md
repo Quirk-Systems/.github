@@ -83,13 +83,16 @@ lifecycle, and owner arrive only through a reviewed inventory change.
 a YAML parser. It finds a `uses` key (plain, `"uses"` or `'uses'`) whose value
 is a plain, quoted, anchored (`&name`) or tagged (`!!str`) scalar, a block
 scalar (`uses: >-`), or an entry in a single-line flow mapping
-(`{uses: ...}`), and it ignores text inside script blocks such as `run: |`.
-It does not resolve aliases (`*name`), merge keys, or flow mappings that span
+(`{uses: ...}`, where a quoted value may hold `,` or `}`), and it ignores
+text inside script blocks such as `run: |`, comments, and quoted scalars,
+including a quoted scalar that continues onto later lines. A quote inside a
+plain scalar (`name: Bob's run`) opens nothing. It does not resolve aliases (`*name`), merge keys, or flow mappings that span
 several lines. Treat a clean `pins` result as "no floating caller in the forms
 above", not as proof that none exists.
 
 A checkout's identity is `owner/name` only when its `origin` is a GitHub URL
-(`https://github.com/…`, `git@github.com:…`, `ssh://git@github.com/…`); any
+(`https://github.com/…`, `git@github.com:…`, `ssh://git@github.com/…`, with
+the scheme and host matched in any case); any
 other remote, or none, leaves only the directory name. Such a checkout, like
 an `UNREADABLE` one, is never a basis for a drift finding and counts as
 present only for an inventory entry whose repository name equals its
@@ -97,8 +100,10 @@ directory. An `UNREADABLE` checkout reports its commit and source counts as
 unknown (`null`, shown `-`), and still reports any validation command its
 working tree declares.
 
-`drift --json` returns `{"findings": [...], "unreadable": [...]}`; a non-empty
-`unreadable` list means those checkouts were not compared.
+`drift --json` returns `{"findings": [...], "not_compared": [...]}`, where each
+`not_compared` entry is `{"directory": ..., "reason": "unreadable" | "no GitHub
+origin"}`; a non-empty list means those checkouts were not compared, and the
+Markdown output names them under its findings.
 
 ## Deliberately not automated
 

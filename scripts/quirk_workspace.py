@@ -66,12 +66,18 @@ CALLER = re.compile(
     r"""^\s*(?:-\s*)?(?:uses|"uses"|'uses')\s*:\s*(?:[&!]\S+\s+)*(["']?)(?i:Quirk-Systems/\.github/\.github/workflows/)([^@\s"']+)@([^\s#"']+)\1(?:\s|$)"""
 )
 # The same caller inside a single-line flow mapping: `{call: {uses: ...@main}}`.
+# A plain value ends at `,` or `}`; a quoted one ends only at its closing quote,
+# so a ref such as `"...@release,1"` keeps its punctuation.
 FLOW_CALLER = re.compile(
-    r"""[{,]\s*(?:uses|"uses"|'uses')\s*:\s*(?:[&!][^\s,{}]+\s+)*(["']?)(?i:Quirk-Systems/\.github/\.github/workflows/)([^@\s"',{}]+)@([^\s#"',{}]+)\1\s*[,}]"""
+    r"""[{,]\s*(?:uses|"uses"|'uses')\s*:\s*(?:[&!][^\s,{}]+\s+)*"""
+    r"""(?:()(?i:Quirk-Systems/\.github/\.github/workflows/)([^@\s"',{}]+)@([^\s#"',{}]+)"""
+    r"""|(["'])(?i:Quirk-Systems/\.github/\.github/workflows/)([^@\s"']+)@([^\s"']+)\4)\s*[,}]"""
 )
 # A key whose value is a literal or folded block scalar (`run: |`, `script: >-`).
 BLOCK_SCALAR = re.compile(r"^(\s*(?:-\s+)?)([^\s:#][^:#]*?)\s*:\s*[|>][-+0-9]*\s*(?:#.*)?$")
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
+# An anchor or tag ending the text before a value: `uses: &a "..."`, `[!!str "..."`.
+PROPERTY = re.compile(r"(?:^|(?<=[\s\[{,]))[&!][^\s,\[\]{}]*$")
 
 
 class WorkspaceError(Exception):
@@ -89,7 +95,8 @@ def git(path, *args):
 
 
 GITHUB_REMOTE = re.compile(
-    r"^(?:https?://(?:[^@/]+@)?github\.com/|ssh://git@github\.com/|git@github\.com:)"
+    # URL schemes and host names are case-insensitive: `https://GitHub.com/...` is GitHub.
+    r"^(?i:https?://(?:[^@/]+@)?github\.com/|ssh://git@github\.com/|git@github\.com:)"
     r"([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+?)(?:\.git)?/?$"
 )
 
@@ -251,6 +258,17 @@ def load_inventory(path=REGISTRY):
     return {entry["repository"]: entry for entry in data["repositories"]}
 
 
+def not_compared(observed):
+    """Checkouts `drift` cannot compare, each with the reason, sorted by directory."""
+    skipped = []
+    for item in observed:
+        if item["state"] == UNREADABLE:
+            skipped.append({"directory": item["directory"], "reason": "unreadable"})
+        elif not item.get("github_identity", True):
+            skipped.append({"directory": item["directory"], "reason": "no GitHub origin"})
+    return sorted(skipped, key=lambda s: s["directory"].lower())
+
+
 def drift(observed, inventory):
     """Return findings sorted by kind then repository, comparing names case-insensitively."""
     # An unreadable checkout supports no finding: its identity may be only the
@@ -324,22 +342,41 @@ def mapping_lines(lines):
         yield number, line
 
 
-def quoted_spans(line):
-    """Return (code, inside) where code drops an unquoted `#` comment and
-    inside[i] is True when position i lies within a quoted scalar.
+def opens_scalar(line, index):
+    """True when a quote at `index` starts a quoted scalar rather than sitting
+    inside a plain one (`name: Bob's job`). YAML opens a quoted scalar only at
+    line start or after `- `, `? `, `: `, `[`, `{`, or `,`, past any anchor or tag."""
+    before = line[:index].rstrip()
+    while True:
+        prop = PROPERTY.search(before)
+        if not prop:
+            break
+        before = before[:prop.start()].rstrip()
+    if not before or before[-1] in "[{,":
+        return True
+    gap = len(before) < index
+    if before[-1] == ":":
+        return gap
+    return before[-1] in "-?" and gap and (len(before) == 1 or before[-2] in " \t[{,")
 
+
+def quoted_spans(line, quote=None):
+    """Return (code, inside, quote) where code drops an unquoted `#` comment,
+    inside[i] is True when position i lies within a quoted scalar, and quote is
+    the scalar still open at the end of the line (YAML lets one span lines).
+
+    Pass the previous line's open quote back in to continue that scalar.
     Handles YAML's escapes: `''` inside a single-quoted scalar and a
     backslash escape inside a double-quoted one never close the scalar.
     """
     inside = [False] * len(line)
-    quote = None
     index = 0
     while index < len(line):
         char = line[index]
         if quote is None:
             if char == "#" and (index == 0 or line[index - 1].isspace()):
-                return line[:index], inside[:index]
-            if char in "\"'":
+                return line[:index], inside[:index], None
+            if char in "\"'" and opens_scalar(line, index):
                 quote = char
         elif quote == "'" and char == "'" and line[index + 1:index + 2] == "'":
             inside[index] = inside[index + 1] = True
@@ -356,14 +393,18 @@ def quoted_spans(line):
         else:
             inside[index] = True
         index += 1
-    return line, inside
+    return line, inside, quote
 
 
-def flow_callers(line):
+def flow_callers(line, quote=None):
     """Every flow-mapping caller on the line that is a real key, not text in a
-    comment or inside a quoted scalar."""
-    code, inside = quoted_spans(line)
-    return [m for m in FLOW_CALLER.finditer(code) if not inside[m.start()]]
+    comment or inside a quoted scalar, as (quote, workflow, ref) tuples."""
+    code, inside, _ = quoted_spans(line, quote)
+    return [
+        (m.group(1), m.group(2), m.group(3)) if m.group(2) else (m.group(4), m.group(5), m.group(6))
+        for m in FLOW_CALLER.finditer(code)
+        if not inside[m.start()]
+    ]
 
 
 def caller_pins(workspace, observed, expect=None):
@@ -373,10 +414,12 @@ def caller_pins(workspace, observed, expect=None):
         workflows_dir = Path(workspace) / item["directory"] / ".github" / "workflows"
         for name in item.get("workflows", []):
             lines = (workflows_dir / name).read_text(encoding="utf-8", errors="replace").splitlines()
+            quote = None  # a quoted scalar left open by an earlier line
             for number, line in mapping_lines(lines):
-                matches = [CALLER.match(line)] if CALLER.match(line) else flow_callers(line)
-                for match in matches:
-                    _, workflow, ref = match.groups()
+                caller = None if quote else CALLER.match(line)
+                matches = [caller.groups()] if caller else flow_callers(line, quote)
+                quote = quoted_spans(line, quote)[2]
+                for _, workflow, ref in matches:
                     if not FULL_SHA.match(ref):
                         status = FLOATING
                     elif expect and ref != expect:
@@ -422,15 +465,18 @@ def render_scan(observed):
     return "\n".join(lines) + "\n"
 
 
-def render_drift(findings, unreadable=0):
+def render_drift(findings, skipped_checkouts=()):
+    count = len(skipped_checkouts)
     skipped = (
-        f"{unreadable} UNREADABLE checkout{'' if unreadable == 1 else 's'} could not be compared and "
-        f"{'is' if unreadable == 1 else 'are'} not covered by this result.\n"
-        if unreadable else ""
+        f"{count} checkout{'' if count == 1 else 's'} could not be compared and "
+        f"{'is' if count == 1 else 'are'} not covered by this result: "
+        + ", ".join(f"`{s['directory']}` ({s['reason']})" for s in skipped_checkouts)
+        + ".\n"
+        if count else ""
     )
     if not findings:
-        if unreadable:
-            return "No determinable drift among readable checkouts.\n" + skipped
+        if count:
+            return "No determinable drift among compared checkouts.\n" + skipped
         return "No drift: every checkout is inventoried and every inventory entry is checked out.\n"
     lines = ["| Finding | Repository | Detail |", "| --- | --- | --- |"]
     lines += [f"| {f['kind']} | `{f['repository']}` | {f['detail']} |" for f in findings]
@@ -529,12 +575,12 @@ def main(argv=None):
 
     if args.command == "drift":
         findings = drift(observed, load_inventory(args.registry))
-        unreadable = sorted(i["directory"] for i in observed if i["state"] == UNREADABLE)
+        skipped = not_compared(observed)
         if args.json:
-            # Unreadable checkouts were not compared; say so rather than let `[]` read as clean.
-            print(json.dumps({"findings": findings, "unreadable": unreadable}, indent=2))
+            # Skipped checkouts were not compared; say so rather than let `[]` read as clean.
+            print(json.dumps({"findings": findings, "not_compared": skipped}, indent=2))
         else:
-            print(render_drift(findings, len(unreadable)), end="")
+            print(render_drift(findings, skipped), end="")
         return 1 if findings and args.fail_on_drift else 0
 
     if args.command == "pins":
