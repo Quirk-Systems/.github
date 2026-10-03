@@ -157,10 +157,15 @@ class WorkspaceDriftTests(unittest.TestCase):
         })
 
     def test_unreadable_checkouts_produce_no_findings(self):
-        unreadable = {"repository": "broken", "state": self.ws.UNREADABLE, "commits": 0, "toolchain": []}
-        listed_unreadable = dict(unreadable, repository="Quirk-Systems/listed")
+        unreadable = {"repository": "broken", "directory": "broken", "state": self.ws.UNREADABLE, "commits": 0, "toolchain": []}
+        listed_unreadable = dict(unreadable, repository="Quirk-Systems/listed", directory="listed")
         registry = inventory([{"repository": "Quirk-Systems/listed", "lifecycle": "active"}])
         self.assertEqual(self.ws.drift([unreadable, listed_unreadable], registry), [])
+
+    def test_unreadable_checkout_known_only_by_directory_is_not_missing(self):
+        unreadable = {"repository": "quirk-feed", "directory": "quirk-feed", "state": self.ws.UNREADABLE, "commits": 0, "toolchain": []}
+        registry = inventory([{"repository": "Quirk-Systems/quirk-feed", "lifecycle": "active"}])
+        self.assertEqual(self.ws.drift([unreadable], registry), [])
 
     def test_names_compare_case_insensitively(self):
         observed = [self.observed("quirk-systems/quirk", self.ws.DOCS_ONLY)]
@@ -193,6 +198,8 @@ class WorkspacePinTests(unittest.TestCase):
         make_repo(self.root, "local", {".github/workflows/a.yml": "jobs:\n  x:\n    uses: ./.github/workflows/reusable-validate.yml\n"})
         make_repo(self.root, "dquoted", {".github/workflows/a.yml": caller.format(w="quirk-semantic-governance.yml", ref="main").replace("uses: ", 'uses: "').replace(" # main", '" # main')})
         make_repo(self.root, "squoted", {".github/workflows/a.yml": caller.format(w="quirk-semantic-governance.yml", ref=self.SHA).replace("uses: ", "uses: '").replace(" # main", "' # main")})
+        make_repo(self.root, "quotedkey", {".github/workflows/a.yml": caller.format(w="reusable-evidence-binding.yml", ref="main").replace("uses: ", '"uses": ')})
+        make_repo(self.root, "notworkflow", {".github/workflows/a.yxml": caller.format(w="reusable-evidence-binding.yml", ref="main")})
         make_repo(self.root, "spaced", {".github/workflows/a.yml": caller.format(w="reusable-evidence-binding.yml", ref="main").replace("uses: ", "uses : ")})
         make_repo(self.root, "lowercase", {".github/workflows/a.yml": caller.format(w="reusable-evidence-binding.yml", ref="main").replace("Quirk-Systems/", "quirk-systems/")})
         make_repo(self.root, "mismatched", {".github/workflows/a.yml": caller.format(w="quirk-semantic-governance.yml", ref="main").replace("uses: ", 'uses: "')})
@@ -213,6 +220,7 @@ class WorkspacePinTests(unittest.TestCase):
             "Quirk-Systems/squoted": (self.ws.PINNED, ".github/workflows/a.yml:3"),
             "Quirk-Systems/lowercase": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
             "Quirk-Systems/spaced": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
+            "Quirk-Systems/quotedkey": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
         })
 
     def test_block_scalar_text_is_not_a_caller(self):

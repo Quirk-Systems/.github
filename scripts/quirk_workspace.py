@@ -62,7 +62,7 @@ OFF_TARGET = "OFF_TARGET"
 # `uses:` may be a plain, single-quoted, or double-quoted YAML scalar, and GitHub
 # resolves the owner and repository case-insensitively.
 CALLER = re.compile(
-    r"""^\s*(?:-\s*)?uses\s*:\s*(["']?)(?i:Quirk-Systems/\.github/\.github/workflows/)([^@\s"']+)@([^\s#"']+)\1(?:\s|$)"""
+    r"""^\s*(?:-\s*)?(?:uses|"uses"|'uses')\s*:\s*(["']?)(?i:Quirk-Systems/\.github/\.github/workflows/)([^@\s"']+)@([^\s#"']+)\1(?:\s|$)"""
 )
 # A key whose value is a literal or folded block scalar (`run: |`, `script: >-`).
 BLOCK_SCALAR = re.compile(r"^(\s*(?:-\s+)?)([^\s:#][^:#]*?)\s*:\s*[|>][-+0-9]*\s*(?:#.*)?$")
@@ -160,7 +160,9 @@ def observe(path):
     entries = sorted(entry.name for entry in path.iterdir() if entry.name != ".git")
     toolchain = [name for name in TOOLCHAIN_FILES if (path / name).is_file()]
     workflows_dir = path / ".github" / "workflows"
-    workflows = sorted(p.name for p in workflows_dir.glob("*.y*ml")) if workflows_dir.is_dir() else []
+    workflows = sorted(
+        p.name for p in workflows_dir.iterdir() if p.is_file() and p.suffix in (".yml", ".yaml")
+    ) if workflows_dir.is_dir() else []
     sources = source_files(path) if commits else 0
     if counted is None or sources is None:
         state = UNREADABLE
@@ -204,6 +206,9 @@ def drift(observed, inventory):
     # An unreadable checkout supports no finding: its identity may be only the
     # directory name, and its state is unknown. It still counts as present.
     present = {item["repository"].lower() for item in observed}
+    # Git cannot report an unreadable checkout's origin, so its identity may be
+    # only the directory name; match that against the inventory's repo names.
+    unreadable_dirs = {item["directory"].lower() for item in observed if item["state"] == UNREADABLE}
     by_name = {item["repository"].lower(): item for item in observed if item["state"] != UNREADABLE}
     listed = {name.lower(): entry for name, entry in inventory.items()}
     findings = []
@@ -229,7 +234,7 @@ def drift(observed, inventory):
                 "detail": f"inventory lifecycle is reserved but the checkout carries {', '.join(item['toolchain'])}",
             })
     for key, entry in listed.items():
-        if key not in present:
+        if key not in present and key.rsplit("/", 1)[-1] not in unreadable_dirs:
             findings.append({
                 "kind": NOT_IN_WORKSPACE,
                 "repository": entry["repository"],
