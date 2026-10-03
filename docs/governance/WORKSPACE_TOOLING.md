@@ -77,6 +77,20 @@ lifecycle, and owner arrive only through a reviewed inventory change.
 | Scheduled drift report | proposed `portfolio-drift.yml` | weekly schedule | one issue | owner reads and files inventory changes | **proposed, not built**: needs read access to private repositories, which means a token or GitHub App the owner provisions; see Decisions |
 | Caller pin bumps | proposed, after the drift report | a reviewed `.github` `main` commit | one pull request per caller repository | owner merge in each repository | **proposed, not built**: needs `contents: write` and `pull-requests: write` in other repositories |
 
+### What `pins` can and cannot see
+
+`pins` reads workflow files line by line with the standard library; it is not
+a YAML parser. It finds a `uses` key (plain, `"uses"` or `'uses'`) whose value
+is a plain, quoted, anchored (`&name`) or tagged (`!!str`) scalar, a block
+scalar (`uses: >-`), or an entry in a single-line flow mapping
+(`{uses: ...}`), and it ignores text inside script blocks such as `run: |`.
+It does not resolve aliases (`*name`), merge keys, or flow mappings that span
+several lines. Treat a clean `pins` result as "no floating caller in the forms
+above", not as proof that none exists.
+
+`drift --json` returns `{"findings": [...], "unreadable": [...]}`; a non-empty
+`unreadable` list means those checkouts were not compared.
+
 ## Deliberately not automated
 
 - **Classification.** The tool reports `OBSERVED_UNCLASSIFIED`; it never writes

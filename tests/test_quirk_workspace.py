@@ -224,6 +224,7 @@ class WorkspacePinTests(unittest.TestCase):
         make_repo(self.root, "local", {".github/workflows/a.yml": "jobs:\n  x:\n    uses: ./.github/workflows/reusable-validate.yml\n"})
         make_repo(self.root, "dquoted", {".github/workflows/a.yml": caller.format(w="quirk-semantic-governance.yml", ref="main").replace("uses: ", 'uses: "').replace(" # main", '" # main')})
         make_repo(self.root, "squoted", {".github/workflows/a.yml": caller.format(w="quirk-semantic-governance.yml", ref=self.SHA).replace("uses: ", "uses: '").replace(" # main", "' # main")})
+        make_repo(self.root, "flow", {".github/workflows/a.yml": "jobs: {call: {uses: Quirk-Systems/.github/.github/workflows/reusable-evidence-binding.yml@main}}\n"})
         make_repo(self.root, "anchored", {".github/workflows/a.yml": caller.format(w="reusable-evidence-binding.yml", ref="main").replace("uses: ", "uses: &shared ")})
         make_repo(self.root, "quotedkey", {".github/workflows/a.yml": caller.format(w="reusable-evidence-binding.yml", ref="main").replace("uses: ", '"uses": ')})
         make_repo(self.root, "notworkflow", {".github/workflows/a.yxml": caller.format(w="reusable-evidence-binding.yml", ref="main")})
@@ -249,6 +250,7 @@ class WorkspacePinTests(unittest.TestCase):
             "Quirk-Systems/spaced": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
             "Quirk-Systems/quotedkey": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
             "Quirk-Systems/anchored": (self.ws.FLOATING, ".github/workflows/a.yml:3"),
+            "Quirk-Systems/flow": (self.ws.FLOATING, ".github/workflows/a.yml:1"),
         })
 
     def test_block_scalar_text_is_not_a_caller(self):
@@ -389,6 +391,29 @@ class WorkspaceCliTests(unittest.TestCase):
             self.ws.main(["--workspace", self.root, "commands", "--run", "--json", "--timeout", "5"])
         rows = {row["repository"]: row for row in json.loads(buffer.getvalue())}
         self.assertIsNone(rows["Quirk-Systems/quirk-new"]["exit_code"])
+
+    def test_drift_json_reports_unreadable_checkouts(self):
+        import contextlib
+        import io
+
+        broken = Path(self.root) / "broken"
+        broken.mkdir()
+        (broken / ".git").write_text("gitdir: /nonexistent/quirk\n", encoding="utf-8")
+        buffer = io.StringIO()
+        with contextlib.redirect_stdout(buffer):
+            self.ws.main(["--workspace", self.root, "--registry", str(self.registry), "drift", "--json"])
+        result = json.loads(buffer.getvalue())
+        self.assertEqual(result["unreadable"], ["broken"])
+        self.assertEqual([f["repository"] for f in result["findings"]], ["Quirk-Systems/quirk-new"])
+
+    def test_nonpositive_timeout_is_rejected(self):
+        import contextlib
+        import io
+
+        for value in ("0", "-1"):
+            with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as caught:
+                self.ws.main(["--workspace", self.root, "commands", "--run", "--timeout", value])
+            self.assertEqual(caught.exception.code, 2)
 
     def test_bad_workspace_exits_two(self):
         self.assertEqual(self.ws.main(["--workspace", str(Path(self.root) / "nope"), "scan"]), 2)

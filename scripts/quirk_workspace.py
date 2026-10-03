@@ -65,6 +65,10 @@ OFF_TARGET = "OFF_TARGET"
 CALLER = re.compile(
     r"""^\s*(?:-\s*)?(?:uses|"uses"|'uses')\s*:\s*(?:[&!]\S+\s+)*(["']?)(?i:Quirk-Systems/\.github/\.github/workflows/)([^@\s"']+)@([^\s#"']+)\1(?:\s|$)"""
 )
+# The same caller inside a single-line flow mapping: `{call: {uses: ...@main}}`.
+FLOW_CALLER = re.compile(
+    r"""[{,]\s*(?:uses|"uses"|'uses')\s*:\s*(?:[&!][^\s,{}]+\s+)*(["']?)(?i:Quirk-Systems/\.github/\.github/workflows/)([^@\s"',{}]+)@([^\s#"',{}]+)\1\s*[,}]"""
+)
 # A key whose value is a literal or folded block scalar (`run: |`, `script: >-`).
 BLOCK_SCALAR = re.compile(r"^(\s*(?:-\s+)?)([^\s:#][^:#]*?)\s*:\s*[|>][-+0-9]*\s*(?:#.*)?$")
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
@@ -309,7 +313,7 @@ def caller_pins(workspace, observed, expect=None):
         for name in item.get("workflows", []):
             lines = (workflows_dir / name).read_text(encoding="utf-8", errors="replace").splitlines()
             for number, line in mapping_lines(lines):
-                match = CALLER.match(line)
+                match = CALLER.match(line) or FLOW_CALLER.search(line)
                 if not match:
                     continue
                 _, workflow, ref = match.groups()
@@ -426,6 +430,13 @@ def run_commands(workspace, observed, timeout):
     return results
 
 
+def positive_int(value):
+    number = int(value)
+    if number <= 0:
+        raise argparse.ArgumentTypeError(f"must be a positive number of seconds, not {value}")
+    return number
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--workspace", default=str(ROOT.parent), help="directory of sibling checkouts (default: parent of this repository)")
@@ -443,7 +454,7 @@ def main(argv=None):
     pins_parser.add_argument("--fail-on-floating", action="store_true", help="exit 1 when any caller uses a non-SHA ref")
     commands_parser = sub.add_parser("commands", parents=[common], help="list or run each repository's declared validation command")
     commands_parser.add_argument("--run", action="store_true", help="execute the commands and report exit codes")
-    commands_parser.add_argument("--timeout", type=int, default=900, help="per-repository timeout in seconds")
+    commands_parser.add_argument("--timeout", type=positive_int, default=900, help="per-repository timeout in seconds (> 0)")
     args = parser.parse_args(argv)
 
     try:
@@ -458,7 +469,12 @@ def main(argv=None):
 
     if args.command == "drift":
         findings = drift(observed, load_inventory(args.registry))
-        print(json.dumps(findings, indent=2) if args.json else render_drift(findings, sum(1 for i in observed if i["state"] == UNREADABLE)), end="" if not args.json else "\n")
+        unreadable = sorted(i["directory"] for i in observed if i["state"] == UNREADABLE)
+        if args.json:
+            # Unreadable checkouts were not compared; say so rather than let `[]` read as clean.
+            print(json.dumps({"findings": findings, "unreadable": unreadable}, indent=2))
+        else:
+            print(render_drift(findings, len(unreadable)), end="")
         return 1 if findings and args.fail_on_drift else 0
 
     if args.command == "pins":
