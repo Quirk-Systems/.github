@@ -1,0 +1,40 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.review-round-two-timing-correction.0dd1dc3a6c3b",
+  "repository": "Quirk-Systems/.github",
+  "status": "retracted",
+  "subject": {
+    "base_commit": "0dd1dc3a6c3b89b72d20caf40a896cbd2ffa108f",
+    "commit": "0dd1dc3a6c3b89b72d20caf40a896cbd2ffa108f",
+    "changed_paths": []
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.review-round-two-timing-correction.0dd1dc3a6c3b",
+      "claim_type": "correction",
+      "authority_effect": "none",
+      "statement": "Retracts the timing assertion in qclaim.review-round-two.8a6dd0b02af8: the recorded 19:05:08Z failure time and twelve-minute interval are withdrawn. The validate job completed at 19:17:04Z, four seconds before PR #6 merged.",
+      "evidence_paths": []
+    }
+  ],
+  "artifacts": [],
+  "verification": {
+    "commands": [],
+    "verified_at": "2026-10-04T04:02:50Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": {
+    "reason": "The prior verified claim mistook the workflow run creation timestamp for the failed validate job completion time.",
+    "external_claim_refs": [
+      "qclaim.review-round-two.8a6dd0b02af8"
+    ],
+    "observations": [
+      "https://github.com/Quirk-Systems/.github/actions/runs/35531136510/job/106133554885: attempt 2 started at 2026-09-20T19:16:49Z; the validate job completed with failure at 2026-09-20T19:17:04Z.",
+      "https://github.com/Quirk-Systems/.github/pull/6: merged_at is 2026-09-20T19:17:08Z, four seconds after the failed job completed."
+    ]
+  },
+  "receipt_sha256": "sha256:7b161aea62bacbc612ccea1aa8849a55e68638b8ccff1e79bff65b058603d948"
+}
