@@ -67,7 +67,7 @@ class GitReceiptFixture:
         self.receipts.mkdir(parents=True)
         self.receipt_path = self.receipts / "qreceipt.test.json"
 
-    def generate(self, evidence_paths=("delete.txt", "keep.txt", "present.txt")):
+    def generate(self, evidence_paths=("delete.txt", "keep.txt", "present.txt"), extra=()):
         command = [
             sys.executable,
             str(GENERATOR),
@@ -94,6 +94,7 @@ class GitReceiptFixture:
         ]
         for path in evidence_paths:
             command.extend(("--evidence-path", path))
+        command.extend(extra)
         return run(*command, cwd=self.root, check=False)
 
     def load(self):
@@ -148,6 +149,60 @@ class EvidenceReceiptTest(unittest.TestCase):
             result = fixture.validate()
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn("1 receipt", result.stdout)
+
+    def test_a_correction_is_a_separate_instrument_not_an_annotation(self):
+        """`correction` is legal only on a non-verified receipt, and required there.
+
+        The validator forbids a correction on a `verified` receipt and demands one
+        on `unverified` or `retracted`, so a receipt cannot both attest bytes and
+        correct an earlier claim. The generator emitted only verified receipts
+        with `correction` hardcoded null, which left the instrument unreachable
+        and every correction so far as prose inside a claim statement, where no
+        validator or query can find it.
+        """
+        whole = (
+            "--correction-reason", "the earlier claim called a near-lapse a lapse",
+            "--corrects-claim", "qclaim.earlier.aaaaaaaaaaaa",
+            "--correction-observation", "the document was re-read before its review date",
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.fixture(directory)
+            result = fixture.generate(extra=("--status", "retracted") + whole)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            receipt = fixture.load()
+            self.assertEqual(receipt["status"], "retracted")
+            self.assertEqual(receipt["correction"]["external_claim_refs"], ["qclaim.earlier.aaaaaaaaaaaa"])
+            self.assertEqual(len(receipt["correction"]["observations"]), 1)
+            fixture.receipt_commit = git_commit(fixture.root, "receipt")
+            self.assertEqual(fixture.validate().returncode, 0, "a retracted correction must validate")
+
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.fixture(directory)
+            # A verified receipt may not carry one, which is why prose was used before.
+            result = fixture.generate(extra=whole)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("cannot carry a correction", result.stderr)
+            # A non-verified receipt may not omit one, nor any of its three parts.
+            result = fixture.generate(extra=("--status", "retracted"))
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("requires a correction", result.stderr)
+            for drop in (0, 2, 4):
+                partial = tuple(v for i, v in enumerate(whole) if i not in (drop, drop + 1))
+                result = fixture.generate(extra=("--status", "unverified") + partial)
+                self.assertNotEqual(result.returncode, 0, f"accepted a correction missing {whole[drop]}")
+                self.assertIn("requires a correction", result.stderr)
+            result = fixture.generate(extra=("--status", "retracted") + whole
+                                      + ("--corrects-claim", "qclaim.earlier.aaaaaaaaaaaa"))
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("must not repeat", result.stderr)
+
+    def test_a_verified_receipt_records_correction_as_none(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.fixture(directory)
+            self.assertEqual(fixture.generate().returncode, 0)
+            receipt = fixture.load()
+            self.assertEqual(receipt["status"], "verified")
+            self.assertIsNone(receipt["correction"])
 
     def test_generator_refuses_claim_path_outside_subject_diff(self):
         with tempfile.TemporaryDirectory() as directory:

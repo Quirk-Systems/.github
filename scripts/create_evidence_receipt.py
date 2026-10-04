@@ -14,6 +14,50 @@ from validate_evidence_receipts import (
 )
 
 
+def correction_for(args):
+    """Build the receipt's `correction` object, or None when it corrects nothing.
+
+    The evidence contract treats a correction as a separate instrument rather
+    than an annotation on an attestation: `validate_evidence_receipts` requires
+    `correction` to be null on a `verified` receipt and non-null on an
+    `unverified` or `retracted` one. So a receipt cannot both attest bytes and
+    correct an earlier claim; correcting one means issuing a non-verified receipt
+    that names the claim it corrects.
+
+    This generator emitted only `verified` receipts with `correction` hardcoded
+    to null, so the instrument the schema has carried all along was unreachable
+    and every correction so far was prose inside a claim statement, where no
+    validator or query can find it. The three parts travel together because a
+    correction with no reason, no claim it corrects, or no observation behind it
+    is not a correction; the schema requires all three.
+    """
+    parts = (args.correction_reason, args.corrects_claim, args.correction_observation)
+    if args.status == "verified":
+        if any(parts):
+            raise SystemExit(
+                "a verified receipt cannot carry a correction: the validator requires "
+                "correction to be null when status is verified. Issue the correction as a "
+                "separate receipt with --status retracted or --status unverified."
+            )
+        return None
+    if not all(parts):
+        raise SystemExit(
+            f"--status {args.status} requires a correction: --correction-reason, at least one "
+            "--corrects-claim, and at least one --correction-observation; got "
+            f"reason={bool(args.correction_reason)}, "
+            f"claims={len(args.corrects_claim)}, "
+            f"observations={len(args.correction_observation)}"
+        )
+    refs = list(dict.fromkeys(args.corrects_claim))
+    if len(refs) != len(args.corrects_claim):
+        raise SystemExit("--corrects-claim must not repeat a claim reference")
+    return {
+        "reason": args.correction_reason,
+        "external_claim_refs": refs,
+        "observations": list(args.correction_observation),
+    }
+
+
 def build_receipt(args):
     root = Path(args.root).resolve()
     entries = derive_diff(root, args.base, args.commit)
@@ -28,7 +72,7 @@ def build_receipt(args):
         "schema_version": "evidence-receipt.v1",
         "receipt_id": args.receipt_id,
         "repository": args.repository,
-        "status": "verified",
+        "status": args.status,
         "subject": {
             "base_commit": args.base,
             "commit": args.commit,
@@ -52,7 +96,7 @@ def build_receipt(args):
             "verified_at": args.verified_at,
         },
         "authority": {"admission_effect": "none", "authority_ref": None},
-        "correction": None,
+        "correction": correction_for(args),
     }
     receipt["receipt_sha256"] = canonical_receipt_digest(receipt)
     validate_receipt(receipt, args.repository, root)
@@ -72,6 +116,15 @@ def main(argv=None):
     parser.add_argument("--verified-at", required=True)
     parser.add_argument("--root", default=".")
     parser.add_argument("--output", required=True)
+    parser.add_argument("--status", default="verified", choices=("verified", "unverified", "retracted"),
+                        help="verified attests bytes and forbids a correction; unverified and "
+                             "retracted are correction instruments and require one")
+    parser.add_argument("--correction-reason",
+                        help="why an earlier claim is being corrected; requires the two flags below")
+    parser.add_argument("--corrects-claim", action="append", default=[],
+                        help="claim id this receipt corrects, repeatable; must not repeat")
+    parser.add_argument("--correction-observation", action="append", default=[],
+                        help="an observation supporting the correction, repeatable")
     args = parser.parse_args(argv)
     try:
         receipt = build_receipt(args)
