@@ -1,0 +1,74 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.failed-command-and-lapse-scope.2e157ae2c151",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "31918ce321dbb50ea517550cfd46217c188a4803",
+    "commit": "2e157ae2c1518b673312954ea93143c44430a73f",
+    "changed_paths": [
+      "docs/goals/2026-09-20-living-documents-validated.md",
+      "scripts/create_evidence_receipt.py",
+      "tests/test_evidence_receipts.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.failed-command-and-lapse-scope.2e157ae2c151",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "A non-verified receipt can now record a verification command that failed, and the living-documents goal's Outcome no longer overstates where staleness bites. VERIFIED at this commit: --failed-verification COMMAND EXIT_CODE serializes result fail with the observed non-zero code, is refused on a verified receipt because the validator requires all-pass there, refuses exit code 0 because validate_evidence_receipts enforces pass iff exit code 0, and refuses a non-integer code; the recorded failure passes the validator. Before this commit every --verification-command was serialized as result pass with exit_code 0 regardless of status, so an unverified receipt, whose purpose is a proof that could not be reproduced, would have recorded that failure as a pass. VERIFIED by reading the goal against itself: the Outcome claimed a lapse cannot reach main unnoticed while a later paragraph in the same file states that completed checks stay green and only the next push or re-run fails, so a pull request that passes before a review date and merges after it carries the lapse to main; the Outcome now states the narrower behaviour and names the hole. VERIFIED at this commit: 185 tests pass under Python 3.12, scripts/validate.sh reports all executed checks passed with zizmor finding nothing at 24 ignored, and validate_living_docs.py --strict reports 4 documents and 0 stale. UNKNOWN: whether merge-time freshness enforcement is wanted, which is an open owner decision recorded on the roadmap and not decided here.",
+      "evidence_paths": [
+        "docs/goals/2026-09-20-living-documents-validated.md",
+        "scripts/create_evidence_receipt.py",
+        "tests/test_evidence_receipts.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/goals/2026-09-20-living-documents-validated.md",
+      "state": "present",
+      "git_blob": "19f7fb8c5f65db62cd9489b2451d9b634190f52b",
+      "sha256": "sha256:0b9f6b30b349827cd043aff63ba760938ed571d26d846971042911ed5592de10"
+    },
+    {
+      "path": "scripts/create_evidence_receipt.py",
+      "state": "present",
+      "git_blob": "140b068a096a16939ea0aa9dfddf141881b4ad56",
+      "sha256": "sha256:1fd1a9374e5887aeb42c0780015b6439bcb751005f101bf1c3293d2fe60624b4"
+    },
+    {
+      "path": "tests/test_evidence_receipts.py",
+      "state": "present",
+      "git_blob": "c1010280b6c03444b677b4ad71359b0dd608c0ac",
+      "sha256": "sha256:2dbb69b28d56fe0c18d46d51b335bb0f93ddbc12b48564c13dde52f3202a972c"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "uv run --no-project --python 3.12 python -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "uv run --no-project --python 3.12 python scripts/validate_living_docs.py --strict",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-04T04:39:25Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:db9722e6b94c70ef954695e12f67c42f03f63420f8f9394026560ac8f3da4664"
+}
