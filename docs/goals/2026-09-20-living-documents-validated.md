@@ -17,7 +17,15 @@ header that names its kind, status, owner, observed head, review dates, and
 lineage; the validator rejects a malformed one and fails on a lapsed one under
 `--strict`; `scripts/validate.sh` runs it that way for contributors; and the
 unit suite the pull-request gate does run checks the same freshness against the
-real date, so a lapse cannot reach `main` unnoticed.
+real date, so **the next pull-request check to run or re-run while a document is
+stale fails**.
+
+That is the whole of it, and the limit is part of the outcome rather than a
+caveat on it. A check that already completed green stays green, and
+`governance-contracts.yml` has no `schedule` trigger, so a pull request that
+passed before a review date and merges after it carries the lapse to `main`
+with nothing going red. Enforcing freshness at merge time would close that, and
+it is an open owner decision on the roadmap, not something this goal claimed.
 
 ## Measure
 
@@ -79,6 +87,17 @@ The finding that survives is narrower and real, and it belongs to the roadmap
 rather than here: the gate runs the unit suite, not `scripts/validate.sh`, so
 any check in that script with no test behind it is unenforced on a pull request.
 Two qualify, both named in the Evidence above.
+
+A later round of the same review caught the replacement Outcome overstating its
+own guarantee: it said a lapse "cannot reach `main` unnoticed", while the
+paragraph four below it already said completed checks stay green and only the
+next push or re-run fails. Both cannot be true, and the weaker one is the true
+one — a pull request that passes before a review date and merges after it
+carries the lapse through. The Outcome now says what the test does and names
+the hole as part of the outcome. That makes three times in this document's
+history that the same subtlety has been got wrong in the same direction, always
+by overstating where staleness bites, which is why the limit is now written
+into the Outcome rather than left to a later section.
 
 The re-scope this section anticipated did happen, and it is worth naming
 because it was not a neutral choice. The Outcome above says the validator

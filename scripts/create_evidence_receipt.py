@@ -67,6 +67,39 @@ def correction_for(args):
     }
 
 
+def commands_for(args):
+    """Record each verification command with the result it actually had.
+
+    This generator wrote `result: pass` and `exit_code: 0` for every command,
+    which was harmless while it emitted only `verified` receipts: the validator
+    requires all-pass there anyway. It stopped being harmless the moment
+    `--status unverified` became reachable, because that status exists for the
+    case where a proof could not be reproduced — so the one receipt whose job is
+    to record a failure would have recorded it as a pass. The schema has always
+    allowed `fail` with a non-zero exit on a non-verified receipt; only this
+    generator forced them green.
+
+    The generator records what the caller observed and never executes anything,
+    so a claimed failure is as unexecuted as a claimed pass. Recording it
+    truthfully is still the difference between evidence and a fabrication.
+    """
+    commands = [
+        {"command": command, "result": "pass", "exit_code": 0}
+        for command in args.verification_command
+    ]
+    for command, exit_code in args.failed_verification:
+        try:
+            code = int(exit_code)
+        except ValueError as error:
+            raise ReceiptError("--failed-verification exit code must be an integer: " + exit_code) from error
+        if code == 0:
+            # The validator enforces pass iff exit code 0, so a failure with
+            # exit 0 is not a shape it can represent.
+            raise ReceiptError("--failed-verification exit code must not be 0; a command that exited 0 passed")
+        commands.append({"command": command, "result": "fail", "exit_code": code})
+    return commands
+
+
 def build_receipt(args):
     root = Path(args.root).resolve()
     correction = correction_for(args)
@@ -77,6 +110,12 @@ def build_receipt(args):
             raise ReceiptError("--evidence-path is required for a verified receipt")
         if not args.verification_command:
             raise ReceiptError("--verification-command is required for a verified receipt")
+        if args.failed_verification:
+            raise ReceiptError(
+                "a verified receipt cannot record a failed command: the validator requires every "
+                "command to pass with exit code 0 when status is verified. Use --status unverified "
+                "to record a proof that could not be reproduced."
+            )
     entries = derive_diff(root, args.base, args.commit)
     changed_paths = [path for path, _ in entries]
     evidence_paths = sorted(set(args.evidence_path))
@@ -109,10 +148,7 @@ def build_receipt(args):
             artifact_for_path(root, args.commit, path, state) for path, state in entries
         ],
         "verification": {
-            "commands": [
-                {"command": command, "result": "pass", "exit_code": 0}
-                for command in args.verification_command
-            ],
+            "commands": commands_for(args),
             "verified_at": args.verified_at,
         },
         "authority": {"admission_effect": "none", "authority_ref": None},
@@ -134,7 +170,12 @@ def main(argv=None):
     # Required for a verified receipt and checked in build_receipt; a correction
     # has a zero-diff subject and no command, so neither can be mandatory here.
     parser.add_argument("--evidence-path", action="append", default=[])
-    parser.add_argument("--verification-command", action="append", default=[])
+    parser.add_argument("--verification-command", action="append", default=[],
+                        help="a command that was run and passed; repeatable")
+    parser.add_argument("--failed-verification", action="append", nargs=2, default=[],
+                        metavar=("COMMAND", "EXIT_CODE"),
+                        help="a command that was run and failed, with its non-zero exit code; "
+                             "repeatable, and rejected on a verified receipt")
     parser.add_argument("--verified-at", required=True)
     parser.add_argument("--root", default=".")
     parser.add_argument("--output", required=True)

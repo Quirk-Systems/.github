@@ -273,6 +273,66 @@ class EvidenceReceiptTest(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("--verification-command is required", result.stderr)
 
+    def test_an_unverified_receipt_records_a_failed_command_as_failed(self):
+        """A receipt that exists to record a failure must not record it as a pass.
+
+        Writing `result: pass` and `exit_code: 0` for every command was harmless
+        while this generator emitted only `verified` receipts, where the
+        validator requires all-pass anyway. `--status unverified` exists for the
+        case where a proof could not be reproduced, so the one receipt whose job
+        is to carry a failure would have carried it as a pass — structurally
+        valid, and false. The schema has always allowed `fail` with a non-zero
+        exit on a non-verified receipt; only this generator forced them green.
+        """
+        correction = (
+            "--correction-reason", "the cited proof does not reproduce",
+            "--corrects-claim", "qclaim.earlier.aaaaaaaaaaaa",
+            "--correction-observation", "the command exits 1 at this commit",
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.fixture(directory)
+            result = fixture.generate(
+                evidence_paths=(),
+                commands=(),
+                base=fixture.subject,
+                extra=("--status", "unverified") + correction
+                + ("--failed-verification", "python -m unittest discover -s tests", "1"),
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            commands = fixture.load()["verification"]["commands"]
+            self.assertEqual(
+                commands,
+                [{
+                    "command": "python -m unittest discover -s tests",
+                    "result": "fail",
+                    "exit_code": 1,
+                }],
+            )
+            fixture.receipt_commit = git_commit(fixture.root, "receipt")
+            self.assertEqual(fixture.validate().returncode, 0, "a recorded failure must validate")
+
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.fixture(directory)
+            # A verified receipt may not carry one: the validator requires all-pass there.
+            result = fixture.generate(extra=("--failed-verification", "false", "1"))
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("cannot record a failed command", result.stderr)
+            # `pass iff exit code 0` is the validator's rule, so exit 0 is not a failure.
+            result = fixture.generate(
+                evidence_paths=(), commands=(), base=fixture.subject,
+                extra=("--status", "unverified") + correction
+                + ("--failed-verification", "true", "0"),
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("must not be 0", result.stderr)
+            result = fixture.generate(
+                evidence_paths=(), commands=(), base=fixture.subject,
+                extra=("--status", "unverified") + correction
+                + ("--failed-verification", "true", "oops"),
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("must be an integer", result.stderr)
+
     def test_a_verified_receipt_records_correction_as_none(self):
         with tempfile.TemporaryDirectory() as directory:
             fixture = self.fixture(directory)
