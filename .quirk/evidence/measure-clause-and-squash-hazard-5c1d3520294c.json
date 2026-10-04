@@ -1,0 +1,77 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.measure-clause-and-squash-hazard.5c1d3520294c",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "6f2b5a0a7a99055620f709c480c8526ecc4831f7",
+    "commit": "5c1d3520294cbd3cc3264cfd027031ac9a74e24b",
+    "changed_paths": [
+      "docs/goals/2026-09-20-living-documents-validated.md",
+      "docs/governance/EVIDENCE_BINDING.md",
+      "docs/roadmaps/2026-09-20-org-control-plane.md",
+      "docs/todos/2026-09-20-living-document-rollout.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.measure-clause-and-squash-hazard.5c1d3520294c",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The living-documents goal's Measure no longer asserts that the pull-request gate inherits scripts/validate.sh, because it does not; the Measure now names tests/test_living_docs.py, which the gate does run, and the Review section records that flipping the goal to active was rejected as a second misstatement rather than a correction. VERIFIED by reading scripts/validate.sh against .github/workflows/ and tests/ at this commit: of the thirteen checks validate.sh runs, eleven reach the pull-request gate because a test in the suite governance-contracts.yml runs applies each validator to this repository's own files; the two with no route in are scripts/quirk_concept.py lint and scripts/validate-copilot-maintenance.py, neither of which has a test module, and quirk-semantic-governance.yml, which runs the registry linter for other repositories, is workflow_call and workflow_dispatch only with no self-caller here. VERIFIED by replaying this branch as a squash onto main at 7c1061ba8867fdce4d903adc7c9589016e3ab002: python3 scripts/validate_evidence_receipts.py --repository Quirk-Systems/.github --root . --receipts .quirk/evidence, the same no-range form the main push step runs, exits non-zero with '.quirk/evidence/correction-instrument-b65eb34a4fd1.json: subject commit must be an ancestor of checked-out HEAD', which is the hazard now documented in EVIDENCE_BINDING.md. VERIFIED at this commit: scripts/validate.sh reports all executed checks passed, and validate_living_docs.py --strict reports 4 documents and 0 stale. UNKNOWN: whether the squash option is restricted on this repository, which is an owner-only setting no file here can read or change.",
+      "evidence_paths": [
+        "docs/goals/2026-09-20-living-documents-validated.md",
+        "docs/governance/EVIDENCE_BINDING.md",
+        "docs/roadmaps/2026-09-20-org-control-plane.md",
+        "docs/todos/2026-09-20-living-document-rollout.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/goals/2026-09-20-living-documents-validated.md",
+      "state": "present",
+      "git_blob": "d179c6d12e523d7338b0d1d1200e66a2d52eea1b",
+      "sha256": "sha256:38071fbf8ff4c287b42a38323008a017abd27f595209c57663df8e94ab1a289e"
+    },
+    {
+      "path": "docs/governance/EVIDENCE_BINDING.md",
+      "state": "present",
+      "git_blob": "11e981602c2997d473898624069c1bec97ff5e2e",
+      "sha256": "sha256:268b42635f56fe116fead47dadf95557d487a9dfa350257c2b5852d233ee0d77"
+    },
+    {
+      "path": "docs/roadmaps/2026-09-20-org-control-plane.md",
+      "state": "present",
+      "git_blob": "5023b0e2c04f01b7026002342cec7cc69ba11248",
+      "sha256": "sha256:b4422ee1e14e9a9124ac1247d30851df6463e9bccc3f0164606fa2bc31488446"
+    },
+    {
+      "path": "docs/todos/2026-09-20-living-document-rollout.md",
+      "state": "present",
+      "git_blob": "dc4e837a5b8723671c034ae9f72229d658f6dc52",
+      "sha256": "sha256:dec5418bddc649bc7481f7bd78f8faed60ecdd64362f8b125e6330f59f26b5d6"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_living_docs.py --strict",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-04T04:14:29Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:4711af36aafdde254588b44fb4081ecbfef9e50784a06a2189dd5ee7ffc5e54f"
+}
