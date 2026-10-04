@@ -1,0 +1,98 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.pr43-action-pins.20387255c0d0",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "c029a903c018e63633e4b2c8b4a83da54801e32f",
+    "commit": "20387255c0d059681e0efd4bd4a5fb5b7431f878",
+    "changed_paths": [
+      ".github/workflows/codeql.yml",
+      ".github/workflows/quirk-semantic-governance.yml",
+      ".github/workflows/reusable-codeql.yml",
+      ".github/workflows/reusable-pr-title-lint.yml",
+      ".github/workflows/reusable-validate.yml",
+      ".github/workflows/scorecard.yml"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.pr43-action-pins.20387255c0d0",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "VERIFIED: Pins the four requested action references to the upstream commits resolved on 2026-10-03: checkout v7.0.1 3d3c42e5aac5ba805825da76410c181273ba90b1; pnpm/action-setup v6.0.10 0977fd99725f1db4007ccb2928dbb4e90d06cc86, matching both peeled v6 and v6.0.10 tags; two setup-node v7.0.0 820762786026740c76f36085b0efc47a31fe5020 uses. All other reusable-validate.yml bytes match incoming PR head 92a454c2c53b627d359d4796b4c5b9ad96fc7f77. Current main c029a903c018e63633e4b2c8b4a83da54801e32f is integrated without changing the six-file Dependabot diff. The subject passes 228 unit tests, all repository validators, Ruff, actionlint 1.7.12, and offline pedantic zizmor 1.30.1 (20 existing ignored findings). scripts/validate.sh skipped absent ruff/actionlint; both were run separately and passed. UNKNOWN: Hosted successor CI and consumer execution of the bun/pnpm/yarn/npm branches are not established by these local checks. Existing setup-bun@v2 and legacy hardening exemptions remain. Human review and merge approval are not established; authority effect none.",
+      "evidence_paths": [
+        ".github/workflows/codeql.yml",
+        ".github/workflows/quirk-semantic-governance.yml",
+        ".github/workflows/reusable-codeql.yml",
+        ".github/workflows/reusable-pr-title-lint.yml",
+        ".github/workflows/reusable-validate.yml",
+        ".github/workflows/scorecard.yml"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/workflows/codeql.yml",
+      "state": "present",
+      "git_blob": "027819826c0c6786f55c679559088d54a583e1c9",
+      "sha256": "sha256:b77eb1c29c6a127959b957225397b2498d091638a11c634b7f5506351afa3ba1"
+    },
+    {
+      "path": ".github/workflows/quirk-semantic-governance.yml",
+      "state": "present",
+      "git_blob": "ac95192f39a9b7948b0a94e6563b36f6bde153a0",
+      "sha256": "sha256:4518da28ece57bb78190b576274bed1c7b0d14da2017568743700089c3945dea"
+    },
+    {
+      "path": ".github/workflows/reusable-codeql.yml",
+      "state": "present",
+      "git_blob": "778090a0771c2dc44780977af7d44c6de0d0373d",
+      "sha256": "sha256:510821f3f09e46d97bc7ad8291380a217046218361e35db3170a928c277c4760"
+    },
+    {
+      "path": ".github/workflows/reusable-pr-title-lint.yml",
+      "state": "present",
+      "git_blob": "cb2453fcee23627c08372765b7519281d0d45edc",
+      "sha256": "sha256:1d56ffd9a458a0d1b2e141c887559f4474f5d647292aeea324c698aadd676bc8"
+    },
+    {
+      "path": ".github/workflows/reusable-validate.yml",
+      "state": "present",
+      "git_blob": "2ff1baea903ecd04bca765cc921a00a23b9a02c3",
+      "sha256": "sha256:6492673985578b490dd672370b01335dace5eb6c0a12d98b4bac8019b2d9539c"
+    },
+    {
+      "path": ".github/workflows/scorecard.yml",
+      "state": "present",
+      "git_blob": "66ae64b9106d26191474576706e06f07ced8ee20",
+      "sha256": "sha256:bbf9421d8502c2acc6773f55ae20e92b34125a708799caed03d57eb71510fe3f"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "uv tool run --quiet ruff check .",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "../pr43-tools/actionlint -ignore 'property \"workflow_(repository|sha)\" is not defined'",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T19:32:14Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:e5e0dc8883b02b9fd8445fb140d5a6392bb6cb0bd7cd74e78532637d39507c59"
+}
