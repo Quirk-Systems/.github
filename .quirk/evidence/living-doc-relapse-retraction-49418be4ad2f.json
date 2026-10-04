@@ -1,0 +1,42 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.living-doc-relapse-retraction.49418be4ad2f",
+  "repository": "Quirk-Systems/.github",
+  "status": "retracted",
+  "subject": {
+    "base_commit": "49418be4ad2f27db8b9a9b30455ffbf39cc3fa3d",
+    "commit": "49418be4ad2f27db8b9a9b30455ffbf39cc3fa3d",
+    "changed_paths": []
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.living-doc-relapse-retraction.49418be4ad2f",
+      "claim_type": "correction",
+      "authority_effect": "none",
+      "statement": "Retracts the lapse assertion in qclaim.living-doc-relapse.4abe5a8d177f. The rollout todo did not lapse: its review date was 2026-10-04 and it was re-read on 2026-10-03, and validate_living_docs.py reports a document stale only when its review_by date is earlier than the current date, so 2026-10-05 was the first day it would have reported stale. The accompanying consequence, that a lapse turns every open pull request red, is withdrawn with it.",
+      "evidence_paths": []
+    }
+  ],
+  "artifacts": [],
+  "verification": {
+    "commands": [],
+    "verified_at": "2026-10-04T04:17:26Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": {
+    "reason": "The prior verified claim called a document re-read one day before its review date a lapse, and treated the review date itself as the day the check turns red. The validator fires on review_by earlier than today, so the first red day is the day after the review date, and nothing had gone unreviewed past it.",
+    "external_claim_refs": [
+      "qclaim.living-doc-relapse.4abe5a8d177f"
+    ],
+    "observations": [
+      "scripts/validate_living_docs.py reports a document stale only when its review_by date is earlier than the current date, so a review date of 2026-10-04 first reports stale on 2026-10-05.",
+      "docs/todos/2026-09-20-living-document-rollout.md carried Review by 2026-10-04 and Reviewed 2026-10-03 when the retracted claim was made: re-read one day before the review date and two days before any red.",
+      ".github/workflows/governance-contracts.yml has no schedule trigger, so a lapse cannot turn an already completed check red; only a pull request whose checks run or re-run during the lapse fails.",
+      "The correction was previously prose inside the verified claim of qreceipt.post-merge-corrections.94ddb6f24550, where no validator or query could reach it. This receipt is that correction as the instrument the schema provides; the bytes of qreceipt.living-doc-relapse.4abe5a8d177f are deliberately unchanged, because a receipt records what was believed at its subject commit."
+    ]
+  },
+  "receipt_sha256": "sha256:fa921fa3fd3f49b6e5f88ead78e52841c05bab5f87c827c1df11196fe86cddaa"
+}

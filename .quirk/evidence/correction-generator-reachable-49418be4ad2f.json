@@ -1,0 +1,61 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.correction-generator-reachable.49418be4ad2f",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "21ec1a0d1df4aba28a91fd1613966e4e98eeff39",
+    "commit": "49418be4ad2f27db8b9a9b30455ffbf39cc3fa3d",
+    "changed_paths": [
+      "scripts/create_evidence_receipt.py",
+      "tests/test_evidence_receipts.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.correction-generator-reachable.49418be4ad2f",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "scripts/create_evidence_receipt.py can now emit the correction instrument it was extended to emit. VERIFIED at this commit: --evidence-path and --verification-command are optional and enforced by status, so a zero-diff retraction generates and validates while a verified receipt missing either flag fails with an error naming it; claim_type is derived from status rather than hardcoded to evidence. VERIFIED: 183 tests pass under Python 3.12 and scripts/validate.sh reports all executed checks passed. The defect was the same shape as the one the previous commit fixed: the instrument existed in the schema and the validator accepted it, and only the generator's required arguments made it unreachable, which is why the single prior correction in .quirk/evidence had to be hand-written. UNKNOWN: whether any other generator argument is mandatory for a case the validator permits; only the two reached by the correction path were audited.",
+      "evidence_paths": [
+        "scripts/create_evidence_receipt.py",
+        "tests/test_evidence_receipts.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "scripts/create_evidence_receipt.py",
+      "state": "present",
+      "git_blob": "4c0c427f9a6be2fb3b0cf0e0426141a4318d782b",
+      "sha256": "sha256:e7752b505e1f893d8de9413ae97f26763a686634baaca652c0f5e5335f6bceb0"
+    },
+    {
+      "path": "tests/test_evidence_receipts.py",
+      "state": "present",
+      "git_blob": "0613f8fd4371330817e03832bbc74a099bf20b67",
+      "sha256": "sha256:e275e8893a63b33e476f02b7df6347a62fc5c53ea377f4d3f2d750337e78d0fa"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "uv run --no-project --python 3.12 python -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-04T04:17:11Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:98f5739826c98b3f3dd136260becdf0b0dc86ddc83d7310395fd3d4b7b366907"
+}
