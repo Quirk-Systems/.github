@@ -1,0 +1,66 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.review-round-three.ceb13f171620",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "2cdc4fdbe42343390a4933aa7027092790d7620c",
+    "commit": "ceb13f171620028db3c9e015ac22aad2a98be1c0",
+    "changed_paths": [
+      "docs/goals/2026-09-20-living-documents-validated.md",
+      "docs/intentions/2026-09-20-evidence-first-planning.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.review-round-three.ceb13f171620",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Corrects the living-document review record by combining header-compatibility evidence into one VERIFIED claim and recording that PR #6's validate job failed at 19:17:04Z, four seconds before merge at 19:17:08Z. Local tests and validators pass; the hosted timestamps are observed in run 35531136510, attempt 2, job 106133554885.",
+      "evidence_paths": [
+        "docs/goals/2026-09-20-living-documents-validated.md",
+        "docs/intentions/2026-09-20-evidence-first-planning.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/goals/2026-09-20-living-documents-validated.md",
+      "state": "present",
+      "git_blob": "351ac71ddd9f5020347778328bc6a826baa10ecd",
+      "sha256": "sha256:e10010df162d35734ce2892a1167cf6bd8875f8a40d5ed437c2259147b13941a"
+    },
+    {
+      "path": "docs/intentions/2026-09-20-evidence-first-planning.md",
+      "state": "present",
+      "git_blob": "2ecc768bfd08aeb55b5289864f249afc7d9a0520",
+      "sha256": "sha256:5d7a3bfb4eab6b6e7f6322ffc861901cc79d70ae639b2bc7f9b5b33a1c1f5ba5"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python -m unittest tests.test_living_docs -v",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python scripts/validate_living_docs.py --strict",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-04T04:01:58Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:2202b3aa5e1a2d4ed22134c664c422eefe1d80a733faba0407ec1f6bcd645185"
+}
