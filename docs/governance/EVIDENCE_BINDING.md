@@ -149,29 +149,40 @@ provider APIs are not frozen merely because Git source is exact. Release-bearing
 systems must record the dependency and build identities required for their own
 reproducibility claim.
 
-### Squash merge destroys the subjects its receipts bind
+### Only a merge commit preserves the subjects its receipts bind
 
 A receipt names an individual subject commit, and the validator requires that
-commit to be an ancestor of the checked-out `HEAD`. Squashing a pull request
-replaces every commit in it with one new commit that is not any of them, so
-each receipt in the branch loses the subject it binds and the whole set fails:
+commit to be an ancestor of the checked-out `HEAD`. Any merge method that
+rewrites the branch's commits therefore loses every subject in it at once, and
+the whole set fails:
 
 ```text
 .quirk/evidence/<slug>.json: subject commit must be an ancestor of checked-out HEAD
 ```
 
-This is not a receipt defect and it cannot be repaired by regenerating against
-the squashed commit, because the subject was *reviewed* — regeneration would
-rebind the claim to bytes nobody checked under that claim. A merge commit or a
-rebase keeps the subjects reachable; a squash does not. Merge a receipt-bearing
-pull request with **Create a merge commit** or **Rebase and merge**, and treat
-the squash option as unavailable in any repository that enforces this gate.
+| Merge method | Subjects survive | Why |
+| --- | --- | --- |
+| **Create a merge commit** | **yes** | the branch's commits are kept and reachable from the merge |
+| Squash and merge | no | every commit is replaced by one new commit that is none of them |
+| Rebase and merge | no | the commits are replayed with new committer information, so every SHA changes even when the base has not moved |
+
+So **merge a receipt-bearing pull request with "Create a merge commit"**, and
+treat squash and rebase as unavailable in any repository that enforces this
+gate. Rebase looks safe and is not: when the base has not moved, a local
+`git rebase` fast-forwards and changes nothing, which is why the hazard is easy
+to miss, but a forced replay rewrites each SHA and GitHub's "Rebase and merge"
+always replays.
+
+This is not a receipt defect, and it cannot be repaired by regenerating against
+the rewritten commit, because the subject was *reviewed* — regeneration would
+rebind the claim to bytes nobody checked under that claim.
 
 The failure appears after the merge, on `main`, not on the pull request whose
-green checks approved it. The branch gate validated the unsquashed head; the
-squash is applied afterwards. Nothing in a repository's files can disable the
-squash button — restricting it is an owner-only repository setting, and until it
-is restricted this rule is a convention a human has to follow.
+green checks approved it. The branch gate validated the original head; the
+rewrite is applied afterwards. Nothing in a repository's files can disable the
+squash or rebase buttons — restricting them is an owner-only repository
+setting, and until they are restricted this rule is a convention a human has to
+follow.
 
 ## Correction receipts
 

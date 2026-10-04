@@ -3,6 +3,7 @@
 import copy
 import hashlib
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -24,8 +25,11 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import validate_evidence_receipts  # noqa: E402
 
 
-def run(*args, cwd, check=True):
-    result = subprocess.run(args, cwd=cwd, capture_output=True, text=True)
+def run(*args, cwd, check=True, env_extra=None):
+    env = None
+    if env_extra:
+        env = {**os.environ, **env_extra}
+    result = subprocess.run(args, cwd=cwd, capture_output=True, text=True, env=env)
     if check and result.returncode:
         raise AssertionError(result.stderr or result.stdout)
     return result
@@ -39,6 +43,26 @@ def git_commit(root, message):
     git(root, "add", "-A")
     git(root, "commit", "-m", message)
     return git(root, "rev-parse", "HEAD").stdout.strip()
+
+
+def workflow_run_body(text, step_name):
+    """Return the shell body of a named workflow step, dedented.
+
+    Line-scanned rather than parsed: `scripts/` and `tests/` import nothing
+    outside the standard library, so there is no YAML parser here. The scan
+    starts at the step's `- name:` line, finds its `run: |`, and takes the block
+    indented further than that key.
+    """
+    lines = text.splitlines()
+    start = next(i for i, line in enumerate(lines) if line.strip() == "- name: " + step_name)
+    run_at = next(i for i in range(start, len(lines)) if lines[i].strip() == "run: |")
+    key_indent = len(lines[run_at]) - len(lines[run_at].lstrip())
+    body = []
+    for line in lines[run_at + 1:]:
+        if line.strip() and len(line) - len(line.lstrip()) <= key_indent:
+            break
+        body.append(line[key_indent + 2:] if line.strip() else "")
+    return "\n".join(body) + "\n"
 
 
 def receipt_digest(receipt):
@@ -759,6 +783,50 @@ class EvidenceReceiptTest(unittest.TestCase):
             set(schema["$defs"]["claim"]["required"]),
             {"claim_id", "claim_type", "authority_effect", "statement", "evidence_paths"},
         )
+
+    def test_a_correction_only_pull_request_emits_no_candidate_and_passes(self):
+        """The candidate step must not fail a range whose only change is a receipt.
+
+        Making the correction instrument reachable from the generator was not
+        enough to make a correction landable on its own. The candidate step
+        detects a receipt-only head, moves the subject back to its parent, finds
+        no substantive path in the range, and then called the generator with no
+        `--evidence-path` and the default `verified` status — which cannot
+        succeed, so the `validate` job failed for a range the coverage step
+        accepts. The only way to land a retraction was to attach it to an
+        unrelated change, which is the opposite of a separate instrument.
+
+        This runs the step's own shell body rather than asserting on its text,
+        so a rewrite that drops the guard fails here even if the comment stays.
+        """
+        body = workflow_run_body(
+            GOVERNANCE_WORKFLOW.read_text(encoding="utf-8"),
+            "Emit exact-range receipt candidate for review",
+        )
+        self.assertIn("create_evidence_receipt.py", body)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            git(root, "init", "-q", "-b", "main")
+            git(root, "config", "user.email", "test@example.com")
+            git(root, "config", "user.name", "test")
+            (root / "subject.txt").write_text("base\n", encoding="utf-8")
+            base = git_commit(root, "base")
+            receipts = root / ".quirk" / "evidence"
+            receipts.mkdir(parents=True)
+            (receipts / "qreceipt.correction.json").write_text("{}\n", encoding="utf-8")
+            head = git_commit(root, "correction receipt alone")
+            result = run(
+                "bash",
+                "-c",
+                body,
+                cwd=root,
+                check=False,
+                env_extra={"RANGE_BASE": base, "RANGE_HEAD": head},
+            )
+            self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+            self.assertIn("No substantive path in range", result.stdout)
+            # The guard must return before the generator runs, not after it fails.
+            self.assertNotIn("EXACT-RANGE RECEIPT CANDIDATE", result.stdout)
 
     def test_workflows_are_stable_read_only_and_do_not_execute_claimant_commands(self):
         governance = GOVERNANCE_WORKFLOW.read_text(encoding="utf-8")
