@@ -67,14 +67,20 @@ class GitReceiptFixture:
         self.receipts.mkdir(parents=True)
         self.receipt_path = self.receipts / "qreceipt.test.json"
 
-    def generate(self, evidence_paths=("delete.txt", "keep.txt", "present.txt"), extra=()):
+    def generate(
+        self,
+        evidence_paths=("delete.txt", "keep.txt", "present.txt"),
+        extra=(),
+        base=None,
+        commands=("python -m unittest discover -s tests -v",),
+    ):
         command = [
             sys.executable,
             str(GENERATOR),
             "--repository",
             "owner/repository",
             "--base",
-            self.base,
+            base or self.base,
             "--commit",
             self.subject,
             "--receipt-id",
@@ -83,8 +89,6 @@ class GitReceiptFixture:
             "qclaim.test",
             "--claim",
             "The subject changes are byte-bound to this receipt.",
-            "--verification-command",
-            "python -m unittest discover -s tests -v",
             "--verified-at",
             "2026-08-21T12:00:00Z",
             "--root",
@@ -94,6 +98,8 @@ class GitReceiptFixture:
         ]
         for path in evidence_paths:
             command.extend(("--evidence-path", path))
+        for entry in commands:
+            command.extend(("--verification-command", entry))
         command.extend(extra)
         return run(*command, cwd=self.root, check=False)
 
@@ -195,6 +201,53 @@ class EvidenceReceiptTest(unittest.TestCase):
                                       + ("--corrects-claim", "qclaim.earlier.aaaaaaaaaaaa"))
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("must not repeat", result.stderr)
+
+    def test_a_correction_needs_no_evidence_path_and_no_command(self):
+        """A correction has a zero-diff subject, so the two verified-only flags must be optional.
+
+        `--status` alone did not make the instrument reachable. `--evidence-path`
+        and `--verification-command` stayed mandatory in argparse, and a
+        correction has neither: it withdraws a claim rather than attesting bytes,
+        so there is no diff to point at and no command that passed against one.
+        The validator has always allowed both to be empty on a non-verified
+        receipt and required both on a verified one, so the only thing that
+        forced the one existing correction to be written by hand was this
+        generator. A hand-written receipt is the failure mode receipts exist to
+        prevent, which is why this is a test and not a convenience.
+        """
+        whole = (
+            "--status", "retracted",
+            "--correction-reason", "the earlier claim called a near-lapse a lapse",
+            "--corrects-claim", "qclaim.earlier.aaaaaaaaaaaa",
+            "--correction-observation", "the document was re-read before its review date",
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.fixture(directory)
+            result = fixture.generate(
+                evidence_paths=(), commands=(), base=fixture.subject, extra=whole
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            receipt = fixture.load()
+            self.assertEqual(receipt["subject"]["changed_paths"], [])
+            self.assertEqual(receipt["artifacts"], [])
+            self.assertEqual(receipt["verification"]["commands"], [])
+            self.assertEqual(receipt["claims"][0]["evidence_paths"], [])
+            # A withdrawal is not an attestation, and the bounded claim types say so.
+            self.assertEqual(receipt["claims"][0]["claim_type"], "correction")
+            fixture.receipt_commit = git_commit(fixture.root, "receipt")
+            self.assertEqual(
+                fixture.validate().returncode, 0, "a zero-diff correction must validate"
+            )
+
+        # A verified receipt still requires both, and the error names the flag.
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.fixture(directory)
+            result = fixture.generate(evidence_paths=())
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("--evidence-path is required", result.stderr)
+            result = fixture.generate(commands=())
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("--verification-command is required", result.stderr)
 
     def test_a_verified_receipt_records_correction_as_none(self):
         with tempfile.TemporaryDirectory() as directory:

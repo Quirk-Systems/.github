@@ -30,6 +30,15 @@ def correction_for(args):
     validator or query can find it. The three parts travel together because a
     correction with no reason, no claim it corrects, or no observation behind it
     is not a correction; the schema requires all three.
+
+    Adding `--status` alone did not finish the job. `--evidence-path` and
+    `--verification-command` stayed mandatory, and a correction has neither: it
+    withdraws a claim rather than attesting bytes, so its subject is zero-diff
+    and there is nothing for a command to have passed against. The validator
+    always allowed both to be empty on a non-verified receipt and requires both
+    on a verified one; only this generator insisted. Until this change the one
+    correction in `.quirk/evidence` had to be written by hand, which is the
+    failure mode receipts exist to prevent.
     """
     parts = (args.correction_reason, args.corrects_claim, args.correction_observation)
     if args.status == "verified":
@@ -60,6 +69,14 @@ def correction_for(args):
 
 def build_receipt(args):
     root = Path(args.root).resolve()
+    correction = correction_for(args)
+    if args.status == "verified":
+        # The validator rejects a verified receipt with no evidence path and no
+        # command; failing here says which flag is missing instead.
+        if not args.evidence_path:
+            raise ReceiptError("--evidence-path is required for a verified receipt")
+        if not args.verification_command:
+            raise ReceiptError("--verification-command is required for a verified receipt")
     entries = derive_diff(root, args.base, args.commit)
     changed_paths = [path for path, _ in entries]
     evidence_paths = sorted(set(args.evidence_path))
@@ -80,7 +97,10 @@ def build_receipt(args):
         },
         "claims": [{
             "claim_id": args.claim_id,
-            "claim_type": "evidence",
+            # A withdrawal is not an attestation, and the bounded claim types
+            # distinguish them, so the type follows the status rather than
+            # needing a flag a caller could set inconsistently with it.
+            "claim_type": "evidence" if args.status == "verified" else "correction",
             "authority_effect": "none",
             "statement": args.claim,
             "evidence_paths": evidence_paths,
@@ -96,7 +116,7 @@ def build_receipt(args):
             "verified_at": args.verified_at,
         },
         "authority": {"admission_effect": "none", "authority_ref": None},
-        "correction": correction_for(args),
+        "correction": correction,
     }
     receipt["receipt_sha256"] = canonical_receipt_digest(receipt)
     validate_receipt(receipt, args.repository, root)
@@ -111,8 +131,10 @@ def main(argv=None):
     parser.add_argument("--receipt-id", required=True)
     parser.add_argument("--claim-id", required=True)
     parser.add_argument("--claim", required=True)
-    parser.add_argument("--evidence-path", action="append", required=True)
-    parser.add_argument("--verification-command", action="append", required=True)
+    # Required for a verified receipt and checked in build_receipt; a correction
+    # has a zero-diff subject and no command, so neither can be mandatory here.
+    parser.add_argument("--evidence-path", action="append", default=[])
+    parser.add_argument("--verification-command", action="append", default=[])
     parser.add_argument("--verified-at", required=True)
     parser.add_argument("--root", default=".")
     parser.add_argument("--output", required=True)
@@ -133,7 +155,7 @@ def main(argv=None):
         output.write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     except (OSError, ReceiptError) as error:
         parser.error(str(error))
-    print("Created verified evidence receipt: " + str(args.output))
+    print("Created " + args.status + " evidence receipt: " + str(args.output))
     return 0
 
 
