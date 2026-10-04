@@ -35,11 +35,11 @@ same script so the pull-request gate inherits it.
 ## Evidence
 
 - VERIFIED at the observed head: `scripts/validate_templates.py` already checks section structure for briefs, plans, ADRs, and move receipts, and `validate_manifest._check` already applies the closed-schema subset used by every other Quirk contract; the living-document validator reuses both rather than adding a parser.
-- INFERRED: the same header can be added to existing briefs and plans without changing their required sections, because the header block sits between the title and the first section.
+- VERIFIED: the same header can be added to existing briefs and plans without changing their required sections. The opt-in path is covered by `test_opted_in_brief_and_plan_validate_their_own_sections`, which reuses `validate_templates.REQUIRED_SECTIONS` so the two cannot diverge.
 - UNKNOWN: whether documents in other Quirk repositories will adopt the header before a reusable workflow exists to check them.
 - VERIFIED on `main` at the observed head, which is the measure this goal set: `python scripts/validate_living_docs.py --strict` exits 0 reporting four documents, one of each of the four kinds, and zero stale, and `scripts/validate.sh` invokes that script with `--strict`. Both halves of the Review condition below are met.
 - The Outcome's phrase "runs as part of the repository's single validation entrypoint on every pull request" conflated two mechanisms, and they are separate. **No workflow invokes `scripts/validate.sh`**; it is the contributor entrypoint. Freshness reaches the pull-request gate by a different route: `governance-contracts.yml` runs the unit suite directly, and `test_repository_documents_are_fresh_today` in `tests/test_living_docs.py` checks every document against the real date. Either one alone would have satisfied a careless reading of the measure; both are named here so a later reader does not look for freshness in a file CI never runs.
-- VERIFIED by reading the earlier INFERRED claim: the header can be added to a brief or plan without changing its required sections. The opt-in path exists and is covered by `test_opted_in_brief_and_plan_validate_their_own_sections`, which reuses `validate_templates.REQUIRED_SECTIONS` so the two cannot diverge. No brief or plan has opted in yet; that is a task in the rollout todo, not part of this goal's measure, which asks only for one document of each of the four kinds.
+- No brief or plan has opted in yet; that is a task in the rollout todo, not part of this goal's measure, which asks only for one document of each of the four kinds.
 
 ## Review
 

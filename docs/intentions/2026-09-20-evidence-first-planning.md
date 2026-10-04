@@ -25,9 +25,10 @@ organization writes a claim down next to the commit it is about, the claim
 stays checkable.
 
 One merge is deliberately **not** in that list, and it is the sharpest fact
-here. PR #6's `Governance Contracts` run concluded `failure` at
-2026-09-20T19:05:08Z and #6 merged at 19:17:08Z — twelve minutes later, over a
-red gate. An earlier version of this section counted it among the ten as having
+here. Attempt 2 of PR #6's `Governance Contracts` run
+(`35531136510`) started at 2026-09-20T19:16:49Z; its `validate` job completed
+with failure at 19:17:04Z and #6 merged at 19:17:08Z — four seconds later, over
+a red gate. An earlier version of this section counted it among the ten as having
 "merged through that gate", and opened by saying the organization "refuses to
 merge without" binding. Both were false, and false in the flattering direction.
 The gate reports; it does not refuse, because no ruleset requires it. That is
