@@ -149,6 +149,30 @@ provider APIs are not frozen merely because Git source is exact. Release-bearing
 systems must record the dependency and build identities required for their own
 reproducibility claim.
 
+### Squash merge destroys the subjects its receipts bind
+
+A receipt names an individual subject commit, and the validator requires that
+commit to be an ancestor of the checked-out `HEAD`. Squashing a pull request
+replaces every commit in it with one new commit that is not any of them, so
+each receipt in the branch loses the subject it binds and the whole set fails:
+
+```text
+.quirk/evidence/<slug>.json: subject commit must be an ancestor of checked-out HEAD
+```
+
+This is not a receipt defect and it cannot be repaired by regenerating against
+the squashed commit, because the subject was *reviewed* — regeneration would
+rebind the claim to bytes nobody checked under that claim. A merge commit or a
+rebase keeps the subjects reachable; a squash does not. Merge a receipt-bearing
+pull request with **Create a merge commit** or **Rebase and merge**, and treat
+the squash option as unavailable in any repository that enforces this gate.
+
+The failure appears after the merge, on `main`, not on the pull request whose
+green checks approved it. The branch gate validated the unsquashed head; the
+squash is applied afterwards. Nothing in a repository's files can disable the
+squash button — restricting it is an owner-only repository setting, and until it
+is restricted this rule is a convention a human has to follow.
+
 ## Correction receipts
 
 Use `unverified` when an external proof claim cannot be reproduced and

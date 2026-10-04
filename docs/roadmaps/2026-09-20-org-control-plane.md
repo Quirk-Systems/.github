@@ -4,8 +4,8 @@ Kind: roadmap
 Status: active  
 Owner: @bryansayler  
 Repository: `Quirk-Systems/.github`  
-Observed head: `1263f5008838f743b16ee218046e26dac5c9edd8`  
-Reviewed: 2026-10-03  
+Observed head: `7c1061ba8867fdce4d903adc7c9589016e3ab002`  
+Reviewed: 2026-10-04  
 Review by: 2026-10-31  
 Derived from: `docs/intentions/2026-09-20-evidence-first-planning.md`, `docs/superpowers/plans/2026-09-20-org-control-plane.md`, `docs/governance/TRUTHFUL_TOPOLOGY_CUT_SPEC.md`  
 Authority effect: **none**
@@ -19,6 +19,7 @@ are never deleted. Each Done item names the evidence that closed it.
 - [ ] Fold the living-document review into the twice-weekly portfolio review in `docs/governance/AUTONOMOUS_OPERATIONS.md` so review dates are bumped by an existing cadence. Now the most urgent item here: on 2026-10-03 the rollout todo was one day from its 2026-10-04 review date and this roadmap two days from its 2026-10-05 one — two and three days from any red, since the validator fires on `review_by < today` — and a stale document fails the `validate` check on any pull request whose checks run or re-run while the document is stale, including pull requests that changed nothing related
 - [ ] Decide where living-document freshness should be enforced. `tests/test_living_docs.py` checks it against the real date and the `validate` check runs the whole suite, so the calendar can fail pull requests that changed nothing. `governance-contracts.yml` has no scheduled trigger, so nothing turns red on its own and completed checks stay green; it is the next push or re-run that fails. The contract is right that staleness must bite; the open question is whether it should bite the stale document's own change, or a scheduled report, rather than whichever unrelated pull request happens to run its checks while the document is stale (owner: @bryansayler)
 - [ ] Add the living-document header to `docs/briefs/2026-09-20-poster-claim-binding.md` and the three plans under `docs/superpowers/plans/` in their next substantive edit
+- [ ] Close the two-check gap between `scripts/validate.sh` and the pull-request gate. No workflow runs `validate.sh`; the gate runs the unit suite, and eleven of the thirteen checks in that script reach it anyway because a test applies each validator to this repository's own files. The two that do not are `scripts/quirk_concept.py lint` and `scripts/validate-copilot-maintenance.py`, neither of which has a test module. The first is the sharper one: this repository offers the registry linter to other repositories through `quirk-semantic-governance.yml`, which is `workflow_call`/`workflow_dispatch` only, and has no self-caller — so the one repository that never lints its own registry on a pull request is the one that owns it (owner: @bryansayler)
 
 ## Next
 

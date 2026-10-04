@@ -4,8 +4,8 @@ Kind: todo
 Status: active  
 Owner: @bryansayler  
 Repository: `Quirk-Systems/.github`  
-Observed head: `1263f5008838f743b16ee218046e26dac5c9edd8`  
-Reviewed: 2026-10-03  
+Observed head: `7c1061ba8867fdce4d903adc7c9589016e3ab002`  
+Reviewed: 2026-10-04  
 Review by: 2026-10-31  
 Derived from: `docs/goals/2026-09-20-living-documents-validated.md`  
 Authority effect: **none**
@@ -18,8 +18,9 @@ task, recorded in the receipt that ships it.
 
 - [ ] Add the living-document header to the poster claim-binding brief in its next substantive edit (owner: @bryansayler; proof: `python scripts/validate_living_docs.py --strict` counts one brief)
 - [ ] Add the living-document header to the three plans under `docs/superpowers/plans/` in their next substantive edits (owner: @bryansayler; proof: the validator counts three plans)
-- [ ] Extend the twice-weekly portfolio review checklist with "read every stale living document and bump or retire it" (owner: @bryansayler; proof: `docs/governance/AUTONOMOUS_OPERATIONS.md` names the validator). This is the mitigation for the lapse recorded below, so it is the first of these to do
+- [ ] Extend the twice-weekly portfolio review checklist with "read every stale living document and bump or retire it" (owner: @bryansayler; proof: `docs/governance/AUTONOMOUS_OPERATIONS.md` names the validator). This is the mitigation for the near-lapse recorded below, so it is the first of these to do
 - [ ] Harden `reusable-validate.yml` and remove its zizmor and pin-test exemptions, now that the PR #20 decision that owned that file is made (owner: @bryansayler; proof: the file leaves `.github/zizmor.yml` and the `LEGACY` set in `tests/test_workflow_pins.py`)
+- [ ] Give `scripts/quirk_concept.py lint` and `scripts/validate-copilot-maintenance.py` a route into this repository's own pull-request gate: either a test that applies each to this repository's files, as every other validator in `scripts/validate.sh` already has, or a self-caller for `quirk-semantic-governance.yml`. Prefer the test — the gate runs the suite, and a second check context is one more thing an owner must require (owner: @bryansayler; proof: `python -m unittest discover -s tests` fails when `.quirk/registry.json` or a `docs/copilot-maintenance/` link is broken)
 
 ## Blocked
 

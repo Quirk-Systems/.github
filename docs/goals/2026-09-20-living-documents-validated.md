@@ -5,7 +5,7 @@ Status: done
 Owner: @bryansayler  
 Repository: `Quirk-Systems/.github`  
 Observed head: `7c1061ba8867fdce4d903adc7c9589016e3ab002`  
-Reviewed: 2026-10-03  
+Reviewed: 2026-10-04  
 Review by: 2026-10-31  
 Derived from: `docs/intentions/2026-09-20-evidence-first-planning.md`  
 Authority effect: **none**
@@ -14,9 +14,10 @@ Authority effect: **none**
 
 Every intention, goal, roadmap, and to-do document under `docs/` carries a
 header that names its kind, status, owner, observed head, review dates, and
-lineage; the validator rejects a malformed one, reports a lapsed one, and
-runs as part of the repository's single validation entrypoint on every pull
-request.
+lineage; the validator rejects a malformed one and fails on a lapsed one under
+`--strict`; `scripts/validate.sh` runs it that way for contributors; and the
+unit suite the pull-request gate does run checks the same freshness against the
+real date, so a lapse cannot reach `main` unnoticed.
 
 ## Measure
 
@@ -24,9 +25,12 @@ request.
 python scripts/validate_living_docs.py --strict
 ```
 
-Done means: exit code 0 on the current head with at least one document of each
-of the four kinds, zero stale documents, and `scripts/validate.sh` invoking the
-same script so the pull-request gate inherits it.
+Done means three things, each checkable at the observed head: exit code 0 with
+at least one document of each of the four kinds and zero stale documents;
+`scripts/validate.sh` invoking the same script with `--strict`; and
+`tests/test_living_docs.py` applying the validator to the real documents
+against the real date, because the pull-request gate runs the unit suite and
+runs no part of `scripts/validate.sh`.
 
 ## Tasks
 
@@ -37,8 +41,9 @@ same script so the pull-request gate inherits it.
 - VERIFIED at the observed head: `scripts/validate_templates.py` already checks section structure for briefs, plans, ADRs, and move receipts, and `validate_manifest._check` already applies the closed-schema subset used by every other Quirk contract; the living-document validator reuses both rather than adding a parser.
 - VERIFIED: the same header can be added to existing briefs and plans without changing their required sections. The opt-in path is covered by `test_opted_in_brief_and_plan_validate_their_own_sections`, which reuses `validate_templates.REQUIRED_SECTIONS` so the two cannot diverge.
 - UNKNOWN: whether documents in other Quirk repositories will adopt the header before a reusable workflow exists to check them.
-- VERIFIED on `main` at the observed head, which is the measure this goal set: `python scripts/validate_living_docs.py --strict` exits 0 reporting four documents, one of each of the four kinds, and zero stale, and `scripts/validate.sh` invokes that script with `--strict`. Both halves of the Review condition below are met.
-- The Outcome's phrase "runs as part of the repository's single validation entrypoint on every pull request" conflated two mechanisms, and they are separate. **No workflow invokes `scripts/validate.sh`**; it is the contributor entrypoint. Freshness reaches the pull-request gate by a different route: `governance-contracts.yml` runs the unit suite directly, and `test_repository_documents_are_fresh_today` in `tests/test_living_docs.py` checks every document against the real date. Either one alone would have satisfied a careless reading of the measure; both are named here so a later reader does not look for freshness in a file CI never runs.
+- VERIFIED on `main` at the observed head: `python scripts/validate_living_docs.py --strict` exits 0 reporting four documents, one of each of the four kinds, and zero stale; `scripts/validate.sh` invokes that script with `--strict`; and `tests/test_living_docs.py` applies the validator to the real documents. All three conditions of the Measure hold.
+- The Outcome and Measure first read "runs as part of the repository's single validation entrypoint on every pull request" and "so the pull-request gate inherits it". That conflated two separate mechanisms and the second clause was simply false. **No workflow invokes `scripts/validate.sh`**; it is the contributor entrypoint. Freshness reaches the pull-request gate by a different route: `governance-contracts.yml` runs the unit suite directly, and `test_repository_documents_are_fresh_today` in `tests/test_living_docs.py` checks every document against the real date. Both are now named in the Measure so a later reader does not look for freshness in a file CI never runs.
+- VERIFIED by reading `scripts/validate.sh` against `.github/workflows/` and `tests/` at the observed head: of the thirteen checks `validate.sh` runs, every one but two reaches the pull-request gate, because the suite the gate runs applies each validator to this repository's own files — `test_repository_manifest_is_valid`, `test_projection_is_in_sync`, `test_example_validates_and_repository_has_no_orphan_records`, `test_repository_documents_are_fresh_today` and their siblings. The two with no route in are `scripts/quirk_concept.py lint` and `scripts/validate-copilot-maintenance.py`, neither of which has a test module. `quirk_concept.py lint` does run in `quirk-semantic-governance.yml`, but that workflow is `workflow_call`/`workflow_dispatch` only and this repository has no self-caller for it, so the registry linter this repository offers other repositories is the one check it does not apply to itself on a pull request. That gap is recorded on the roadmap; it is not part of this goal's measure, which is about living documents.
 - No brief or plan has opted in yet; that is a task in the rollout todo, not part of this goal's measure, which asks only for one document of each of the four kinds.
 
 ## Review
@@ -47,6 +52,33 @@ Marked **done** on 2026-10-03: the measure passes on `main` at
 `7c1061ba8867fdce4d903adc7c9589016e3ab002` and the validator runs inside
 `scripts/validate.sh`. A `done` document does not go stale, so the review date
 above is inert and kept only because the header requires it.
+
+Re-read on 2026-10-04 after review challenged the `done`, on the grounds that
+the Measure's trailing clause — "so the pull-request gate inherits it" — is
+false, which it is. Two responses were available and they are not equivalent.
+
+Flipping this goal back to `active` was the first, and it was rejected on the
+facts: it would assert that the outcome is not reached when it is. Living-document
+freshness **is** enforced on every pull request, by `tests/test_living_docs.py`
+inside the suite `governance-contracts.yml` runs. Marking a reached outcome
+unreached to look rigorous is as dishonest as the opposite, and it would have
+buried a real finding under a false one.
+
+What was done instead: the false clause was struck and the Measure now names
+the mechanism that actually carries freshness into the gate. That is not the
+same move as rewriting a measure to fit what was delivered, and the difference
+is worth stating because the two look alike. Nothing testable was removed. The
+original Measure asked for two checkable things (the validator passing; and
+`validate.sh` invoking it) and gave a third clause as the *reason* the second
+mattered. The reason was wrong; the bar is now higher, not lower, because the
+replacement clause is itself checkable and someone can fail it. Had the measure
+required something the work did not deliver, the honest move would have been
+`active`, and this paragraph would say so.
+
+The finding that survives is narrower and real, and it belongs to the roadmap
+rather than here: the gate runs the unit suite, not `scripts/validate.sh`, so
+any check in that script with no test behind it is unenforced on a pull request.
+Two qualify, both named in the Evidence above.
 
 The re-scope this section anticipated did happen, and it is worth naming
 because it was not a neutral choice. The Outcome above says the validator
