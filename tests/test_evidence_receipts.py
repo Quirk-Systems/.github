@@ -3,6 +3,7 @@
 import copy
 import hashlib
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -24,8 +25,11 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import validate_evidence_receipts  # noqa: E402
 
 
-def run(*args, cwd, check=True):
-    result = subprocess.run(args, cwd=cwd, capture_output=True, text=True)
+def run(*args, cwd, check=True, env_extra=None):
+    env = None
+    if env_extra:
+        env = {**os.environ, **env_extra}
+    result = subprocess.run(args, cwd=cwd, capture_output=True, text=True, env=env)
     if check and result.returncode:
         raise AssertionError(result.stderr or result.stdout)
     return result
@@ -39,6 +43,26 @@ def git_commit(root, message):
     git(root, "add", "-A")
     git(root, "commit", "-m", message)
     return git(root, "rev-parse", "HEAD").stdout.strip()
+
+
+def workflow_run_body(text, step_name):
+    """Return the shell body of a named workflow step, dedented.
+
+    Line-scanned rather than parsed: `scripts/` and `tests/` import nothing
+    outside the standard library, so there is no YAML parser here. The scan
+    starts at the step's `- name:` line, finds its `run: |`, and takes the block
+    indented further than that key.
+    """
+    lines = text.splitlines()
+    start = next(i for i, line in enumerate(lines) if line.strip() == "- name: " + step_name)
+    run_at = next(i for i in range(start, len(lines)) if lines[i].strip() == "run: |")
+    key_indent = len(lines[run_at]) - len(lines[run_at].lstrip())
+    body = []
+    for line in lines[run_at + 1:]:
+        if line.strip() and len(line) - len(line.lstrip()) <= key_indent:
+            break
+        body.append(line[key_indent + 2:] if line.strip() else "")
+    return "\n".join(body) + "\n"
 
 
 def receipt_digest(receipt):
@@ -67,14 +91,20 @@ class GitReceiptFixture:
         self.receipts.mkdir(parents=True)
         self.receipt_path = self.receipts / "qreceipt.test.json"
 
-    def generate(self, evidence_paths=("delete.txt", "keep.txt", "present.txt")):
+    def generate(
+        self,
+        evidence_paths=("delete.txt", "keep.txt", "present.txt"),
+        extra=(),
+        base=None,
+        commands=("python -m unittest discover -s tests -v",),
+    ):
         command = [
             sys.executable,
             str(GENERATOR),
             "--repository",
             "owner/repository",
             "--base",
-            self.base,
+            base or self.base,
             "--commit",
             self.subject,
             "--receipt-id",
@@ -83,8 +113,6 @@ class GitReceiptFixture:
             "qclaim.test",
             "--claim",
             "The subject changes are byte-bound to this receipt.",
-            "--verification-command",
-            "python -m unittest discover -s tests -v",
             "--verified-at",
             "2026-08-21T12:00:00Z",
             "--root",
@@ -94,6 +122,9 @@ class GitReceiptFixture:
         ]
         for path in evidence_paths:
             command.extend(("--evidence-path", path))
+        for entry in commands:
+            command.extend(("--verification-command", entry))
+        command.extend(extra)
         return run(*command, cwd=self.root, check=False)
 
     def load(self):
@@ -148,6 +179,167 @@ class EvidenceReceiptTest(unittest.TestCase):
             result = fixture.validate()
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn("1 receipt", result.stdout)
+
+    def test_a_correction_is_a_separate_instrument_not_an_annotation(self):
+        """`correction` is legal only on a non-verified receipt, and required there.
+
+        The validator forbids a correction on a `verified` receipt and demands one
+        on `unverified` or `retracted`, so a receipt cannot both attest bytes and
+        correct an earlier claim. The generator emitted only verified receipts
+        with `correction` hardcoded null, which left the instrument unreachable
+        and every correction so far as prose inside a claim statement, where no
+        validator or query can find it.
+        """
+        whole = (
+            "--correction-reason", "the earlier claim called a near-lapse a lapse",
+            "--corrects-claim", "qclaim.earlier.aaaaaaaaaaaa",
+            "--correction-observation", "the document was re-read before its review date",
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.fixture(directory)
+            result = fixture.generate(extra=("--status", "retracted") + whole)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            receipt = fixture.load()
+            self.assertEqual(receipt["status"], "retracted")
+            self.assertEqual(receipt["correction"]["external_claim_refs"], ["qclaim.earlier.aaaaaaaaaaaa"])
+            self.assertEqual(len(receipt["correction"]["observations"]), 1)
+            fixture.receipt_commit = git_commit(fixture.root, "receipt")
+            self.assertEqual(fixture.validate().returncode, 0, "a retracted correction must validate")
+
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.fixture(directory)
+            # A verified receipt may not carry one, which is why prose was used before.
+            result = fixture.generate(extra=whole)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("cannot carry a correction", result.stderr)
+            # A non-verified receipt may not omit one, nor any of its three parts.
+            result = fixture.generate(extra=("--status", "retracted"))
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("requires a correction", result.stderr)
+            for drop in (0, 2, 4):
+                partial = tuple(v for i, v in enumerate(whole) if i not in (drop, drop + 1))
+                result = fixture.generate(extra=("--status", "unverified") + partial)
+                self.assertNotEqual(result.returncode, 0, f"accepted a correction missing {whole[drop]}")
+                self.assertIn("requires a correction", result.stderr)
+            result = fixture.generate(extra=("--status", "retracted") + whole
+                                      + ("--corrects-claim", "qclaim.earlier.aaaaaaaaaaaa"))
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("must not repeat", result.stderr)
+
+    def test_a_correction_needs_no_evidence_path_and_no_command(self):
+        """A correction has a zero-diff subject, so the two verified-only flags must be optional.
+
+        `--status` alone did not make the instrument reachable. `--evidence-path`
+        and `--verification-command` stayed mandatory in argparse, and a
+        correction has neither: it withdraws a claim rather than attesting bytes,
+        so there is no diff to point at and no command that passed against one.
+        The validator has always allowed both to be empty on a non-verified
+        receipt and required both on a verified one, so the only thing that
+        forced the one existing correction to be written by hand was this
+        generator. A hand-written receipt is the failure mode receipts exist to
+        prevent, which is why this is a test and not a convenience.
+        """
+        whole = (
+            "--status", "retracted",
+            "--correction-reason", "the earlier claim called a near-lapse a lapse",
+            "--corrects-claim", "qclaim.earlier.aaaaaaaaaaaa",
+            "--correction-observation", "the document was re-read before its review date",
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.fixture(directory)
+            result = fixture.generate(
+                evidence_paths=(), commands=(), base=fixture.subject, extra=whole
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            receipt = fixture.load()
+            self.assertEqual(receipt["subject"]["changed_paths"], [])
+            self.assertEqual(receipt["artifacts"], [])
+            self.assertEqual(receipt["verification"]["commands"], [])
+            self.assertEqual(receipt["claims"][0]["evidence_paths"], [])
+            # A withdrawal is not an attestation, and the bounded claim types say so.
+            self.assertEqual(receipt["claims"][0]["claim_type"], "correction")
+            fixture.receipt_commit = git_commit(fixture.root, "receipt")
+            self.assertEqual(
+                fixture.validate().returncode, 0, "a zero-diff correction must validate"
+            )
+
+        # A verified receipt still requires both, and the error names the flag.
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.fixture(directory)
+            result = fixture.generate(evidence_paths=())
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("--evidence-path is required", result.stderr)
+            result = fixture.generate(commands=())
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("--verification-command is required", result.stderr)
+
+    def test_an_unverified_receipt_records_a_failed_command_as_failed(self):
+        """A receipt that exists to record a failure must not record it as a pass.
+
+        Writing `result: pass` and `exit_code: 0` for every command was harmless
+        while this generator emitted only `verified` receipts, where the
+        validator requires all-pass anyway. `--status unverified` exists for the
+        case where a proof could not be reproduced, so the one receipt whose job
+        is to carry a failure would have carried it as a pass — structurally
+        valid, and false. The schema has always allowed `fail` with a non-zero
+        exit on a non-verified receipt; only this generator forced them green.
+        """
+        correction = (
+            "--correction-reason", "the cited proof does not reproduce",
+            "--corrects-claim", "qclaim.earlier.aaaaaaaaaaaa",
+            "--correction-observation", "the command exits 1 at this commit",
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.fixture(directory)
+            result = fixture.generate(
+                evidence_paths=(),
+                commands=(),
+                base=fixture.subject,
+                extra=("--status", "unverified") + correction
+                + ("--failed-verification", "python -m unittest discover -s tests", "1"),
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            commands = fixture.load()["verification"]["commands"]
+            self.assertEqual(
+                commands,
+                [{
+                    "command": "python -m unittest discover -s tests",
+                    "result": "fail",
+                    "exit_code": 1,
+                }],
+            )
+            fixture.receipt_commit = git_commit(fixture.root, "receipt")
+            self.assertEqual(fixture.validate().returncode, 0, "a recorded failure must validate")
+
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.fixture(directory)
+            # A verified receipt may not carry one: the validator requires all-pass there.
+            result = fixture.generate(extra=("--failed-verification", "false", "1"))
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("cannot record a failed command", result.stderr)
+            # `pass iff exit code 0` is the validator's rule, so exit 0 is not a failure.
+            result = fixture.generate(
+                evidence_paths=(), commands=(), base=fixture.subject,
+                extra=("--status", "unverified") + correction
+                + ("--failed-verification", "true", "0"),
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("must not be 0", result.stderr)
+            result = fixture.generate(
+                evidence_paths=(), commands=(), base=fixture.subject,
+                extra=("--status", "unverified") + correction
+                + ("--failed-verification", "true", "oops"),
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("must be an integer", result.stderr)
+
+    def test_a_verified_receipt_records_correction_as_none(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.fixture(directory)
+            self.assertEqual(fixture.generate().returncode, 0)
+            receipt = fixture.load()
+            self.assertEqual(receipt["status"], "verified")
+            self.assertIsNone(receipt["correction"])
 
     def test_generator_refuses_claim_path_outside_subject_diff(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -740,6 +932,50 @@ class EvidenceReceiptTest(unittest.TestCase):
             set(schema["$defs"]["claim"]["required"]),
             {"claim_id", "claim_type", "authority_effect", "statement", "evidence_paths"},
         )
+
+    def test_a_correction_only_pull_request_emits_no_candidate_and_passes(self):
+        """The candidate step must not fail a range whose only change is a receipt.
+
+        Making the correction instrument reachable from the generator was not
+        enough to make a correction landable on its own. The candidate step
+        detects a receipt-only head, moves the subject back to its parent, finds
+        no substantive path in the range, and then called the generator with no
+        `--evidence-path` and the default `verified` status — which cannot
+        succeed, so the `validate` job failed for a range the coverage step
+        accepts. The only way to land a retraction was to attach it to an
+        unrelated change, which is the opposite of a separate instrument.
+
+        This runs the step's own shell body rather than asserting on its text,
+        so a rewrite that drops the guard fails here even if the comment stays.
+        """
+        body = workflow_run_body(
+            GOVERNANCE_WORKFLOW.read_text(encoding="utf-8"),
+            "Emit exact-range receipt candidate for review",
+        )
+        self.assertIn("create_evidence_receipt.py", body)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            git(root, "init", "-q", "-b", "main")
+            git(root, "config", "user.email", "test@example.com")
+            git(root, "config", "user.name", "test")
+            (root / "subject.txt").write_text("base\n", encoding="utf-8")
+            base = git_commit(root, "base")
+            receipts = root / ".quirk" / "evidence"
+            receipts.mkdir(parents=True)
+            (receipts / "qreceipt.correction.json").write_text("{}\n", encoding="utf-8")
+            head = git_commit(root, "correction receipt alone")
+            result = run(
+                "bash",
+                "-c",
+                body,
+                cwd=root,
+                check=False,
+                env_extra={"RANGE_BASE": base, "RANGE_HEAD": head},
+            )
+            self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+            self.assertIn("No substantive path in range", result.stdout)
+            # The guard must return before the generator runs, not after it fails.
+            self.assertNotIn("EXACT-RANGE RECEIPT CANDIDATE", result.stdout)
 
     def test_workflows_are_stable_read_only_and_do_not_execute_claimant_commands(self):
         governance = GOVERNANCE_WORKFLOW.read_text(encoding="utf-8")

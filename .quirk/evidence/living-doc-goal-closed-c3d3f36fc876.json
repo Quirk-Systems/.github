@@ -1,0 +1,66 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.living-doc-goal-closed.c3d3f36fc876",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "7c1061ba8867fdce4d903adc7c9589016e3ab002",
+    "commit": "c3d3f36fc8764c41b7be6ae41651fcbdd748ba27",
+    "changed_paths": [
+      "docs/goals/2026-09-20-living-documents-validated.md",
+      "docs/intentions/2026-09-20-evidence-first-planning.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.living-doc-goal-closed.c3d3f36fc876",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The living-documents goal is marked done against the measure it set, and its intention is re-observed and remains active. VERIFIED on main at 7c1061ba8867fdce4d903adc7c9589016e3ab002, which is the goal's stated measure: scripts/validate_living_docs.py --strict exits 0 reporting four documents, one of each of the four kinds, and zero stale, and scripts/validate.sh invokes that script with --strict. VERIFIED at this commit: 180 tests pass under Python 3.12, scripts/validate.sh reports all executed checks passed, and the validator reports 0 stale when run forward to 2026-10-19 and 2026-10-31, the dates that would otherwise have failed. VERIFIED by counting: 48 receipts in .quirk/evidence, all status verified. VERIFIED from the pull-request list: ten pull requests merged between 2026-09-20 and 2026-10-03. The goal's status change to done means it can no longer be reported stale, which is schema behavior, not a claim that every task in the rollout todo is complete; no brief or plan has used the opt-in header path, and that task remains open. UNKNOWN: whether freshness enforcement should fail the gate or report, which this commit records as an owner decision rather than deciding.",
+      "evidence_paths": [
+        "docs/goals/2026-09-20-living-documents-validated.md",
+        "docs/intentions/2026-09-20-evidence-first-planning.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/goals/2026-09-20-living-documents-validated.md",
+      "state": "present",
+      "git_blob": "51749bd457962294ffb944326d74ab0c10325a01",
+      "sha256": "sha256:4e8140b65c2a246fd1e2234de407a16abe03c0b8fad61d3868c974d2fefa7894"
+    },
+    {
+      "path": "docs/intentions/2026-09-20-evidence-first-planning.md",
+      "state": "present",
+      "git_blob": "02908f1e711c498efa80f8d01da19ead4b8c1d7b",
+      "sha256": "sha256:0871216b76d01cecf79cc1c825dd462599ef69aabfe75dbdfad1c7244727d897"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python3 scripts/validate_living_docs.py --strict",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "uv run --no-project --python 3.12 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T09:16:58Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:0c55c9f6fed95c6ad4885d1ad430c46262ac0de1a8824318fee671e3248db151"
+}

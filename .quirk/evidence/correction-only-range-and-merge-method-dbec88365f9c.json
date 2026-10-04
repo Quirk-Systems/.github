@@ -1,0 +1,69 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.correction-only-range-and-merge-method.dbec88365f9c",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "c4411dcfb1460ef9f401813e318f49ab745753cc",
+    "commit": "dbec88365f9c6e8897f4ca158a8399c193250107",
+    "changed_paths": [
+      ".github/workflows/governance-contracts.yml",
+      "docs/governance/EVIDENCE_BINDING.md",
+      "tests/test_evidence_receipts.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.correction-only-range-and-merge-method.dbec88365f9c",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "A correction-only pull request can now pass the validate job, and EVIDENCE_BINDING.md no longer names Rebase and merge as safe for receipts. VERIFIED by replaying this branch with a forced rebase onto main at 7c1061ba8867fdce4d903adc7c9589016e3ab002: head c4411dcfb146 became c8f01aefe70e, every subject SHA changed, and validate_evidence_receipts.py failed with 'subject commit must be an ancestor of checked-out HEAD' as it does after a squash; a local rebase when the base has not moved fast-forwards instead, which is why the hazard is easy to miss. VERIFIED by replaying a correction-only range, a single commit adding one zero-diff retracted receipt onto that same main: the coverage step reported 'Evidence binding passed: 49 receipts' while the candidate-emission step exited non-zero, so the validate job failed for a range coverage accepts. The failure predates the generator change; at main's generator the same call was rejected by argparse. VERIFIED at this commit: the guarded step exits 0 emitting no candidate, the new test executes the step's own shell body and was observed to fail with the guard removed, 184 tests pass under Python 3.12, and scripts/validate.sh reports all executed checks passed. UNKNOWN: whether GitHub's Rebase and merge rewrites commits in every case, which could not be read from docs.github.com because network egress to it is blocked here; the forced-replay reproduction and the cost of being wrong are why the document recommends only the merge commit.",
+      "evidence_paths": [
+        ".github/workflows/governance-contracts.yml",
+        "docs/governance/EVIDENCE_BINDING.md",
+        "tests/test_evidence_receipts.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/workflows/governance-contracts.yml",
+      "state": "present",
+      "git_blob": "559024c0ff18e01b7691a1a453aab63634f0f04b",
+      "sha256": "sha256:269b93b6fa7b65c27082391e91bbead6bb0f65298619719ee7be9073cdf9a33d"
+    },
+    {
+      "path": "docs/governance/EVIDENCE_BINDING.md",
+      "state": "present",
+      "git_blob": "192c49074485f80565d94ea8a8591ae045f612fe",
+      "sha256": "sha256:29e605e00e943bee9cb71ec932b17d7b32eea93b348ace1b56e7a0051eed9ad7"
+    },
+    {
+      "path": "tests/test_evidence_receipts.py",
+      "state": "present",
+      "git_blob": "ec3f7e67ebe7f93b19ad30bad6140caa3d41a5b7",
+      "sha256": "sha256:a4ed856a7027c99b88b0ac2893eea4b4bc10e91ad9b76bc9cbb83279e4c66275"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "uv run --no-project --python 3.12 python -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-04T04:29:05Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:add0e59d85d1817373e1f4c466a1c4cbe44050bd804adb6e119efc15463df67c"
+}

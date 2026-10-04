@@ -73,6 +73,20 @@ jobs:
             args+=(--evidence-path "$path")
           done < <(git diff --name-only -z "$RANGE_BASE..$subject")
 
+          # A pull request carrying only receipts leaves no substantive path to
+          # bind, and a verified receipt requires at least one evidence path, so
+          # generating a candidate here would fail the job for a range that is
+          # correctly covered. The coverage step below still runs and still
+          # decides: it excludes receipt JSON from the paths needing cover, so a
+          # correction-only pull request passes on its own terms. Without this
+          # guard the correction instrument was unusable on its own — the only
+          # way to land a retraction was to attach it to an unrelated change.
+          if ((${#args[@]} == 0)); then
+            echo 'No substantive path in range: no candidate receipt to emit.'
+            echo 'Coverage is decided by the next step, which exempts receipt JSON.'
+            exit 0
+          fi
+
           suffix="${subject:0:12}"
           verified_at="$(date -u -d "$(git show -s --format=%cI "$subject")" +%Y-%m-%dT%H:%M:%SZ)"
           python scripts/create_evidence_receipt.py \

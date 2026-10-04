@@ -1,10 +1,18 @@
 # Owner activation inputs
 
-Two settings in `docs/roadmaps/2026-09-20-org-control-plane.md` wait on an
-owner: the required-checks ruleset, and harden-runner's egress `block` mode.
-Repository content cannot change either. This file supplies the exact values
-those settings need, each traced to the run it was read from, so the owner
-pastes rather than guesses.
+Two items in `docs/roadmaps/2026-09-20-org-control-plane.md` wait on an owner,
+and they are **not** the same kind of thing:
+
+- The **required-checks ruleset** is owner-only. No file in this repository can
+  create, change, or activate it.
+- Harden-runner's **egress `block` mode** is a workflow-file change
+  (`egress-policy: block`), so it lands here as a reviewed pull request with
+  its own receipt. It waits on an owner's judgement about when, not on an
+  owner's access.
+
+Conflating the two is what the first version of this file did. Either way this
+file supplies the exact values each needs, traced to the run it was read from,
+so the owner pastes rather than guesses.
 
 Nothing here activates anything. Authority effect: **none**. Record what you
 actually applied in [`REQUIRED_CHECKS_ROLLOUT.md`](./REQUIRED_CHECKS_ROLLOUT.md)

@@ -14,8 +14,108 @@ from validate_evidence_receipts import (
 )
 
 
+def correction_for(args):
+    """Build the receipt's `correction` object, or None when it corrects nothing.
+
+    The evidence contract treats a correction as a separate instrument rather
+    than an annotation on an attestation: `validate_evidence_receipts` requires
+    `correction` to be null on a `verified` receipt and non-null on an
+    `unverified` or `retracted` one. So a receipt cannot both attest bytes and
+    correct an earlier claim; correcting one means issuing a non-verified receipt
+    that names the claim it corrects.
+
+    This generator emitted only `verified` receipts with `correction` hardcoded
+    to null, so the instrument the schema has carried all along was unreachable
+    and every correction so far was prose inside a claim statement, where no
+    validator or query can find it. The three parts travel together because a
+    correction with no reason, no claim it corrects, or no observation behind it
+    is not a correction; the schema requires all three.
+
+    Adding `--status` alone did not finish the job. `--evidence-path` and
+    `--verification-command` stayed mandatory, and a correction has neither: it
+    withdraws a claim rather than attesting bytes, so its subject is zero-diff
+    and there is nothing for a command to have passed against. The validator
+    always allowed both to be empty on a non-verified receipt and requires both
+    on a verified one; only this generator insisted. Until this change the one
+    correction in `.quirk/evidence` had to be written by hand, which is the
+    failure mode receipts exist to prevent.
+    """
+    parts = (args.correction_reason, args.corrects_claim, args.correction_observation)
+    if args.status == "verified":
+        if any(parts):
+            raise SystemExit(
+                "a verified receipt cannot carry a correction: the validator requires "
+                "correction to be null when status is verified. Issue the correction as a "
+                "separate receipt with --status retracted or --status unverified."
+            )
+        return None
+    if not all(parts):
+        raise SystemExit(
+            f"--status {args.status} requires a correction: --correction-reason, at least one "
+            "--corrects-claim, and at least one --correction-observation; got "
+            f"reason={bool(args.correction_reason)}, "
+            f"claims={len(args.corrects_claim)}, "
+            f"observations={len(args.correction_observation)}"
+        )
+    refs = list(dict.fromkeys(args.corrects_claim))
+    if len(refs) != len(args.corrects_claim):
+        raise SystemExit("--corrects-claim must not repeat a claim reference")
+    return {
+        "reason": args.correction_reason,
+        "external_claim_refs": refs,
+        "observations": list(args.correction_observation),
+    }
+
+
+def commands_for(args):
+    """Record each verification command with the result it actually had.
+
+    This generator wrote `result: pass` and `exit_code: 0` for every command,
+    which was harmless while it emitted only `verified` receipts: the validator
+    requires all-pass there anyway. It stopped being harmless the moment
+    `--status unverified` became reachable, because that status exists for the
+    case where a proof could not be reproduced — so the one receipt whose job is
+    to record a failure would have recorded it as a pass. The schema has always
+    allowed `fail` with a non-zero exit on a non-verified receipt; only this
+    generator forced them green.
+
+    The generator records what the caller observed and never executes anything,
+    so a claimed failure is as unexecuted as a claimed pass. Recording it
+    truthfully is still the difference between evidence and a fabrication.
+    """
+    commands = [
+        {"command": command, "result": "pass", "exit_code": 0}
+        for command in args.verification_command
+    ]
+    for command, exit_code in args.failed_verification:
+        try:
+            code = int(exit_code)
+        except ValueError as error:
+            raise ReceiptError("--failed-verification exit code must be an integer: " + exit_code) from error
+        if code == 0:
+            # The validator enforces pass iff exit code 0, so a failure with
+            # exit 0 is not a shape it can represent.
+            raise ReceiptError("--failed-verification exit code must not be 0; a command that exited 0 passed")
+        commands.append({"command": command, "result": "fail", "exit_code": code})
+    return commands
+
+
 def build_receipt(args):
     root = Path(args.root).resolve()
+    correction = correction_for(args)
+    if args.status == "verified":
+        # The validator rejects a verified receipt with no evidence path and no
+        # command; failing here says which flag is missing instead.
+        if not args.evidence_path:
+            raise ReceiptError("--evidence-path is required for a verified receipt")
+        if not args.verification_command:
+            raise ReceiptError("--verification-command is required for a verified receipt")
+        if args.failed_verification:
+            raise ReceiptError(
+                "a verified receipt cannot record a failed command: the validator requires every "
+                "command to pass with exit code 0 when status is verified. Use --status unverified "
+                "to record a proof that could not be reproduced."
+            )
     entries = derive_diff(root, args.base, args.commit)
     changed_paths = [path for path, _ in entries]
     evidence_paths = sorted(set(args.evidence_path))
@@ -28,7 +128,7 @@ def build_receipt(args):
         "schema_version": "evidence-receipt.v1",
         "receipt_id": args.receipt_id,
         "repository": args.repository,
-        "status": "verified",
+        "status": args.status,
         "subject": {
             "base_commit": args.base,
             "commit": args.commit,
@@ -36,7 +136,10 @@ def build_receipt(args):
         },
         "claims": [{
             "claim_id": args.claim_id,
-            "claim_type": "evidence",
+            # A withdrawal is not an attestation, and the bounded claim types
+            # distinguish them, so the type follows the status rather than
+            # needing a flag a caller could set inconsistently with it.
+            "claim_type": "evidence" if args.status == "verified" else "correction",
             "authority_effect": "none",
             "statement": args.claim,
             "evidence_paths": evidence_paths,
@@ -45,14 +148,11 @@ def build_receipt(args):
             artifact_for_path(root, args.commit, path, state) for path, state in entries
         ],
         "verification": {
-            "commands": [
-                {"command": command, "result": "pass", "exit_code": 0}
-                for command in args.verification_command
-            ],
+            "commands": commands_for(args),
             "verified_at": args.verified_at,
         },
         "authority": {"admission_effect": "none", "authority_ref": None},
-        "correction": None,
+        "correction": correction,
     }
     receipt["receipt_sha256"] = canonical_receipt_digest(receipt)
     validate_receipt(receipt, args.repository, root)
@@ -67,11 +167,27 @@ def main(argv=None):
     parser.add_argument("--receipt-id", required=True)
     parser.add_argument("--claim-id", required=True)
     parser.add_argument("--claim", required=True)
-    parser.add_argument("--evidence-path", action="append", required=True)
-    parser.add_argument("--verification-command", action="append", required=True)
+    # Required for a verified receipt and checked in build_receipt; a correction
+    # has a zero-diff subject and no command, so neither can be mandatory here.
+    parser.add_argument("--evidence-path", action="append", default=[])
+    parser.add_argument("--verification-command", action="append", default=[],
+                        help="a command that was run and passed; repeatable")
+    parser.add_argument("--failed-verification", action="append", nargs=2, default=[],
+                        metavar=("COMMAND", "EXIT_CODE"),
+                        help="a command that was run and failed, with its non-zero exit code; "
+                             "repeatable, and rejected on a verified receipt")
     parser.add_argument("--verified-at", required=True)
     parser.add_argument("--root", default=".")
     parser.add_argument("--output", required=True)
+    parser.add_argument("--status", default="verified", choices=("verified", "unverified", "retracted"),
+                        help="verified attests bytes and forbids a correction; unverified and "
+                             "retracted are correction instruments and require one")
+    parser.add_argument("--correction-reason",
+                        help="why an earlier claim is being corrected; requires the two flags below")
+    parser.add_argument("--corrects-claim", action="append", default=[],
+                        help="claim id this receipt corrects, repeatable; must not repeat")
+    parser.add_argument("--correction-observation", action="append", default=[],
+                        help="an observation supporting the correction, repeatable")
     args = parser.parse_args(argv)
     try:
         receipt = build_receipt(args)
@@ -80,7 +196,7 @@ def main(argv=None):
         output.write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     except (OSError, ReceiptError) as error:
         parser.error(str(error))
-    print("Created verified evidence receipt: " + str(args.output))
+    print("Created " + args.status + " evidence receipt: " + str(args.output))
     return 0
 
 

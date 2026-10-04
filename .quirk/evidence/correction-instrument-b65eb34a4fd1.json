@@ -1,0 +1,61 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.correction-instrument.b65eb34a4fd1",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "2cdc4fdbe42343390a4933aa7027092790d7620c",
+    "commit": "b65eb34a4fd18c827c4f2c65578d1fd765bb1607",
+    "changed_paths": [
+      "scripts/create_evidence_receipt.py",
+      "tests/test_evidence_receipts.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.correction-instrument.b65eb34a4fd1",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "create_evidence_receipt.py can emit the correction instrument the evidence contract already defined: --status accepts verified, unverified or retracted, and --correction-reason, --corrects-claim and --correction-observation build the correction object. VERIFIED by reading validate_evidence_receipts.py: _validate_authority_and_correction raises 'verified receipts require correction to be null' when status is verified and otherwise requires reason, unique external_claim_refs matching the external-ref pattern, and a non-empty observations array; the generator now mirrors both directions and refuses a verified receipt carrying any correction flag as well as a non-verified receipt missing any of the three parts. VERIFIED by counting: all 52 receipts under .quirk/evidence carry correction null, which was not a choice because the generator hardcoded it and emitted status verified only. VERIFIED at this commit: 182 tests pass under Python 3.12, two more than before, and the new test asserts a retracted correction validates end to end through validate_evidence_receipts; scripts/validate.sh reports all executed checks passed. CORRECTION OF AN EXTERNAL FINDING, recorded here in prose because this receipt is verified and therefore may not carry a structured correction: the Graphify finding on .quirk/evidence/post-merge-corrections-94ddb6f24550.json asked for its correction field to be populated. That receipt is verified, so null is required and populating it would make it invalid. This commit adds no correction to any existing receipt and retracts nothing.",
+      "evidence_paths": [
+        "scripts/create_evidence_receipt.py",
+        "tests/test_evidence_receipts.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "scripts/create_evidence_receipt.py",
+      "state": "present",
+      "git_blob": "1eef79001933fc4a8a007db8cb143874abbe0eeb",
+      "sha256": "sha256:89c579365f492bb57dc69eaeff599c1db8affd6016234a30f40498fee4b11cac"
+    },
+    {
+      "path": "tests/test_evidence_receipts.py",
+      "state": "present",
+      "git_blob": "7d29279dbd0412fd0e340b60fd431a3f2e8601e5",
+      "sha256": "sha256:0b1c8677ddfa5c61c376f4cc7c5a748ac610b8eb8eb2e4b8205b87f6a4552474"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "uv run --no-project --python 3.12 -m unittest discover -s tests",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-04T04:02:48Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:3da20e285f3fa7d6e2b46c1440f078b38cebec2512ffedfb8c443950067ea788"
+}

@@ -9,9 +9,14 @@ following it.
 
 ## What Copilot reads that other agents do not
 
-- GitHub Copilot loads this file automatically for chat and code review in this
-  repository and across the organization. Claude Code loads `CLAUDE.md`, which
-  imports `AGENTS.md` the same way.
+- GitHub Copilot loads this file automatically for chat and code review **in
+  this repository only**. Repository custom instructions are per-repository;
+  this file is not inherited by other repositories just because it lives in
+  `.github`, which special-cases profile, funding, and issue-template defaults
+  but not Copilot instructions. Organization-wide custom instructions are a
+  separate owner-only setting under the organization's Copilot settings, and
+  nothing in this repository can supply them. Claude Code loads `CLAUDE.md`,
+  which imports `AGENTS.md` the same way, also per repository.
 - Org-level Copilot agent profiles are in [`agents/`](../agents/); the canonical
   skill bodies they share with Claude are in
   [`.github/skills/`](./skills/). A `.claude/skills/` entry is a shim that
