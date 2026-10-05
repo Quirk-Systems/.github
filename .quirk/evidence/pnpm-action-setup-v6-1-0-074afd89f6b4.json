@@ -1,0 +1,53 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.pnpm-action-setup-v6-1-0.074afd89f6b4",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "4139373b697ee33d159d103feff01da29adc9819",
+    "commit": "074afd89f6b4ddd1b0fc4ab0e830f63ee24dbe2b",
+    "changed_paths": [
+      ".github/workflows/reusable-validate.yml"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.pnpm-action-setup-v6-1-0.074afd89f6b4",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Updates only the pnpm/action-setup pin in reusable-validate.yml from 0977fd99725f1db4007ccb2928dbb4e90d06cc86 (v6.0.10) to ea17c68df8912ef543352723c149a84f56e3d413 (v6.1.0). Consumer runtime behavior and merge approval are not established by this receipt.",
+      "evidence_paths": [
+        ".github/workflows/reusable-validate.yml"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/workflows/reusable-validate.yml",
+      "state": "present",
+      "git_blob": "a235a4e39c072f1b0bb9f5b33119d85cc09ddbd2",
+      "sha256": "sha256:93c4d8c2323254c078b89c0c526512d72a75129d40fc7d70e3fb62deb63f2fe9"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python3 -m unittest tests.test_workflow_pins -v",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_governed_decisions.py --repository Quirk-Systems/.github --root . --decisions .quirk/decisions",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-05T08:18:19Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:ebcf3cdb860eeb9bbb834adee82ebcc848ecd094edde2f83fc13abea5605c11f"
+}
