@@ -1,0 +1,4 @@
+interface:
+  display_name: "Quirk Review"
+  short_description: "Review exact revisions and keep authority separate"
+  default_prompt: "Use $code-review to review this change with commit-specific evidence, severity-ranked findings, and separate review and merge decisions."
