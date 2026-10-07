@@ -185,7 +185,7 @@ def _validate_authority(authority, disposition):
         raise DecisionError("REAUTHORIZE requires authority.required_next to include reauthorize")
 
 
-def validate_decision(decision, repository=None, current_head=None):
+def validate_decision(decision, repositories=None, current_head=None):
     _require_object(decision, TOP_LEVEL_FIELDS, "decision")
     if decision["schema_version"] != "governed-decision.v1":
         raise DecisionError("schema_version must be governed-decision.v1")
@@ -193,8 +193,8 @@ def validate_decision(decision, repository=None, current_head=None):
         raise DecisionError("decision_id is invalid")
     if not isinstance(decision["repository"], str) or not REPOSITORY_PATTERN.fullmatch(decision["repository"]):
         raise DecisionError("repository must use owner/name form")
-    if repository is not None and decision["repository"] != repository:
-        raise DecisionError("decision repository must match --repository")
+    if repositories is not None and decision["repository"] not in repositories:
+        raise DecisionError("decision repository must match one allowed --repository value")
 
     _require_sha256(decision["decision_sha256"], "decision_sha256")
     if decision["decision_sha256"] != canonical_decision_digest(decision):
@@ -249,7 +249,7 @@ def discover_decisions(root, decisions):
     return sorted(candidate for candidate in path.rglob("*.json") if candidate.is_file())
 
 
-def validate_directory(repository, root, decisions, current_head=None):
+def validate_directory(repositories, root, decisions, current_head=None):
     paths = discover_decisions(root, decisions)
     ids = set()
     for path in paths:
@@ -258,7 +258,7 @@ def validate_directory(repository, root, decisions, current_head=None):
         except (OSError, UnicodeError, json.JSONDecodeError) as error:
             raise DecisionError(path.as_posix() + ": invalid JSON: " + str(error)) from error
         try:
-            decision_id = validate_decision(decision, repository=repository, current_head=current_head)
+            decision_id = validate_decision(decision, repositories=repositories, current_head=current_head)
         except DecisionError as error:
             raise DecisionError(path.as_posix() + ": " + str(error)) from error
         if decision_id in ids:
@@ -269,14 +269,14 @@ def validate_directory(repository, root, decisions, current_head=None):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--repository", required=True)
+    parser.add_argument("--repository", required=True, action="append")
     parser.add_argument("--root", default=".")
     parser.add_argument("--decisions", default=".quirk/decisions")
     parser.add_argument("--current-head")
     args = parser.parse_args(argv)
     try:
         count = validate_directory(
-            args.repository,
+            set(args.repository),
             args.root,
             args.decisions,
             current_head=args.current_head,

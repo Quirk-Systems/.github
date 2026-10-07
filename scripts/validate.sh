@@ -17,7 +17,7 @@ optional() {
 }
 
 run "$PY" -m unittest discover -s tests
-run "$PY" scripts/validate_governed_decisions.py --repository "$REPO" --root . --decisions .quirk/decisions
+run "$PY" scripts/validate_governed_decisions.py --repository "$REPO" --repository Quirk-Systems/Quirk --root . --decisions .quirk/decisions
 run "$PY" scripts/validate_evidence_receipts.py --repository "$REPO" --root . --receipts .quirk/evidence
 run "$PY" scripts/quirk_concept.py lint
 run "$PY" scripts/validate-copilot-maintenance.py
