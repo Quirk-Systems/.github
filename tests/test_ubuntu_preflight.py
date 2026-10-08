@@ -45,6 +45,8 @@ class UbuntuPreflightTests(unittest.TestCase):
 
     def test_runner_selection_is_a_closed_mapping_with_the_original_default(self):
         text = WORKFLOW.read_text(encoding="utf-8")
+        self.assertNotIn("uses: oven-sh/setup-bun@v2", text)
+        self.assertIn("uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6", text)
         runner = re.search(r"^    runs-on: (.+)$", text, re.M).group(1)
         self.assertEqual(runner, "${{ inputs.ubuntu-image == 'ubuntu-26.04' && 'ubuntu-26.04' || "
                          "inputs.ubuntu-image == 'ubuntu-24.04' && 'ubuntu-24.04' || 'ubuntu-latest' }}")

@@ -15,3 +15,7 @@
 - No existing consumer pin is changed. Hosted fixture proof establishes only
   the tested fixture and image; downstream apps require their own preflight.
   Revert this change to remove the input and fixture jobs.
+
+- Pin the inherited Bun setup action to the verified v2.2.0 commit. Hosted
+  policy rejected its floating v2 tag even for the npm fixture's skipped step;
+  fix the workflow rather than changing the organization's full-SHA protection.
