@@ -1,0 +1,160 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.ubuntu26-preflight.9f7720814e8b",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "eb889adf3009951de873890103199600f4aad20f",
+    "commit": "9f7720814e8b0a80fce5add9c1bb2bd35e3e7750",
+    "changed_paths": [
+      ".github/workflows/governance-contracts.yml",
+      ".github/workflows/reusable-validate.yml",
+      "CHANGELOG.md",
+      "docs/governance/REUSABLE_WORKFLOWS.md",
+      "docs/governance/UBUNTU_26_AUDIT.md",
+      "fixtures/ubuntu-preflight/.gitignore",
+      "fixtures/ubuntu-preflight/browser.spec.ts",
+      "fixtures/ubuntu-preflight/build.mjs",
+      "fixtures/ubuntu-preflight/build.test.mjs",
+      "fixtures/ubuntu-preflight/package-lock.json",
+      "fixtures/ubuntu-preflight/package.json",
+      "fixtures/ubuntu-preflight/playwright.config.ts",
+      "fixtures/ubuntu-preflight/tsconfig.json",
+      "tests/test_evidence_receipts.py",
+      "tests/test_ubuntu_preflight.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.ubuntu26-preflight.9f7720814e8b",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Adds a closed Ubuntu runner choice, exact-head validation, read-only Ubuntu 24/26 npm browser fixture and Ubuntu 26 system-Python probes. Local governance suite (237 tests), validators and offline zizmor passed; ruff and actionlint unavailable. Hosted Ubuntu compatibility and downstream application compatibility remain unproven; no review, merge, or authority is granted.",
+      "evidence_paths": [
+        ".github/workflows/governance-contracts.yml",
+        ".github/workflows/reusable-validate.yml",
+        "CHANGELOG.md",
+        "docs/governance/REUSABLE_WORKFLOWS.md",
+        "docs/governance/UBUNTU_26_AUDIT.md",
+        "fixtures/ubuntu-preflight/.gitignore",
+        "fixtures/ubuntu-preflight/browser.spec.ts",
+        "fixtures/ubuntu-preflight/build.mjs",
+        "fixtures/ubuntu-preflight/build.test.mjs",
+        "fixtures/ubuntu-preflight/package-lock.json",
+        "fixtures/ubuntu-preflight/package.json",
+        "fixtures/ubuntu-preflight/playwright.config.ts",
+        "fixtures/ubuntu-preflight/tsconfig.json",
+        "tests/test_evidence_receipts.py",
+        "tests/test_ubuntu_preflight.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/workflows/governance-contracts.yml",
+      "state": "present",
+      "git_blob": "3e438cb9be36609e4230b7b1e193fdae644f7098",
+      "sha256": "sha256:de4262793aaba4fa7be80d25a979b276290d264308e9fe7cea0e7dcc04f50827"
+    },
+    {
+      "path": ".github/workflows/reusable-validate.yml",
+      "state": "present",
+      "git_blob": "8e4508063f8925d1b88ec37c1dd33140555a7bed",
+      "sha256": "sha256:124fc89642683a09b372e766be477ff97221b080be9f358b7c9ea21a641808b2"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "state": "present",
+      "git_blob": "03407e0b9e878d84d8784a1fa9d912e059ad027b",
+      "sha256": "sha256:d07b38698fb3fe3dcf79c4e1b487793ad2b910ba09798616db93a0fc31726f08"
+    },
+    {
+      "path": "docs/governance/REUSABLE_WORKFLOWS.md",
+      "state": "present",
+      "git_blob": "509d4e62eac61e5ce974dfb22dffa109c7d69274",
+      "sha256": "sha256:176c77f9b2d82ab0342558f8db0b04f8b8a1ffbc0fb9cb4ee9b900ec8dcbb906"
+    },
+    {
+      "path": "docs/governance/UBUNTU_26_AUDIT.md",
+      "state": "present",
+      "git_blob": "3c2fc9385cc8d411c8b485792235083e33e9cf67",
+      "sha256": "sha256:5c312ed3ddd1aa318a54c2013d62f9901bf61d77a805939ead8098716f7c6a01"
+    },
+    {
+      "path": "fixtures/ubuntu-preflight/.gitignore",
+      "state": "present",
+      "git_blob": "f0a232bfffba9aee3214a9c12f50e6ccf4cf0c6c",
+      "sha256": "sha256:463b5f9362420aaa6bbf70c200b7cef361af47f34e60e6767851406f3091a39a"
+    },
+    {
+      "path": "fixtures/ubuntu-preflight/browser.spec.ts",
+      "state": "present",
+      "git_blob": "a64631e9ab2959a1f1d5f81faff01ff7f3439233",
+      "sha256": "sha256:f74e9b4ae08b5bd2636fe5c5b6beb87a10df3fd7008bc1aa3f411e5463ead2ff"
+    },
+    {
+      "path": "fixtures/ubuntu-preflight/build.mjs",
+      "state": "present",
+      "git_blob": "30e5ac3b28ed71c97bf8c901353b883b010f4c65",
+      "sha256": "sha256:20365e7c524392244c5d68c494770926438ce15462cbbd0240c2d2d58f309756"
+    },
+    {
+      "path": "fixtures/ubuntu-preflight/build.test.mjs",
+      "state": "present",
+      "git_blob": "1ab973900a4793ebdde7e3a2f0622a8d27214752",
+      "sha256": "sha256:c150480fce97ede8f11817bfd362259ae572a3b184b998284f173a6850472c0a"
+    },
+    {
+      "path": "fixtures/ubuntu-preflight/package-lock.json",
+      "state": "present",
+      "git_blob": "8b3b5ebca0461ac3d43e21b2bc313519d0276d52",
+      "sha256": "sha256:0be572cbf1c477373377cb3115b9f5546410e4ce58ff7d3ecb6530f90ee16afe"
+    },
+    {
+      "path": "fixtures/ubuntu-preflight/package.json",
+      "state": "present",
+      "git_blob": "36249aa5a77897fe6f5c88ec9c3f39477f781c13",
+      "sha256": "sha256:b0ee5bd92d70ed559f57e7f8e32b3758234f6a13dc04d0bec06da186022a46f2"
+    },
+    {
+      "path": "fixtures/ubuntu-preflight/playwright.config.ts",
+      "state": "present",
+      "git_blob": "3a76db67d525838cac5b7b9c87b00bed8b2228d2",
+      "sha256": "sha256:d38e999b09ee149778d96831e04eae5398f0b6ea2b6707b7b7b3353edbf29eec"
+    },
+    {
+      "path": "fixtures/ubuntu-preflight/tsconfig.json",
+      "state": "present",
+      "git_blob": "c99697c0c828c2f516850ab42c2d7eafeda4ba79",
+      "sha256": "sha256:e78ecddab416e33fc842d78788b85fc380bb14584b5932eb1c897517eaed2bec"
+    },
+    {
+      "path": "tests/test_evidence_receipts.py",
+      "state": "present",
+      "git_blob": "d3fe27288b303d1a02bd36f8407fd2286da1b11e",
+      "sha256": "sha256:7737c1fdb9cac64ce08c222b3d8d3cdec5b036dfb1341905d6a6e19debf15794"
+    },
+    {
+      "path": "tests/test_ubuntu_preflight.py",
+      "state": "present",
+      "git_blob": "02b6820efb5b702d91cca5f008216ab44d6d7b21",
+      "sha256": "sha256:843b02c4699cb93d2963ac64ace5c96a136acc3acf9c3271fa038bedb93844c2"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-08T16:47:06Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:f51e95f0b0a7fc83aee48288ac7e47832b7afdc4a369f46d41ebf7dec10678f8"
+}
