@@ -1,0 +1,65 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.ubuntu26-preflight-repair.dc7ada466704",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "51d671d9731194f3215a03ce4558cb5181b22046",
+    "commit": "dc7ada46670428757796120b33b3da29bfd13ed6",
+    "changed_paths": [
+      ".github/workflows/reusable-validate.yml",
+      "CHANGELOG.md",
+      "tests/test_ubuntu_preflight.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.ubuntu26-preflight-repair.dc7ada466704",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Pins the inherited Bun setup action to verified v2.2.0 and resolves cache lockfiles from the declared working directory. Local validation passed including 237 tests and offline pedantic zizmor; ruff/actionlint unavailable. Hosted browser proof, review, merge and authority are not granted by this receipt.",
+      "evidence_paths": [
+        ".github/workflows/reusable-validate.yml",
+        "CHANGELOG.md",
+        "tests/test_ubuntu_preflight.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/workflows/reusable-validate.yml",
+      "state": "present",
+      "git_blob": "70637b104889ab04a81cc27c144edfeb53e3aa28",
+      "sha256": "sha256:5cf0eeae14435dc93d4a319c6f6b2ff878573237ccfadd84a9b7feda26f56325"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "state": "present",
+      "git_blob": "5fd0c15ff597d71c99102273d1c6c09f7dd103b0",
+      "sha256": "sha256:0563d148a742e000e5392f2f63ca1fbb7864af9c3987d80bb138d4db70df3a9c"
+    },
+    {
+      "path": "tests/test_ubuntu_preflight.py",
+      "state": "present",
+      "git_blob": "77820f7b8ef656ad95458af7e75649aac87e4518",
+      "sha256": "sha256:4fa21cdb9443110922d73c476c414d72c32609400c03439c75c5b7fe381a8f64"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-08T16:52:44Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:94bf76da98540d67fb7c1dd8eb5f17e4552f980b730652641adc4761507a79a2"
+}
+
