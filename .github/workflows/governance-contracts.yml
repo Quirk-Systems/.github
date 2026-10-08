@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         image: [ubuntu-24.04, ubuntu-26.04]
-    uses: ./.github/workflows/reusable-validate.yml
+    uses: $/.github/workflows/reusable-validate.yml
     with:
       package-manager: npm
       node-version: "22"

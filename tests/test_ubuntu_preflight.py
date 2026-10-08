@@ -51,7 +51,7 @@ class UbuntuPreflightTests(unittest.TestCase):
         self.assertIn("        default: ubuntu-latest", text.split("      ubuntu-image:", 1)[1])
         caller = (ROOT / ".github/workflows/governance-contracts.yml").read_text(encoding="utf-8")
         self.assertIn("image: [ubuntu-24.04, ubuntu-26.04]", caller)
-        self.assertIn("uses: ./.github/workflows/reusable-validate.yml", caller)
+        self.assertIn("uses: $/.github/workflows/reusable-validate.yml", caller)
         self.assertIn("      run-e2e: true", caller)
 
 
