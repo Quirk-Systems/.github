@@ -98,6 +98,11 @@ jobs:
         with:
           node-version: ${{ inputs.node-version }}
           cache: ${{ inputs.package-manager }}
+          cache-dependency-path: |
+            ${{ inputs.working-directory }}/package-lock.json
+            ${{ inputs.working-directory }}/npm-shrinkwrap.json
+            ${{ inputs.working-directory }}/yarn.lock
+            ${{ inputs.working-directory }}/pnpm-lock.yaml
 
       - name: Setup Node.js
         if: inputs.package-manager == 'bun'

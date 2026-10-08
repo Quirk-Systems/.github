@@ -55,6 +55,7 @@ class UbuntuPreflightTests(unittest.TestCase):
         self.assertIn("image: [ubuntu-24.04, ubuntu-26.04]", caller)
         self.assertIn("uses: $/.github/workflows/reusable-validate.yml", caller)
         self.assertIn("      run-e2e: true", caller)
+        self.assertIn("${{ inputs.working-directory }}/package-lock.json", text)
 
 
 if __name__ == "__main__":

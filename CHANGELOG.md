@@ -19,3 +19,6 @@
 - Pin the inherited Bun setup action to the verified v2.2.0 commit. Hosted
   policy rejected its floating v2 tag even for the npm fixture's skipped step;
   fix the workflow rather than changing the organization's full-SHA protection.
+- Resolve setup-node cache lockfiles from the declared working directory. The
+  real nested npm fixture exposed the inherited root-only cache lookup failure
+  on both Ubuntu images; lockfile patterns cover npm, yarn, and pnpm.
