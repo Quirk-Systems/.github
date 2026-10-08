@@ -43,10 +43,17 @@ on:
         required: false
         type: string
         default: "test:e2e"
+      ubuntu-image:
+        description: "Runner: ubuntu-latest (default), ubuntu-24.04 (temporary hold), or ubuntu-26.04 (preflight)"
+        required: false
+        type: string
+        default: ubuntu-latest
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    # Map to known hosted images; caller input cannot select a self-hosted runner.
+    runs-on: ${{ inputs.ubuntu-image == 'ubuntu-26.04' && 'ubuntu-26.04' || inputs.ubuntu-image == 'ubuntu-24.04' && 'ubuntu-24.04' || 'ubuntu-latest' }}
+    timeout-minutes: 20
     env:
       # Quirk Systems repos use t3-env; allow the build to skip strict env
       # validation when secrets aren't configured in CI.
@@ -56,6 +63,24 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Validate runner choice and record exact environment
+        env:
+          UBUNTU_IMAGE: ${{ inputs.ubuntu-image }}
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        working-directory: .
+        run: |
+          case "$UBUNTU_IMAGE" in
+            ubuntu-latest|ubuntu-24.04|ubuntu-26.04) ;;
+            *) echo "Unsupported Ubuntu runner choice" >&2; exit 1 ;;
+          esac
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          git show --no-patch --format='commit=%H'
+          cat /etc/os-release
+          printf 'ImageOS=%s ImageVersion=%s\n' "$ImageOS" "$ImageVersion"
 
       - name: Setup Bun
         if: inputs.package-manager == 'bun'
