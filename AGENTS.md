@@ -87,6 +87,10 @@ python scripts/validate_evidence_receipts.py --repository Quirk-Systems/.github 
 
 ## Context Pointers
 
+- For Quirk design, implementation, prompting, execution, or documentation, use
+  [working defaults](docs/governance/WORKING_DEFAULTS.md) according to scope.
+  Identify the owning layer and inherit applicable guidance; declare local
+  differences without duplicating policy or inferring execution authority.
 - Changing anything about receipts, decisions, or the PR gate: read
   `docs/governance/EVIDENCE_BINDING.md` first, because the validator's
   freshness and coverage rules are stricter than they look.
