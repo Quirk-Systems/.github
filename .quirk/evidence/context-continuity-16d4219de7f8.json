@@ -1,0 +1,96 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.context-continuity.16d4219de7f8",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "eb889adf3009951de873890103199600f4aad20f",
+    "commit": "16d4219de7f80c18a8daf3a1082af5ab29a4247b",
+    "changed_paths": [
+      ".quirk/context-profile.json",
+      "AGENTS.md",
+      "CLAUDE.md",
+      "QUIRK-CONTEXT.md",
+      "README.md",
+      "templates/README.md",
+      "tests/test_agent_assets.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.context-continuity.16d4219de7f8",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Adds candidate context continuity guidance and inherited template requirements. The repository validation command passed with ruff and actionlint reported as unavailable; no runtime adoption or production compliance is established.",
+      "evidence_paths": [
+        ".quirk/context-profile.json",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "QUIRK-CONTEXT.md",
+        "README.md",
+        "templates/README.md",
+        "tests/test_agent_assets.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".quirk/context-profile.json",
+      "state": "present",
+      "git_blob": "222881e49e15e7786a8195067eb1041b4bf22cd7",
+      "sha256": "sha256:03eac406d618df37fe933bec6b181e99d71278e14709318fc10ecdcc05fc1cbf"
+    },
+    {
+      "path": "AGENTS.md",
+      "state": "present",
+      "git_blob": "e1f373108d6034e8224954670e94b9fc86981941",
+      "sha256": "sha256:3c2032cef4723aca1b6bb354143fcb0504c5bc6b37e3060a73bec9b8030b233b"
+    },
+    {
+      "path": "CLAUDE.md",
+      "state": "present",
+      "git_blob": "06b95036e427d49fd9c8aeb646cd2cce78a22e82",
+      "sha256": "sha256:d6df9a4f726c2cd9b31a3c2debf4cf4d74e0b3366f2bcbf2cbd82a3f2be57667"
+    },
+    {
+      "path": "QUIRK-CONTEXT.md",
+      "state": "present",
+      "git_blob": "72594a0121e1622c1c9907d41d56ad25be442b9e",
+      "sha256": "sha256:527322dba2e655be7b5282517e780c1c4d3817707b4627090f476e7a3d9e978e"
+    },
+    {
+      "path": "README.md",
+      "state": "present",
+      "git_blob": "171f4c137048475fb20d441fe4b96eeffd8f88a2",
+      "sha256": "sha256:38cdf171a7c3ff7aef6d8e0f5bb21d674c39f0688e0c25ee251b9a0c067adc3b"
+    },
+    {
+      "path": "templates/README.md",
+      "state": "present",
+      "git_blob": "e51a5e0209a3a385439bf51cef66b2d914ad389b",
+      "sha256": "sha256:72f1b129d6b259c2639041dde995841283c1157b54f93f509c23ad1423a741b9"
+    },
+    {
+      "path": "tests/test_agent_assets.py",
+      "state": "present",
+      "git_blob": "c6e4e464d60e8c271735754ba98c192b8d8e7375",
+      "sha256": "sha256:c25eba4161a192145612b2b43f7b10ad23d779faa82bb8e91fd0e36376aec438"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-14T08:49:02.342251Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:66e6d35578c37906b8792d17ec7609994f0adbe80ccd6077eb387147b31f558d"
+}
