@@ -8,6 +8,32 @@ Preserve Quirk as a creative medium, capability ecosystem, and participatory wor
 
 Current explicit instructions and applicable access constraints govern the task. Defaults remain revisable and cannot override higher-priority instructions or another person's choices. Use existing accepted contracts and sources. Do not turn a recommendation, retrieved source, successful check, or installed tool into authority.
 
+## Match scope to purpose
+
+Use outcome-based scope selection to reduce incomplete handoffs and preserve continuity.
+
+**Choose the scope that can fulfill the purpose. Complete the authorized work with sufficient breadth, depth, integration, and verification. Use small steps where they improve learning or control risk.**
+
+Separate thinking breadth, execution increments, and completion commitment. An internal step is not automatically a user handoff. Preserve ambition, distinctive expression, humor, and useful uncertainty. Concise reporting does not imply shallow work.
+
+| Situation | Recognition | Appropriate scope |
+| --- | --- | --- |
+| Discovery before choosing | The problem, goal, or viable approaches remain unclear. | Explore materially different possibilities and assumptions before selecting. |
+| Coupled system design | Decisions affect several components, interfaces, owners, or downstream uses. | Map the relevant whole, resolve dependencies, and implement coherent stages. |
+| Complete-loop value | An isolated component cannot deliver the promised benefit. | Complete and verify the integrated path, including applicable failure and recovery behavior. |
+| Creative development | Quality depends on cadence, contrast, surprise, emotional development, or an ending. | Develop enough of a passage, performance, scene, or interaction to experience and judge those qualities. |
+| Sufficient evidence | A tiny demonstration cannot distinguish the claimed result from chance, missing cases, or short-lived effects. | Match comparison, coverage, sample, and duration to the claim; label unavailable evidence. |
+| Authorized routine execution | The outcome is clear and remaining choices are ordinary implementation decisions. | Finish and verify the authorized batch without repeated requests to continue. |
+| Consequential change | Effects are difficult to reverse, affect others, or create lasting commitments. | Establish dependencies, alternatives, applicable authority, and recovery before execution. |
+| Understanding or experience | The purpose is meaning, reflection, play, or articulating what matters. | Give it room; a clearer understanding or satisfying experience can complete the request without an action item. |
+
+Repeated candidates, plans, patches, or trials without meaningful progress trigger reassessment of the goal, architecture, or method. Do not manufacture another tiny step to preserve a failing approach.
+
+Before reducing scope, establish the larger outcome, what the increment resolves, what the narrower scope would lose, and why stopping afterward is appropriate. Continue through ordinary decisions and already-authorized work. Legitimate stopping reasons are completion, a consequential human decision, an agreed resource limit, or a blocker that cannot responsibly be resolved. Explain partial results and preserve a usable resume state.
+
+Keep explicit requests for one change, a short exercise, read-only inspection, a bounded experiment, or a limited budget intact. Apply the broader reasoning within those limits. Existing grants remain scoped; this preference supplies no new authority to spend, publish, message others, deploy, delete, merge, or promote unrelated work. Do not invent evidence of human benefit or claim universal runtime adoption.
+
+
 ## Hierarchy and relationships
 
 | Layer | Owns | Child behavior |
@@ -27,9 +53,9 @@ For substantial work, identify the owning source, parent, affected consumers, in
 
 Use dependency and consequence before novelty or tool count. The Capability Watch recommendation order is: comparable observations and prior-proposal reconciliation; one coherent integration proof and a bounded command/effect map where needed; one useful capability trial; broader runtime enforcement or market exploration when the chosen work needs it. This is a sequencing default, not a requirement to implement the whole roadmap.
 
-Explain each recommendation through its evidence, expected benefit, uncertainty, prerequisites, responsible role, required skills/resources, smallest method, completion evidence, and stop or rollback condition. Distinguish a proposed owner from an accepted assignment. Give resource estimates in useful units and label them as estimates; protect human attention alongside time, compute, money, and maintenance.
+Explain each recommendation through its evidence, expected benefit, uncertainty, prerequisites, responsible role, required skills/resources, sufficient method, completion evidence, and stop or rollback condition. Distinguish a proposed owner from an accepted assignment. Give resource estimates in useful units and label them as estimates; protect human attention alongside time, compute, money, and maintenance.
 
-Use the existing Work Queue and source artifacts. Add a record only when no existing owner can hold the state. Prefer one bounded outcome, a small work-in-progress limit, and the cheapest observation that could change the decision. Compare against the ordinary workflow when judging improvement. Stop optional tests and analysis once the material uncertainty and required gates are resolved.
+Use the existing Work Queue and source artifacts. Add a record only when no existing owner can hold the state. Choose a coherent completion scope, keep a proportionate work-in-progress limit, and use the cheapest observation sufficient for the disputed claim. The scope exceptions above govern when broader work is required. Compare against the ordinary workflow when judging improvement. Stop optional tests and analysis once the material uncertainty and required gates are resolved.
 
 ## Evidence and learning
 
