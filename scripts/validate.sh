@@ -4,6 +4,31 @@
 # Optional tools (ruff, actionlint, zizmor) are skipped with a notice when absent;
 # a skipped check is reported, never counted as passed.
 set -euo pipefail
+
+require_tools=false
+case "${1:-}" in
+  "") ;;
+  --require-tools) require_tools=true; shift ;;
+  --help|-h)
+    echo "Usage: scripts/validate.sh [--require-tools]"
+    echo "--require-tools: require installed ruff, actionlint, and zizmor before running checks."
+    exit 0 ;;
+  *) echo "Unknown argument: $1" >&2; exit 2 ;;
+esac
+if (($#)); then echo "Unexpected arguments: $*" >&2; exit 2; fi
+
+# Agent handoffs can fail closed on incomplete environments. Do this before
+# tests/validators so missing tools do not waste a full validation run.
+if "$require_tools"; then
+  missing=()
+  for tool in "${PYTHON:-python3}" ruff actionlint zizmor; do
+    if ! command -v "$tool" >/dev/null 2>&1; then missing+=("$tool"); fi
+  done
+  if ((${#missing[@]})); then
+    echo "REQUIRED TOOLS MISSING: ${missing[*]}" >&2
+    exit 2
+  fi
+fi
 cd "$(dirname "$0")/.."
 
 PY="${PYTHON:-python3}"
@@ -45,7 +70,13 @@ optional ruff check .
 # job.workflow_sha contexts used by the reusable policy checkouts.
 optional actionlint -ignore 'property "workflow_(repository|sha)" is not defined'
 # Offline: online audits need GitHub API access; the pin policy is checked by tests.
-if command -v uv >/dev/null 2>&1; then run uv tool run --quiet zizmor --offline --persona pedantic .github/workflows; else skipped+=("zizmor"); fi
+if command -v zizmor >/dev/null 2>&1; then
+  run zizmor --offline --persona pedantic .github/workflows
+elif command -v uv >/dev/null 2>&1; then
+  run uv tool run --quiet zizmor --offline --persona pedantic .github/workflows
+else
+  skipped+=("zizmor")
+fi
 
 if ((${#skipped[@]})); then
   echo "SKIPPED (tool not installed, not a pass): ${skipped[*]}"
