@@ -1,0 +1,566 @@
+{
+  "reviewed": "2026-10-30",
+  "timezone": "America/Chicago",
+  "observed_governance_head": "d320f775a1be9ca8f6becfc19c84165bed176d1d",
+  "authority_effect": "none",
+  "scope": "Seven public repositories only. No private-derived counts or findings. Nonpublic assessment is outside this public evidence artifact.",
+  "comparison_pin": "92e5b2d928f25d0fedae87aaad2ef764a806065d",
+  "comparison_pin_note": "Historical comparison only, not a newly selected common policy target.",
+  "pull_requests": [
+    {
+      "repository": "quirk-feed",
+      "number": 28,
+      "title": "ci(semantic): pin governance caller to a reviewed .github commit",
+      "state": "closed",
+      "draft": false,
+      "merged": true,
+      "merged_at": "2026-10-04T02:42:33Z",
+      "merge_sha": "b945223e2247932bdbe45adea872fafb6252c07d",
+      "head": "ceb00e1095dedddd7f73636d62ace0bb639c7045",
+      "base": "d311c476f4505288ada45d77f3cb0e804e8ec51b",
+      "url": "https://github.com/Quirk-Systems/quirk-feed/pull/28"
+    },
+    {
+      "repository": "quirk-generator",
+      "number": 5,
+      "title": "ci(semantic): pin governance caller to a reviewed .github commit",
+      "state": "closed",
+      "draft": false,
+      "merged": true,
+      "merged_at": "2026-10-04T05:31:56Z",
+      "merge_sha": "389b4980098057e6403ac967694a31fb6a3ae1a8",
+      "head": "45cebae8c0c27d9db79ada7e6beeed74e0c88283",
+      "base": "8610f07f24230d5fe666ba62f51ecb2866e4c3c8",
+      "url": "https://github.com/Quirk-Systems/quirk-generator/pull/5"
+    },
+    {
+      "repository": ".github",
+      "number": 24,
+      "title": "Record `quirk-kitworks` candidate provisioning handoff in portfolio registry",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "merged_at": null,
+      "merge_sha": null,
+      "head": "c1188e0924e55ff61f4a0998510d24368a361928",
+      "base": "33309409424bbece1149dc9d7a9b8b68ac361703",
+      "url": "https://github.com/Quirk-Systems/.github/pull/24"
+    },
+    {
+      "repository": ".github",
+      "number": 44,
+      "title": "feat(workspace): add multi-repository scanner and per-repository plans; repair stranded receipt",
+      "state": "closed",
+      "draft": false,
+      "merged": true,
+      "merged_at": "2026-10-03T18:05:36Z",
+      "merge_sha": "c029a903c018e63633e4b2c8b4a83da54801e32f",
+      "head": "0ea03b57832b093f9a289a227d114a888253aa2c",
+      "base": "92e5b2d928f25d0fedae87aaad2ef764a806065d",
+      "url": "https://github.com/Quirk-Systems/.github/pull/44"
+    },
+    {
+      "repository": ".github",
+      "number": 47,
+      "title": "fix(dependabot): remove unavailable label overrides",
+      "state": "closed",
+      "draft": false,
+      "merged": true,
+      "merged_at": "2026-10-30T04:44:52Z",
+      "merge_sha": "d320f775a1be9ca8f6becfc19c84165bed176d1d",
+      "head": "303d201e88f7622afe7bace65b6a4eeaa22b2c77",
+      "base": "eb889adf3009951de873890103199600f4aad20f",
+      "url": "https://github.com/Quirk-Systems/.github/pull/47"
+    },
+    {
+      "repository": ".github",
+      "number": 51,
+      "title": "ci(validation): add bounded Ubuntu 26 migration preflight",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "merged_at": null,
+      "merge_sha": "48bb6a0aad86a1110f915b1d52e1cdee09dbd331",
+      "head": "7f18e49a90b1b6d772ed7d80fc6bb48258a2cc77",
+      "base": "eb889adf3009951de873890103199600f4aad20f",
+      "url": "https://github.com/Quirk-Systems/.github/pull/51"
+    },
+    {
+      "repository": ".github",
+      "number": 55,
+      "title": "docs(governance): define working defaults and sufficient completion scope",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "merged_at": null,
+      "merge_sha": "132013ea968a1e24dbedb8fe5612354d8ef2336a",
+      "head": "35c3a05341de125f6466b663775105cb7307527b",
+      "base": "eb889adf3009951de873890103199600f4aad20f",
+      "url": "https://github.com/Quirk-Systems/.github/pull/55"
+    },
+    {
+      "repository": ".github",
+      "number": 58,
+      "title": "chore(deps): bump the github-actions group across 1 directory with 9 updates",
+      "state": "closed",
+      "draft": false,
+      "merged": false,
+      "merged_at": null,
+      "merge_sha": "20e9ae06ada7c35523c13cced777006289f22873",
+      "head": "bfd53dc93485a6dce10e70827e45027aaff61bd8",
+      "base": "eb889adf3009951de873890103199600f4aad20f",
+      "url": "https://github.com/Quirk-Systems/.github/pull/58"
+    },
+    {
+      "repository": "project-scaffold",
+      "number": 137,
+      "title": "Modernize CI with checkout v7, strategic caching, and least-privilege permissions",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "head": "0440f2cb837d3e05efff832f6a0e0ea37e3560f1",
+      "base": "1e04dfc91941905fff7312403bf0817eb2768c0f",
+      "url": "https://github.com/Quirk-Systems/project-scaffold/pull/137"
+    },
+    {
+      "repository": "project-scaffold",
+      "number": 149,
+      "title": "fix(testing): align dependency upgrades with supported Node runtimes",
+      "state": "open",
+      "draft": false,
+      "merged": false,
+      "head": "92d683a652c9ec21b47d7343db5b1c69988e43a3",
+      "base": "1e04dfc91941905fff7312403bf0817eb2768c0f",
+      "url": "https://github.com/Quirk-Systems/project-scaffold/pull/149"
+    },
+    {
+      "repository": "project-scaffold",
+      "number": 152,
+      "title": "chore(ci)(deps): bump trufflesecurity/trufflehog from 3.97.9 to 3.99.7",
+      "state": "open",
+      "draft": false,
+      "merged": false,
+      "head": "be8958f41b4e0a2cdf66cec8940eb3b37af69567",
+      "base": "1e04dfc91941905fff7312403bf0817eb2768c0f",
+      "url": "https://github.com/Quirk-Systems/project-scaffold/pull/152"
+    },
+    {
+      "repository": "quirk-feed",
+      "number": 48,
+      "title": "chore(deps-dev): bump the testing group across 1 directory with 8 updates",
+      "state": "open",
+      "draft": false,
+      "merged": false,
+      "head": "48b5560718605a313280a91569ba5991e236e229",
+      "base": "a338ea3e0158437167cd875bb4655b67c3b9dc68",
+      "url": "https://github.com/Quirk-Systems/quirk-feed/pull/48"
+    },
+    {
+      "repository": ".github",
+      "number": 45,
+      "title": "feat(validation): require complete tool availability for agent handoffs",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "head": "5de16a5979aa5cbb298f3e16b52984d38caaffba",
+      "base": "c029a903c018e63633e4b2c8b4a83da54801e32f",
+      "url": "https://github.com/Quirk-Systems/.github/pull/45"
+    },
+    {
+      "repository": ".github",
+      "number": 59,
+      "title": "chore(deps): bump the github-actions group across 1 directory with 10 updates",
+      "state": "open",
+      "draft": false,
+      "merged": false,
+      "head": "3b5747734aee9eccf30c14f715150044e8fb840e",
+      "base": "d320f775a1be9ca8f6becfc19c84165bed176d1d",
+      "url": "https://github.com/Quirk-Systems/.github/pull/59"
+    }
+  ],
+  "limitations": [
+    "Coverage is the seven listed public checkouts, not an exhaustive organization inventory.",
+    "No portfolio-wide install, validation, deployment, authority or usefulness claim.",
+    "Scanner ran on the seven actual public checkouts. Only public findings are retained in this evidence file.",
+    "Six public clones are shallow; commit counts were not compared with October 3.",
+    "Pin parser limitations in WORKSPACE_TOOLING.md apply."
+  ],
+  "local_scanner": {
+    "scan": [
+      {
+        "repository": "Quirk-Systems/.github",
+        "github_identity": true,
+        "directory": ".github",
+        "state": "CODE",
+        "commits": 247,
+        "head": "d320f775a1be9ca8f6becfc19c84165bed176d1d",
+        "top_level_entries": 26,
+        "source_files": 31,
+        "toolchain": [
+          "pyproject.toml"
+        ],
+        "manifest": true,
+        "agent_files": [
+          "AGENTS.md",
+          "CLAUDE.md",
+          ".github/copilot-instructions.md"
+        ],
+        "workflows": [
+          "agent-task-dispatch.yml",
+          "codeql.yml",
+          "dependency-review.yml",
+          "governance-contracts.yml",
+          "quirk-semantic-governance.yml",
+          "reusable-agent-task-contract.yml",
+          "reusable-codeql.yml",
+          "reusable-dependency-review.yml",
+          "reusable-evidence-binding.yml",
+          "reusable-pr-title-lint.yml",
+          "reusable-sbom-provenance.yml",
+          "reusable-stale-incubations.yml",
+          "reusable-validate.yml",
+          "reusable-workflow-lint.yml",
+          "scorecard.yml",
+          "workflow-lint.yml"
+        ],
+        "validation_command": "scripts/validate.sh"
+      },
+      {
+        "repository": "Quirk-Systems/greenfield",
+        "github_identity": true,
+        "directory": "greenfield",
+        "state": "DOCS_ONLY",
+        "commits": 1,
+        "head": "6e6d4b425fe9082d469493d64a5b8e12b15dc9da",
+        "top_level_entries": 9,
+        "source_files": 0,
+        "toolchain": [],
+        "manifest": false,
+        "agent_files": [],
+        "workflows": [],
+        "validation_command": null
+      },
+      {
+        "repository": "Quirk-Systems/project-scaffold",
+        "github_identity": true,
+        "directory": "project-scaffold",
+        "state": "CODE",
+        "commits": 1,
+        "head": "1e04dfc91941905fff7312403bf0817eb2768c0f",
+        "top_level_entries": 42,
+        "source_files": 181,
+        "toolchain": [
+          "package.json"
+        ],
+        "manifest": true,
+        "agent_files": [
+          "AGENTS.md",
+          "CLAUDE.md"
+        ],
+        "workflows": [
+          "ci.yml",
+          "deps-audit.yml",
+          "evidence-binding.yml",
+          "quirk-semantic.yml"
+        ],
+        "validation_command": "bun run validate"
+      },
+      {
+        "repository": "Quirk-Systems/quirk-core",
+        "github_identity": true,
+        "directory": "quirk-core",
+        "state": "CODE",
+        "commits": 1,
+        "head": "b3162b0cd6dcc6c07570f240ca33c711ed860f0b",
+        "top_level_entries": 5,
+        "source_files": 5,
+        "toolchain": [],
+        "manifest": false,
+        "agent_files": [],
+        "workflows": [
+          "quirk-contracts-conformance.yml"
+        ],
+        "validation_command": null
+      },
+      {
+        "repository": "Quirk-Systems/quirk-feed",
+        "github_identity": true,
+        "directory": "quirk-feed",
+        "state": "CODE",
+        "commits": 1,
+        "head": "a338ea3e0158437167cd875bb4655b67c3b9dc68",
+        "top_level_entries": 26,
+        "source_files": 35,
+        "toolchain": [
+          "package.json"
+        ],
+        "manifest": true,
+        "agent_files": [
+          "CLAUDE.md"
+        ],
+        "workflows": [
+          "ci.yml",
+          "quirk-semantic.yml"
+        ],
+        "validation_command": "bun run validate"
+      },
+      {
+        "repository": "Quirk-Systems/quirk-generator",
+        "github_identity": true,
+        "directory": "quirk-generator",
+        "state": "CODE",
+        "commits": 1,
+        "head": "8b5d979e3c4cb42f076d2bf5836267e290bf873f",
+        "top_level_entries": 25,
+        "source_files": 49,
+        "toolchain": [
+          "package.json"
+        ],
+        "manifest": true,
+        "agent_files": [
+          "CLAUDE.md"
+        ],
+        "workflows": [
+          "ci.yml",
+          "quirk-semantic.yml"
+        ],
+        "validation_command": "bun run validate"
+      },
+      {
+        "repository": "Quirk-Systems/quirk-os",
+        "github_identity": true,
+        "directory": "quirk-os",
+        "state": "CODE",
+        "commits": 1,
+        "head": "03f70e1a790bac09294fe0f31a3c5f0d0fb4418e",
+        "top_level_entries": 29,
+        "source_files": 98,
+        "toolchain": [],
+        "manifest": true,
+        "agent_files": [
+          ".github/copilot-instructions.md"
+        ],
+        "workflows": [
+          "agent-reliability.yml",
+          "applause-gate-conformance.yml",
+          "applause-gate-fixtures.yml",
+          "deck-grammar-conformance.yml",
+          "distill-loop-conformance.yml",
+          "evidence-binding.yml",
+          "furniture-brief-conformance.yml",
+          "golden-gates.yml",
+          "intent-shaper-conformance.yml",
+          "qis-agent-harness.yml",
+          "sync-control-plane-conformance.yml",
+          "validate-agents.yml",
+          "validate-skills.yml"
+        ],
+        "validation_command": null
+      }
+    ],
+    "drift": {
+      "findings": [
+        {
+          "kind": "OBSERVED_UNCLASSIFIED",
+          "repository": "Quirk-Systems/greenfield",
+          "detail": "observed DOCS_ONLY with 1 commit; not in .quirk/repositories.json"
+        }
+      ],
+      "not_compared": [],
+      "public_projection_note": "Private/adjacent missing-checkout rows omitted from this public projection. They describe local coverage only."
+    },
+    "pins": [
+      {
+        "repository": "Quirk-Systems/project-scaffold",
+        "file": ".github/workflows/evidence-binding.yml:11",
+        "workflow": "reusable-evidence-binding.yml",
+        "ref": "ed2f2ff7caacdb7a148ac9811dce1e7cce48a7c8",
+        "status": "OFF_TARGET"
+      },
+      {
+        "repository": "Quirk-Systems/project-scaffold",
+        "file": ".github/workflows/quirk-semantic.yml:14",
+        "workflow": "quirk-semantic-governance.yml",
+        "ref": "1263f5008838f743b16ee218046e26dac5c9edd8",
+        "status": "OFF_TARGET"
+      },
+      {
+        "repository": "Quirk-Systems/quirk-feed",
+        "file": ".github/workflows/quirk-semantic.yml:14",
+        "workflow": "quirk-semantic-governance.yml",
+        "ref": "92e5b2d928f25d0fedae87aaad2ef764a806065d",
+        "status": "PINNED"
+      },
+      {
+        "repository": "Quirk-Systems/quirk-generator",
+        "file": ".github/workflows/quirk-semantic.yml:14",
+        "workflow": "quirk-semantic-governance.yml",
+        "ref": "92e5b2d928f25d0fedae87aaad2ef764a806065d",
+        "status": "PINNED"
+      },
+      {
+        "repository": "Quirk-Systems/quirk-os",
+        "file": ".github/workflows/evidence-binding.yml:11",
+        "workflow": "reusable-evidence-binding.yml",
+        "ref": "6136fa5fa77116abfbc103c822d9d244a0e870b3",
+        "status": "OFF_TARGET"
+      }
+    ],
+    "commands": [
+      {
+        "repository": "Quirk-Systems/.github",
+        "command": "scripts/validate.sh"
+      },
+      {
+        "repository": "Quirk-Systems/project-scaffold",
+        "command": "bun run validate"
+      },
+      {
+        "repository": "Quirk-Systems/quirk-feed",
+        "command": "bun run validate"
+      },
+      {
+        "repository": "Quirk-Systems/quirk-generator",
+        "command": "bun run validate"
+      }
+    ]
+  },
+  "public_repositories": [
+    {
+      "repository": "Quirk-Systems/project-scaffold",
+      "archived": false,
+      "visibility": "public",
+      "inventory_entry": true,
+      "head": "1e04dfc91941905fff7312403bf0817eb2768c0f",
+      "tree": "dd2ba5ff4d93e1dd87c4bddba7e9658ba743fc37",
+      "tree_truncated": false,
+      "observed_state": "CODE",
+      "source_files": 181,
+      "manifest": true,
+      "workflow_count": 4
+    },
+    {
+      "repository": "Quirk-Systems/quirk-generator",
+      "archived": false,
+      "visibility": "public",
+      "inventory_entry": true,
+      "head": "8b5d979e3c4cb42f076d2bf5836267e290bf873f",
+      "tree": "56403847ddb4728c540bd689de0fa54dc4d5f828",
+      "tree_truncated": false,
+      "observed_state": "CODE",
+      "source_files": 49,
+      "manifest": true,
+      "workflow_count": 2
+    },
+    {
+      "repository": "Quirk-Systems/.github",
+      "archived": false,
+      "visibility": "public",
+      "inventory_entry": true,
+      "head": "d320f775a1be9ca8f6becfc19c84165bed176d1d",
+      "tree": "8e96e6cc796a257c00323c94b9cda4e65962d6d7",
+      "tree_truncated": false,
+      "observed_state": "CODE",
+      "source_files": 31,
+      "manifest": true,
+      "workflow_count": 16
+    },
+    {
+      "repository": "Quirk-Systems/quirk-feed",
+      "archived": false,
+      "visibility": "public",
+      "inventory_entry": true,
+      "head": "a338ea3e0158437167cd875bb4655b67c3b9dc68",
+      "tree": "b3b4e2b2f3b291f73496e7fb9ffd5e4995f16991",
+      "tree_truncated": false,
+      "observed_state": "CODE",
+      "source_files": 35,
+      "manifest": true,
+      "workflow_count": 2
+    },
+    {
+      "repository": "Quirk-Systems/quirk-os",
+      "archived": false,
+      "visibility": "public",
+      "inventory_entry": true,
+      "head": "03f70e1a790bac09294fe0f31a3c5f0d0fb4418e",
+      "tree": "37c4d94d95b2e9b120ca31f38becd23880d101c2",
+      "tree_truncated": false,
+      "observed_state": "CODE",
+      "source_files": 98,
+      "manifest": true,
+      "workflow_count": 13
+    },
+    {
+      "repository": "Quirk-Systems/quirk-core",
+      "archived": false,
+      "visibility": "public",
+      "inventory_entry": true,
+      "head": "b3162b0cd6dcc6c07570f240ca33c711ed860f0b",
+      "tree": "3ada9098ed23230d19e0ad90984e6bbe37650a17",
+      "tree_truncated": false,
+      "observed_state": "CODE",
+      "source_files": 5,
+      "manifest": false,
+      "workflow_count": 1
+    },
+    {
+      "repository": "Quirk-Systems/greenfield",
+      "archived": false,
+      "visibility": "public",
+      "inventory_entry": false,
+      "head": "6e6d4b425fe9082d469493d64a5b8e12b15dc9da",
+      "tree": "f93bc2c1aa384e93900f5eb86a68d44ddd748766",
+      "tree_truncated": false,
+      "observed_state": "DOCS_ONLY",
+      "source_files": 0,
+      "manifest": false,
+      "workflow_count": 0
+    }
+  ],
+  "public_reusable_workflow_callers": [
+    {
+      "repository": "Quirk-Systems/project-scaffold",
+      "file": ".github/workflows/evidence-binding.yml:11",
+      "workflow": "reusable-evidence-binding.yml",
+      "ref": "ed2f2ff7caacdb7a148ac9811dce1e7cce48a7c8",
+      "status": "OFF_TARGET"
+    },
+    {
+      "repository": "Quirk-Systems/project-scaffold",
+      "file": ".github/workflows/quirk-semantic.yml:14",
+      "workflow": "quirk-semantic-governance.yml",
+      "ref": "1263f5008838f743b16ee218046e26dac5c9edd8",
+      "status": "OFF_TARGET"
+    },
+    {
+      "repository": "Quirk-Systems/quirk-feed",
+      "file": ".github/workflows/quirk-semantic.yml:14",
+      "workflow": "quirk-semantic-governance.yml",
+      "ref": "92e5b2d928f25d0fedae87aaad2ef764a806065d",
+      "status": "PINNED"
+    },
+    {
+      "repository": "Quirk-Systems/quirk-generator",
+      "file": ".github/workflows/quirk-semantic.yml:14",
+      "workflow": "quirk-semantic-governance.yml",
+      "ref": "92e5b2d928f25d0fedae87aaad2ef764a806065d",
+      "status": "PINNED"
+    },
+    {
+      "repository": "Quirk-Systems/quirk-os",
+      "file": ".github/workflows/evidence-binding.yml:11",
+      "workflow": "reusable-evidence-binding.yml",
+      "ref": "6136fa5fa77116abfbc103c822d9d244a0e870b3",
+      "status": "OFF_TARGET"
+    }
+  ],
+  "public_summary": {
+    "repositories": 7,
+    "CODE": 6,
+    "DOCS_ONLY": 1,
+    "reusable_calls": 5,
+    "distinct_policy_shas": 4,
+    "floating_in_parser_supported_forms": 0
+  }
+}
