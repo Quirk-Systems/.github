@@ -1,0 +1,66 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.dependabot-labels-current-main.2bbf96193fd2",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "eb889adf3009951de873890103199600f4aad20f",
+    "commit": "2bbf96193fd296014b917836af8850414736b532",
+    "changed_paths": [
+      ".github/dependabot.yml",
+      ".quirk/evidence/dependabot-labels-8d6c0ae99d9f.json"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.dependabot-labels-current-main.2bbf96193fd2",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Reuses PR 47 on current main: removes only the explicit Dependabot labels override and preserves its original receipt. All other Dependabot configuration bytes and workflow security controls are unchanged. Stored-receipt validation passed. Full scripts/validate.sh ran 233 tests with 232 passing and one pre-existing stale living-document failure, identical on base main; the full pipeline is not claimed as passing. Hosted checks and post-change Dependabot behavior are not established.",
+      "evidence_paths": [
+        ".github/dependabot.yml",
+        ".quirk/evidence/dependabot-labels-8d6c0ae99d9f.json"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/dependabot.yml",
+      "state": "present",
+      "git_blob": "acdc1ff545a67954726d5e69686e7cc184360471",
+      "sha256": "sha256:fa8f1ff5aa8ab47a8159b85858fb5456c72001acc3b51d0378648aa1e1e8b9ed"
+    },
+    {
+      "path": ".quirk/evidence/dependabot-labels-8d6c0ae99d9f.json",
+      "state": "present",
+      "git_blob": "f03005c9f0e1e6c97190fd9f8792016ee6e02935",
+      "sha256": "sha256:e86d3162da8872fe1179d2c38043a7c01b5f75ec8c42059818a58c83df384fa6"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python3 scripts/validate_evidence_receipts.py --repository Quirk-Systems/.github --root . --receipts .quirk/evidence",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check eb889adf3009951de873890103199600f4aad20f..2bbf96193fd296014b917836af8850414736b532",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --exit-code eb889adf3009951de873890103199600f4aad20f 2bbf96193fd296014b917836af8850414736b532 -- .github/workflows",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-30T04:41:45Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:cc31f8b4b9c5a9905f910750b0fb22aada78f8d12d2e9c4a2dd937cd70e0b0b5"
+}
