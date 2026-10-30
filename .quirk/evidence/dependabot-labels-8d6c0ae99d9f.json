@@ -1,0 +1,48 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.dependabot-labels.8d6c0ae99d9f",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "4139373b697ee33d159d103feff01da29adc9819",
+    "commit": "8d6c0ae99d9f1d1b42df3648693b3152fbff6252",
+    "changed_paths": [
+      ".github/dependabot.yml"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.dependabot-labels.8d6c0ae99d9f",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Removes the two unavailable explicit labels from Dependabot configuration while retaining the GitHub Actions update schedule and grouping; does not establish hosted Dependabot execution or repository label state.",
+      "evidence_paths": [
+        ".github/dependabot.yml"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/dependabot.yml",
+      "state": "present",
+      "git_blob": "acdc1ff545a67954726d5e69686e7cc184360471",
+      "sha256": "sha256:fa8f1ff5aa8ab47a8159b85858fb5456c72001acc3b51d0378648aa1e1e8b9ed"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-04T09:32:07Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:349080e9c2d3fe449a0c525b55f5026ed0c0e9bf73a5dc520eb684618f1dc93c"
+}
