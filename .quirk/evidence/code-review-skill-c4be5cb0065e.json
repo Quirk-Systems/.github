@@ -1,0 +1,176 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.code-review-skill-c4be5cb0065e",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "4139373b697ee33d159d103feff01da29adc9819",
+    "commit": "c4be5cb0065ec2387a46177164395a82606090a8",
+    "changed_paths": [
+      ".claude/skills/code-review/SKILL.md",
+      ".github/skills/code-review/SKILL.md",
+      ".github/skills/code-review/agents/openai.yaml",
+      ".github/skills/code-review/assets/01-scope-card.md",
+      ".github/skills/code-review/assets/02-revision-manifest.md",
+      ".github/skills/code-review/assets/03-evidence-ledger.md",
+      ".github/skills/code-review/assets/04-findings-register.md",
+      ".github/skills/code-review/assets/05-coverage-map.md",
+      ".github/skills/code-review/assets/06-verification-log.md",
+      ".github/skills/code-review/assets/07-authority-record.md",
+      ".github/skills/code-review/assets/08-staleness-report.md",
+      ".github/skills/code-review/assets/09-review-decision-card.md",
+      ".github/skills/code-review/assets/10-merge-handoff.md",
+      ".github/skills/code-review/assets/11-learning-scar.md",
+      ".github/skills/code-review/references/artifact-index.md",
+      ".github/skills/code-review/references/evidence-and-authority.md",
+      ".github/skills/code-review/references/severity.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.code-review-skill-c4be5cb0065e",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Adds a code-review skill, Claude discovery shim, and eleven review artifact templates with commit-specific evidence and separate technical review, human disposition, and merge authority. Local repository validation passed; agent/runtime adoption, hosted checks, human approval, and merge are not established.",
+      "evidence_paths": [
+        ".claude/skills/code-review/SKILL.md",
+        ".github/skills/code-review/SKILL.md",
+        ".github/skills/code-review/agents/openai.yaml",
+        ".github/skills/code-review/assets/01-scope-card.md",
+        ".github/skills/code-review/assets/02-revision-manifest.md",
+        ".github/skills/code-review/assets/03-evidence-ledger.md",
+        ".github/skills/code-review/assets/04-findings-register.md",
+        ".github/skills/code-review/assets/05-coverage-map.md",
+        ".github/skills/code-review/assets/06-verification-log.md",
+        ".github/skills/code-review/assets/07-authority-record.md",
+        ".github/skills/code-review/assets/08-staleness-report.md",
+        ".github/skills/code-review/assets/09-review-decision-card.md",
+        ".github/skills/code-review/assets/10-merge-handoff.md",
+        ".github/skills/code-review/assets/11-learning-scar.md",
+        ".github/skills/code-review/references/artifact-index.md",
+        ".github/skills/code-review/references/evidence-and-authority.md",
+        ".github/skills/code-review/references/severity.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".claude/skills/code-review/SKILL.md",
+      "state": "present",
+      "git_blob": "a446493fc0d6e4f8c06ccae046619301500b5724",
+      "sha256": "sha256:6fc372ebca3d8bf769f807e06bf8a71317e46ba9f9ae085173e910eceae0c913"
+    },
+    {
+      "path": ".github/skills/code-review/SKILL.md",
+      "state": "present",
+      "git_blob": "579714cb1750b0ce1df921eb357ddd55e667979b",
+      "sha256": "sha256:14fc910eb9a99a3f77731116e09653ceb1f656eceaf64421b1d3dc7aeccea1f3"
+    },
+    {
+      "path": ".github/skills/code-review/agents/openai.yaml",
+      "state": "present",
+      "git_blob": "c9b307c0dffe45b53d7633ab5dcb15451e0f3d4d",
+      "sha256": "sha256:628e745ed17f571b03e90d14f522739dee2c15898a9497d4d540ad7699189642"
+    },
+    {
+      "path": ".github/skills/code-review/assets/01-scope-card.md",
+      "state": "present",
+      "git_blob": "bca0ba6bdbe17b216508890d34476c1ff9b0a2c1",
+      "sha256": "sha256:42514a8985535a69cba71a8b1e0cdd3ccb4574f1cd99392957559f7a210ae407"
+    },
+    {
+      "path": ".github/skills/code-review/assets/02-revision-manifest.md",
+      "state": "present",
+      "git_blob": "dcf059ec4e6b88d1987cf052d19580307df711c9",
+      "sha256": "sha256:78473877b88026395bff89d331542a4904f5f2ccf466ef0fa3b5116e9b3418c2"
+    },
+    {
+      "path": ".github/skills/code-review/assets/03-evidence-ledger.md",
+      "state": "present",
+      "git_blob": "23a4d26cf81f98646098c3cf4474891cc37c6732",
+      "sha256": "sha256:6b8969d3f68d58bb63d65b949c3e2d1ea972477d43e1be42e4bef20c31d871b3"
+    },
+    {
+      "path": ".github/skills/code-review/assets/04-findings-register.md",
+      "state": "present",
+      "git_blob": "5bbd760f0055cc28c28518c83ffb0f53012b346c",
+      "sha256": "sha256:115c86d8995f4b4a08065b2660a65254422c07635bd03d91b5697b1f9379bf88"
+    },
+    {
+      "path": ".github/skills/code-review/assets/05-coverage-map.md",
+      "state": "present",
+      "git_blob": "c95bfb0bd42774d0a9af9da096de0794a0cc68e2",
+      "sha256": "sha256:8b8e3c942882cfa73b308ffa52887b3bbd2ece07c9e9e8a49f1b34c2a354421d"
+    },
+    {
+      "path": ".github/skills/code-review/assets/06-verification-log.md",
+      "state": "present",
+      "git_blob": "58e2b5dd37f75211cebde573e15b58b7fd1e0f1b",
+      "sha256": "sha256:9efe1a3d638f045c97c82f6c186ee1e910108fef50e71c7b29c2978e70666c5f"
+    },
+    {
+      "path": ".github/skills/code-review/assets/07-authority-record.md",
+      "state": "present",
+      "git_blob": "888c9e0d93e71d6cea59d98830023fa8b1b12cd3",
+      "sha256": "sha256:5b11b921051f338fd34a352bfb7e9164b76d965f1738673838c6dfae9da8567c"
+    },
+    {
+      "path": ".github/skills/code-review/assets/08-staleness-report.md",
+      "state": "present",
+      "git_blob": "96b24433bf809a9e4cbbdba45de33bab663e4cc8",
+      "sha256": "sha256:d417441ca9a00d9efaf2284eda8471dfaacc53b117e9714de9ac648da2150309"
+    },
+    {
+      "path": ".github/skills/code-review/assets/09-review-decision-card.md",
+      "state": "present",
+      "git_blob": "c4d5f93bdfc477d57f38bf03ab51da9677b4ce5b",
+      "sha256": "sha256:9ef43195170bee368359b90f9ca7604be8fdf257238951c7a5b28a3142f903e5"
+    },
+    {
+      "path": ".github/skills/code-review/assets/10-merge-handoff.md",
+      "state": "present",
+      "git_blob": "bd05629baabc51fb35bedd251adc96d858aaa319",
+      "sha256": "sha256:186b11a0e24dc8da1f57f581590dbc4bd3d4817e8620f303222fb26190fc0ce0"
+    },
+    {
+      "path": ".github/skills/code-review/assets/11-learning-scar.md",
+      "state": "present",
+      "git_blob": "ddb47732e57d6dcec811be7bf0cbcbd7426960aa",
+      "sha256": "sha256:e428cdb700c12b039b1414288fa6e7fb7a27c9aaf9764b30ca5165420b3b7ef0"
+    },
+    {
+      "path": ".github/skills/code-review/references/artifact-index.md",
+      "state": "present",
+      "git_blob": "13b19a2fbfcdeae251d99f5e7dbdbccff8715a5a",
+      "sha256": "sha256:1a8b920662b8c793aab1eef5c684e86959b5bd9686cc7561a72dc33bf1ffec38"
+    },
+    {
+      "path": ".github/skills/code-review/references/evidence-and-authority.md",
+      "state": "present",
+      "git_blob": "9734dbd8b49fd5df4bba15bf15c2fb41190e84e3",
+      "sha256": "sha256:32e31e5a40fe88c4d8804bebe8669dda8a43bb71005731e84f375070b51a2886"
+    },
+    {
+      "path": ".github/skills/code-review/references/severity.md",
+      "state": "present",
+      "git_blob": "d5abb829718d5f85b0042eeb142d623ea00ce8d1",
+      "sha256": "sha256:689d655ed9928d0639d828653d2cd051c9ab8d3001c506d6649b0288e9eaeffd"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-04T13:32:21Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:99f96031ec14b276cadbcd61b01f5e9f8f4520da50b7ecd006c049a35de7557c"
+}
