@@ -1,0 +1,469 @@
+{
+  "registry_version": "0.3.0",
+  "authority": "Quirk-Systems/.github",
+  "snapshot": "2026-08-21",
+  "scope": {
+    "organization": "Quirk-Systems",
+    "expected_organization_repository_count": 17,
+    "expected_adjacent_repository_count": 2,
+    "adjacent_repository_selection_rule": "Include directly adjacent repositories that influence topology decisions."
+  },
+  "repositories": [
+    {
+      "repository": "Quirk-Systems/.github",
+      "scope": "organization",
+      "visibility": "public",
+      "primary_class": "canon",
+      "lifecycle": "active",
+      "owner": {
+        "state": "identified",
+        "name": "Quirk Systems"
+      },
+      "canonical_responsibility": "Topology contract entry for Quirk-Systems/.github.",
+      "consumers_and_dependencies": [
+        "Topology validator",
+        "Governance contract tests"
+      ],
+      "extraction_or_retirement_rule": "Change only through reviewed topology decisions.",
+      "deployment_security_boundary": "Governance metadata only; no runtime authority effect.",
+      "evidence_anchors": [
+        {
+          "label": "Repository homepage",
+          "url": "https://github.com/Quirk-Systems/.github"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/.github-private",
+      "scope": "organization",
+      "visibility": "private",
+      "primary_class": "canon",
+      "lifecycle": "active",
+      "owner": {
+        "state": "identified",
+        "name": "Quirk Systems"
+      },
+      "canonical_responsibility": "Topology contract entry for Quirk-Systems/.github-private.",
+      "consumers_and_dependencies": [
+        "Topology validator",
+        "Governance contract tests"
+      ],
+      "extraction_or_retirement_rule": "Change only through reviewed topology decisions.",
+      "deployment_security_boundary": "Governance metadata only; no runtime authority effect.",
+      "evidence_anchors": [
+        {
+          "label": "Repository homepage",
+          "url": "https://github.com/Quirk-Systems/.github-private"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/project-scaffold",
+      "scope": "organization",
+      "visibility": "public",
+      "primary_class": "reference",
+      "lifecycle": "active",
+      "owner": {
+        "state": "identified",
+        "name": "Quirk Systems"
+      },
+      "canonical_responsibility": "Topology contract entry for Quirk-Systems/project-scaffold.",
+      "consumers_and_dependencies": [
+        "Topology validator",
+        "Governance contract tests"
+      ],
+      "extraction_or_retirement_rule": "Change only through reviewed topology decisions.",
+      "deployment_security_boundary": "Governance metadata only; no runtime authority effect.",
+      "evidence_anchors": [
+        {
+          "label": "Repository homepage",
+          "url": "https://github.com/Quirk-Systems/project-scaffold"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/quirk-os",
+      "scope": "organization",
+      "visibility": "public",
+      "primary_class": "kernel",
+      "lifecycle": "active",
+      "owner": {
+        "state": "identified",
+        "name": "Quirk Systems"
+      },
+      "canonical_responsibility": "Topology contract entry for Quirk-Systems/quirk-os.",
+      "consumers_and_dependencies": [
+        "Topology validator",
+        "Governance contract tests"
+      ],
+      "extraction_or_retirement_rule": "Change only through reviewed topology decisions.",
+      "deployment_security_boundary": "Governance metadata only; no runtime authority effect.",
+      "evidence_anchors": [
+        {
+          "label": "Repository homepage",
+          "url": "https://github.com/Quirk-Systems/quirk-os"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/quirk-core",
+      "scope": "organization",
+      "visibility": "public",
+      "primary_class": "reference",
+      "lifecycle": "active",
+      "owner": {
+        "state": "identified",
+        "name": "Quirk Systems"
+      },
+      "canonical_responsibility": "Topology contract entry for Quirk-Systems/quirk-core.",
+      "consumers_and_dependencies": [
+        "Topology validator",
+        "Governance contract tests"
+      ],
+      "extraction_or_retirement_rule": "Change only through reviewed topology decisions.",
+      "deployment_security_boundary": "Governance metadata only; no runtime authority effect.",
+      "evidence_anchors": [
+        {
+          "label": "Repository homepage",
+          "url": "https://github.com/Quirk-Systems/quirk-core"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/quirk-feed",
+      "scope": "organization",
+      "visibility": "public",
+      "primary_class": "interface",
+      "lifecycle": "active",
+      "owner": {
+        "state": "identified",
+        "name": "Quirk Systems"
+      },
+      "canonical_responsibility": "Topology contract entry for Quirk-Systems/quirk-feed.",
+      "consumers_and_dependencies": [
+        "Topology validator",
+        "Governance contract tests"
+      ],
+      "extraction_or_retirement_rule": "Change only through reviewed topology decisions.",
+      "deployment_security_boundary": "Governance metadata only; no runtime authority effect.",
+      "evidence_anchors": [
+        {
+          "label": "Repository homepage",
+          "url": "https://github.com/Quirk-Systems/quirk-feed"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/quirk-generator",
+      "scope": "organization",
+      "visibility": "public",
+      "primary_class": "instrument",
+      "lifecycle": "active",
+      "owner": {
+        "state": "identified",
+        "name": "Quirk Systems"
+      },
+      "canonical_responsibility": "Topology contract entry for Quirk-Systems/quirk-generator.",
+      "consumers_and_dependencies": [
+        "Topology validator",
+        "Governance contract tests"
+      ],
+      "extraction_or_retirement_rule": "Change only through reviewed topology decisions.",
+      "deployment_security_boundary": "Governance metadata only; no runtime authority effect.",
+      "evidence_anchors": [
+        {
+          "label": "Repository homepage",
+          "url": "https://github.com/Quirk-Systems/quirk-generator"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/quirk-beauty",
+      "scope": "organization",
+      "visibility": "private",
+      "primary_class": "realm",
+      "lifecycle": "active",
+      "owner": {
+        "state": "identified",
+        "name": "Quirk Systems"
+      },
+      "canonical_responsibility": "Topology contract entry for Quirk-Systems/quirk-beauty.",
+      "consumers_and_dependencies": [
+        "Topology validator",
+        "Governance contract tests"
+      ],
+      "extraction_or_retirement_rule": "Change only through reviewed topology decisions.",
+      "deployment_security_boundary": "Governance metadata only; no runtime authority effect.",
+      "evidence_anchors": [
+        {
+          "label": "Repository homepage",
+          "url": "https://github.com/Quirk-Systems/quirk-beauty"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/quirk-pet",
+      "scope": "organization",
+      "visibility": "private",
+      "primary_class": "realm",
+      "lifecycle": "active",
+      "owner": {
+        "state": "identified",
+        "name": "Quirk Systems"
+      },
+      "canonical_responsibility": "Topology contract entry for Quirk-Systems/quirk-pet.",
+      "consumers_and_dependencies": [
+        "Topology validator",
+        "Governance contract tests"
+      ],
+      "extraction_or_retirement_rule": "Change only through reviewed topology decisions.",
+      "deployment_security_boundary": "Governance metadata only; no runtime authority effect.",
+      "evidence_anchors": [
+        {
+          "label": "Repository homepage",
+          "url": "https://github.com/Quirk-Systems/quirk-pet"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/quirk-town",
+      "scope": "organization",
+      "visibility": "private",
+      "primary_class": "realm",
+      "lifecycle": "active",
+      "owner": {
+        "state": "identified",
+        "name": "Quirk Systems"
+      },
+      "canonical_responsibility": "Topology contract entry for Quirk-Systems/quirk-town.",
+      "consumers_and_dependencies": [
+        "Topology validator",
+        "Governance contract tests"
+      ],
+      "extraction_or_retirement_rule": "Change only through reviewed topology decisions.",
+      "deployment_security_boundary": "Governance metadata only; no runtime authority effect.",
+      "evidence_anchors": [
+        {
+          "label": "Repository homepage",
+          "url": "https://github.com/Quirk-Systems/quirk-town"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/Quirk",
+      "scope": "organization",
+      "visibility": "private",
+      "primary_class": "reservation",
+      "lifecycle": "reserved",
+      "owner": {
+        "state": "identified",
+        "name": "Quirk Systems"
+      },
+      "canonical_responsibility": "Topology contract entry for Quirk-Systems/Quirk.",
+      "consumers_and_dependencies": [
+        "Topology validator",
+        "Governance contract tests"
+      ],
+      "extraction_or_retirement_rule": "Change only through reviewed topology decisions.",
+      "deployment_security_boundary": "Governance metadata only; no runtime authority effect.",
+      "evidence_anchors": [
+        {
+          "label": "Repository homepage",
+          "url": "https://github.com/Quirk-Systems/Quirk"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/quirk-data",
+      "scope": "organization",
+      "visibility": "private",
+      "primary_class": "reservation",
+      "lifecycle": "reserved",
+      "owner": {
+        "state": "identified",
+        "name": "Quirk Systems"
+      },
+      "canonical_responsibility": "Topology contract entry for Quirk-Systems/quirk-data.",
+      "consumers_and_dependencies": [
+        "Topology validator",
+        "Governance contract tests"
+      ],
+      "extraction_or_retirement_rule": "Change only through reviewed topology decisions.",
+      "deployment_security_boundary": "Governance metadata only; no runtime authority effect.",
+      "evidence_anchors": [
+        {
+          "label": "Repository homepage",
+          "url": "https://github.com/Quirk-Systems/quirk-data"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/quirk-me",
+      "scope": "organization",
+      "visibility": "private",
+      "primary_class": "reservation",
+      "lifecycle": "reserved",
+      "owner": {
+        "state": "identified",
+        "name": "Quirk Systems"
+      },
+      "canonical_responsibility": "Topology contract entry for Quirk-Systems/quirk-me.",
+      "consumers_and_dependencies": [
+        "Topology validator",
+        "Governance contract tests"
+      ],
+      "extraction_or_retirement_rule": "Change only through reviewed topology decisions.",
+      "deployment_security_boundary": "Governance metadata only; no runtime authority effect.",
+      "evidence_anchors": [
+        {
+          "label": "Repository homepage",
+          "url": "https://github.com/Quirk-Systems/quirk-me"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/quirk-run",
+      "scope": "organization",
+      "visibility": "private",
+      "primary_class": "reservation",
+      "lifecycle": "reserved",
+      "owner": {
+        "state": "identified",
+        "name": "Quirk Systems"
+      },
+      "canonical_responsibility": "Topology contract entry for Quirk-Systems/quirk-run.",
+      "consumers_and_dependencies": [
+        "Topology validator",
+        "Governance contract tests"
+      ],
+      "extraction_or_retirement_rule": "Change only through reviewed topology decisions.",
+      "deployment_security_boundary": "Governance metadata only; no runtime authority effect.",
+      "evidence_anchors": [
+        {
+          "label": "Repository homepage",
+          "url": "https://github.com/Quirk-Systems/quirk-run"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/quirk-dog",
+      "scope": "organization",
+      "visibility": "private",
+      "primary_class": "reference",
+      "lifecycle": "active",
+      "owner": {
+        "state": "identified",
+        "name": "Quirk Systems"
+      },
+      "canonical_responsibility": "Topology contract entry for Quirk-Systems/quirk-dog.",
+      "consumers_and_dependencies": [
+        "Topology validator",
+        "Governance contract tests"
+      ],
+      "extraction_or_retirement_rule": "Change only through reviewed topology decisions.",
+      "deployment_security_boundary": "Governance metadata only; no runtime authority effect.",
+      "evidence_anchors": [
+        {
+          "label": "Repository homepage",
+          "url": "https://github.com/Quirk-Systems/quirk-dog"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/quirk-music",
+      "scope": "organization",
+      "visibility": "private",
+      "primary_class": "reference",
+      "lifecycle": "active",
+      "owner": {
+        "state": "identified",
+        "name": "Quirk Systems"
+      },
+      "canonical_responsibility": "Topology contract entry for Quirk-Systems/quirk-music.",
+      "consumers_and_dependencies": [
+        "Topology validator",
+        "Governance contract tests"
+      ],
+      "extraction_or_retirement_rule": "Change only through reviewed topology decisions.",
+      "deployment_security_boundary": "Governance metadata only; no runtime authority effect.",
+      "evidence_anchors": [
+        {
+          "label": "Repository homepage",
+          "url": "https://github.com/Quirk-Systems/quirk-music"
+        }
+      ]
+    },
+    {
+      "repository": "Quirk-Systems/quirk-preference",
+      "scope": "organization",
+      "visibility": "private",
+      "primary_class": "reference",
+      "lifecycle": "active",
+      "owner": {
+        "state": "identified",
+        "name": "Quirk Systems"
+      },
+      "canonical_responsibility": "Topology contract entry for Quirk-Systems/quirk-preference.",
+      "consumers_and_dependencies": [
+        "Topology validator",
+        "Governance contract tests"
+      ],
+      "extraction_or_retirement_rule": "Change only through reviewed topology decisions.",
+      "deployment_security_boundary": "Governance metadata only; no runtime authority effect.",
+      "evidence_anchors": [
+        {
+          "label": "Repository homepage",
+          "url": "https://github.com/Quirk-Systems/quirk-preference"
+        }
+      ]
+    },
+    {
+      "repository": "bryansayler/quirk-commerce",
+      "scope": "adjacent",
+      "visibility": "public",
+      "primary_class": "commerce",
+      "lifecycle": "candidate",
+      "owner": {
+        "state": "identified",
+        "name": "Quirk Systems"
+      },
+      "canonical_responsibility": "Topology contract entry for bryansayler/quirk-commerce.",
+      "consumers_and_dependencies": [
+        "Topology validator",
+        "Governance contract tests"
+      ],
+      "extraction_or_retirement_rule": "Change only through reviewed topology decisions.",
+      "deployment_security_boundary": "Governance metadata only; no runtime authority effect.",
+      "evidence_anchors": [
+        {
+          "label": "Repository homepage",
+          "url": "https://github.com/bryansayler/quirk-commerce"
+        }
+      ]
+    },
+    {
+      "repository": "bryansayler/quirk-beauty-store",
+      "scope": "adjacent",
+      "visibility": "public",
+      "primary_class": "commerce",
+      "lifecycle": "candidate",
+      "owner": {
+        "state": "identified",
+        "name": "Quirk Systems"
+      },
+      "canonical_responsibility": "Topology contract entry for bryansayler/quirk-beauty-store.",
+      "consumers_and_dependencies": [
+        "Topology validator",
+        "Governance contract tests"
+      ],
+      "extraction_or_retirement_rule": "Change only through reviewed topology decisions.",
+      "deployment_security_boundary": "Governance metadata only; no runtime authority effect.",
+      "evidence_anchors": [
+        {
+          "label": "Repository homepage",
+          "url": "https://github.com/bryansayler/quirk-beauty-store"
+        }
+      ]
+    }
+  ]
+}
