@@ -1,0 +1,174 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.dependabot-pr59-review.b5dae62e2247",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "d320f775a1be9ca8f6becfc19c84165bed176d1d",
+    "commit": "b5dae62e2247b96262e48fef697b5b465a457454",
+    "changed_paths": [
+      ".github/workflows/agent-task-dispatch.yml",
+      ".github/workflows/codeql.yml",
+      ".github/workflows/dependency-review.yml",
+      ".github/workflows/governance-contracts.yml",
+      ".github/workflows/reusable-agent-task-contract.yml",
+      ".github/workflows/reusable-codeql.yml",
+      ".github/workflows/reusable-evidence-binding.yml",
+      ".github/workflows/reusable-sbom-provenance.yml",
+      ".github/workflows/reusable-validate.yml",
+      ".github/workflows/reusable-workflow-lint.yml",
+      ".github/workflows/scorecard.yml",
+      ".github/workflows/workflow-lint.yml",
+      "tests/test_evidence_receipts.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.dependabot-pr59-review.b5dae62e2247",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Updates ten action references across twelve workflows and aligns the exact setup-python assertion with v7.1.0; all action repository/version pins were resolved to upstream commits. The 41 evidence/workflow contract tests, actionlint 1.7.12, ruff 0.17.3, and zizmor 1.31.1 offline pedantic checks passed using existing exclusions. Full scripts/validate.sh is NOT passing: 232 of 233 unit tests pass; the inherited portfolio-document freshness failure also reproduces at the PR base, and the separate strict living-document validator fails. Hosted execution, online audits, vulnerability absence, independent approval, and merge readiness are NOT established; four hosted jobs did not start because of an account billing lock. No permissions, security controls, or test assertions were removed.",
+      "evidence_paths": [
+        ".github/workflows/agent-task-dispatch.yml",
+        ".github/workflows/codeql.yml",
+        ".github/workflows/dependency-review.yml",
+        ".github/workflows/governance-contracts.yml",
+        ".github/workflows/reusable-agent-task-contract.yml",
+        ".github/workflows/reusable-codeql.yml",
+        ".github/workflows/reusable-evidence-binding.yml",
+        ".github/workflows/reusable-sbom-provenance.yml",
+        ".github/workflows/reusable-validate.yml",
+        ".github/workflows/reusable-workflow-lint.yml",
+        ".github/workflows/scorecard.yml",
+        ".github/workflows/workflow-lint.yml",
+        "tests/test_evidence_receipts.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/workflows/agent-task-dispatch.yml",
+      "state": "present",
+      "git_blob": "a8e5db9e4b796b57cd7bc9bb0d8c1d44d7b1c03a",
+      "sha256": "sha256:5f162ebcd2641759c7afea93171acf7cad10f5cbbbb204aecbb4127c25a8e6b5"
+    },
+    {
+      "path": ".github/workflows/codeql.yml",
+      "state": "present",
+      "git_blob": "79007bc2835ba78c8736f826796d9afb439f65bf",
+      "sha256": "sha256:71dc73e2115d2d2a9dfe4195cc83ab5ae118cf013294a0c4e32e535e9c6e2c76"
+    },
+    {
+      "path": ".github/workflows/dependency-review.yml",
+      "state": "present",
+      "git_blob": "4f339c3f5bece329881b4600134e00c91fa0f72c",
+      "sha256": "sha256:35228fb13f411c729f26d98da0ccc29c77b0c89fa864ad953c3412b1a063f818"
+    },
+    {
+      "path": ".github/workflows/governance-contracts.yml",
+      "state": "present",
+      "git_blob": "7b43ddf398cc5097930861b7df624416a35d5ee4",
+      "sha256": "sha256:adda6626fb8c2e041ebab977fff0c886925acbe8baaf2054c8e597baa0d14318"
+    },
+    {
+      "path": ".github/workflows/reusable-agent-task-contract.yml",
+      "state": "present",
+      "git_blob": "943bc7b8ac727c3fce4c8a65e2b40ad87506792f",
+      "sha256": "sha256:bd1c5f150c763ffbf6212fb354eefc4fb8cb93d0a8baf1de1e7d4aa13c67dc5e"
+    },
+    {
+      "path": ".github/workflows/reusable-codeql.yml",
+      "state": "present",
+      "git_blob": "5695bc6b8ad85d2b01a2595eb68b71d44a7d3c39",
+      "sha256": "sha256:8dccadf9f72a33110b17923d62171fd9001085b7a2742ce347db1ed087386dcf"
+    },
+    {
+      "path": ".github/workflows/reusable-evidence-binding.yml",
+      "state": "present",
+      "git_blob": "52333459ba8824b2fbbbda6fdef4a284d7a5b643",
+      "sha256": "sha256:632e32dd3bae96c1406b91bd3a6a8dddd0f93705be000f817755a01a9ea47750"
+    },
+    {
+      "path": ".github/workflows/reusable-sbom-provenance.yml",
+      "state": "present",
+      "git_blob": "8960e8cfbd60f4d1a6a9919cb045a1b0314a6342",
+      "sha256": "sha256:7ccf1406f5e5e11f71ca0290f1dc63d32d4f7cd8c78dcdefa13596ada0a06c14"
+    },
+    {
+      "path": ".github/workflows/reusable-validate.yml",
+      "state": "present",
+      "git_blob": "46558c5f70122fc279398a0adbe1978fdadebd33",
+      "sha256": "sha256:e43865f70a2bdcb746244417dc88ad7719933c91ff266f704e6354485a601df0"
+    },
+    {
+      "path": ".github/workflows/reusable-workflow-lint.yml",
+      "state": "present",
+      "git_blob": "ef08675479bf0f2b36f0550a26405baddf21c160",
+      "sha256": "sha256:cd70d680aabc3236fc55e63a3457cdee10ec125c487a7b383f3848ce85219975"
+    },
+    {
+      "path": ".github/workflows/scorecard.yml",
+      "state": "present",
+      "git_blob": "72f200433e0694fcea46657e590295bf4e180aaf",
+      "sha256": "sha256:672a9e66ccb2d1969e9f5db2129999cf252e145f1dec6cc4b67ad810ad4a9524"
+    },
+    {
+      "path": ".github/workflows/workflow-lint.yml",
+      "state": "present",
+      "git_blob": "647912d9779048cc0654325b09831dee25fb53cf",
+      "sha256": "sha256:b8de61461a59b57993bc720e755d642ae9b353ca897737fb2369fbe18fea0c45"
+    },
+    {
+      "path": "tests/test_evidence_receipts.py",
+      "state": "present",
+      "git_blob": "8c120e462516bf86eba5c7e47016476e5cbe01fd",
+      "sha256": "sha256:160dcba6925dcc72a27346b26c7c2925cdba06e4c17e42012f52aa421179e587"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python3 -m unittest tests.test_evidence_receipts tests.test_workflow_pins -v",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "../pr59-tools/actionlint -ignore 'property \"workflow_(repository|sha)\" is not defined'",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "../pr59-tools/zizmor-wheel/zizmor-1.31.1.data/scripts/zizmor --offline --persona pedantic .",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "uv tool run ruff check .",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_governed_decisions.py --repository Quirk-Systems/.github --root . --decisions .quirk/decisions",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_evidence_receipts.py --repository Quirk-Systems/.github --root . --receipts .quirk/evidence",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check d320f775a1be9ca8f6becfc19c84165bed176d1d HEAD",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-30T14:10:57Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:0f133ff71c0e9c7a20e89e2170b0c37b2c329c9f549a5dfcf5fbed09d2b4c3dc"
+}
