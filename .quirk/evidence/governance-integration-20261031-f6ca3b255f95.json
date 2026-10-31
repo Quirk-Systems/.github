@@ -1,0 +1,92 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.governance-integration-20261031.f6ca3b255f95",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "76d828239136dd13189c024843ad85ab269fcf49",
+    "commit": "f6ca3b255f95839abe4bdcab25dcb38396fd556a",
+    "changed_paths": [
+      ".quirk/evidence/governance-review-20261031-f2deb14f0d9c.json",
+      "docs/intentions/2026-09-20-evidence-first-planning.md",
+      "docs/roadmaps/2026-09-20-org-control-plane.md",
+      "docs/todos/2026-09-20-living-document-rollout.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.governance-integration-20261031.f6ca3b255f95",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Integrates main after PR 60 using a merge commit whose tree is byte-identical to original PR 61 head 7bad94833a84413683f186756cedf8b96fe58dad. Preserves all original subject commits, receipts, documentation, and historical evidence. Binds the three existing governance corrections and their original receipt to the retargeted main base. At this exact integration subject, 233 tests and all executed validate.sh stages pass, including offline pedantic zizmor 1.31.1; ruff and actionlint are unavailable, 21 existing concept warnings and 20 existing zizmor ignores remain. Strict freshness passes for November 1 and November 3. This receipt does not establish hosted validation success, authority, settings activation, completed cadence/enforcement decisions, or final main integration.",
+      "evidence_paths": [
+        ".quirk/evidence/governance-review-20261031-f2deb14f0d9c.json",
+        "docs/intentions/2026-09-20-evidence-first-planning.md",
+        "docs/roadmaps/2026-09-20-org-control-plane.md",
+        "docs/todos/2026-09-20-living-document-rollout.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".quirk/evidence/governance-review-20261031-f2deb14f0d9c.json",
+      "state": "present",
+      "git_blob": "5346a21eaccba6a7d4da8bcbc471e219337ee7ed",
+      "sha256": "sha256:93f4a6ed3aa8e1fc270f7f0e70cef703e1051f9a10f9f8b09035584dad5c479c"
+    },
+    {
+      "path": "docs/intentions/2026-09-20-evidence-first-planning.md",
+      "state": "present",
+      "git_blob": "bb61570bdd67db145f9004eaa4133ddd3f122bde",
+      "sha256": "sha256:7cf940bc9be2d8c2ede289af4be8902ed09304aca0db6a563c8692aa2214fcac"
+    },
+    {
+      "path": "docs/roadmaps/2026-09-20-org-control-plane.md",
+      "state": "present",
+      "git_blob": "0ead9cce75f95c71b58e8a4507aa2e1307a9fee4",
+      "sha256": "sha256:97710fc8875e88bc9df0a8b2e4fc5b57f89428fbab71283a2b5260427411850e"
+    },
+    {
+      "path": "docs/todos/2026-09-20-living-document-rollout.md",
+      "state": "present",
+      "git_blob": "04898c4455be7524c20c5e29e9478e35d7ef5518",
+      "sha256": "sha256:7c72db425bce9a53a47ca74c8e3dd51c07592c0c4f869c52d4effaa62bce6d8d"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_living_docs.py --strict --today 2026-11-01",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_living_docs.py --strict --today 2026-11-03",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --exit-code 7bad94833a84413683f186756cedf8b96fe58dad HEAD",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check 76d828239136dd13189c024843ad85ab269fcf49 HEAD",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-31T20:54:57Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:d7aa6bdc7070dc963cf9d6228095a73c9fb28ffa9819b1c05f2d879cfb324281"
+}
