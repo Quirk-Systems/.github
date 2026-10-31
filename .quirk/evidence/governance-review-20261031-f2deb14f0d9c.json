@@ -1,0 +1,94 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.governance-review-20261031.f2deb14f0d9c",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "7c52c0407ea2fa6d3fa99cf13d86492a74733259",
+    "commit": "f2deb14f0d9c9eb3a1608cde49c72f2ffa572abf",
+    "changed_paths": [
+      "docs/intentions/2026-09-20-evidence-first-planning.md",
+      "docs/roadmaps/2026-09-20-org-control-plane.md",
+      "docs/todos/2026-09-20-living-document-rollout.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.governance-review-20261031.f2deb14f0d9c",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Substantively revalidates three existing active governance documents against main d320f775a1be9ca8f6becfc19c84165bed176d1d and preserved PR 60 head 7c52c0407ea2fa6d3fa99cf13d86492a74733259. Records recovered review history, five-plan opt-in scope, landed work, draft dependencies, and pending owner decisions; sets November 3 checkpoints without changing status or enforcement. Historical sections, the done goal, and all three portfolio-review files are preserved. At this subject 233 tests and all executed validate.sh stages pass, including offline pedantic zizmor 1.31.1; Ruff and actionlint are unavailable, 21 concept warnings and 20 zizmor ignores remain. Strict validation passes on October 31 and simulated November 1 and November 3. This does not establish hosted success, implemented cadence/enforcement decisions, merge, settings activation, consumer adoption, or freshness on main before integration.",
+      "evidence_paths": [
+        "docs/intentions/2026-09-20-evidence-first-planning.md",
+        "docs/roadmaps/2026-09-20-org-control-plane.md",
+        "docs/todos/2026-09-20-living-document-rollout.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/intentions/2026-09-20-evidence-first-planning.md",
+      "state": "present",
+      "git_blob": "bb61570bdd67db145f9004eaa4133ddd3f122bde",
+      "sha256": "sha256:7cf940bc9be2d8c2ede289af4be8902ed09304aca0db6a563c8692aa2214fcac"
+    },
+    {
+      "path": "docs/roadmaps/2026-09-20-org-control-plane.md",
+      "state": "present",
+      "git_blob": "0ead9cce75f95c71b58e8a4507aa2e1307a9fee4",
+      "sha256": "sha256:97710fc8875e88bc9df0a8b2e4fc5b57f89428fbab71283a2b5260427411850e"
+    },
+    {
+      "path": "docs/todos/2026-09-20-living-document-rollout.md",
+      "state": "present",
+      "git_blob": "04898c4455be7524c20c5e29e9478e35d7ef5518",
+      "sha256": "sha256:7c72db425bce9a53a47ca74c8e3dd51c07592c0c4f869c52d4effaa62bce6d8d"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_living_docs.py --strict",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_living_docs.py --strict --today 2026-10-31",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_living_docs.py --strict --today 2026-11-01",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_living_docs.py --strict --today 2026-11-03",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --exit-code 7c52c0407ea2fa6d3fa99cf13d86492a74733259 -- docs/goals/2026-09-20-living-documents-validated.md docs/todos/2026-10-03-workspace-portfolio-plans.md docs/reviews/2026-10-30-workspace-portfolio-evidence.json .quirk/evidence/portfolio-review-20261030-bc4d58257330.json",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check 7c52c0407ea2fa6d3fa99cf13d86492a74733259 HEAD",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-31T14:59:31Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:13fbccb097aca11117a1c4159b1788941f7c9d0cbea9edeb9a0f26e4687ed6b2"
+}
