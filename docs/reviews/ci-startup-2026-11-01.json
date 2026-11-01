@@ -1,0 +1,422 @@
+{
+  "repository": "Quirk-Systems/quirk-os",
+  "pr": 62,
+  "head_sha": "9f26b090f4869590d824291c77c6352294f7f059",
+  "base_sha": "80f53905f793751aa47ed4093d5dd035cab608ff",
+  "observed_at": "2026-11-01T18:56:22.641320Z",
+  "final_head_sha": "9f26b090f4869590d824291c77c6352294f7f059",
+  "authority_effect": "none",
+  "smoke": "NOT_RUN: owner reports billing hold through 2026-11-04",
+  "runs": [
+    {
+      "id": 41315365456,
+      "path": ".github/workflows/one-to-infinity-candidate.yml",
+      "head_sha": "9f26b090f4869590d824291c77c6352294f7f059",
+      "event": "push",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/Quirk-Systems/quirk-os/actions/runs/41315365456",
+      "jobs": [
+        {
+          "id": 124874135581,
+          "name": "one-to-infinity-candidate-conformance",
+          "runner_id": 0,
+          "status": "completed",
+          "conclusion": "failure",
+          "steps": [],
+          "classification": "BILLING_BLOCK_CONFIRMED",
+          "annotations": [
+            {
+              "annotation_level": "failure",
+              "blob_href": "https://github.com/Quirk-Systems/quirk-os/blob/9f26b090f4869590d824291c77c6352294f7f059/.github",
+              "end_column": null,
+              "end_line": 1,
+              "message": "The job was not started because your account is locked due to a billing issue.",
+              "path": ".github",
+              "raw_details": "",
+              "start_column": null,
+              "start_line": 1,
+              "title": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 41315365398,
+      "path": ".github/workflows/applause-gate-conformance.yml",
+      "head_sha": "9f26b090f4869590d824291c77c6352294f7f059",
+      "event": "push",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/Quirk-Systems/quirk-os/actions/runs/41315365398",
+      "jobs": [
+        {
+          "id": 124874135869,
+          "name": "candidate-applause-gate-conformance",
+          "runner_id": 0,
+          "status": "completed",
+          "conclusion": "failure",
+          "steps": [],
+          "classification": "BILLING_BLOCK_CONFIRMED",
+          "annotations": [
+            {
+              "annotation_level": "failure",
+              "blob_href": "https://github.com/Quirk-Systems/quirk-os/blob/9f26b090f4869590d824291c77c6352294f7f059/.github",
+              "end_column": null,
+              "end_line": 1,
+              "message": "The job was not started because your account is locked due to a billing issue.",
+              "path": ".github",
+              "raw_details": "",
+              "start_column": null,
+              "start_line": 1,
+              "title": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 41315365395,
+      "path": ".github/workflows/validate-agents.yml",
+      "head_sha": "9f26b090f4869590d824291c77c6352294f7f059",
+      "event": "push",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/Quirk-Systems/quirk-os/actions/runs/41315365395",
+      "jobs": [
+        {
+          "id": 124874135573,
+          "name": "agent-candidate-conformance",
+          "runner_id": 0,
+          "status": "completed",
+          "conclusion": "failure",
+          "steps": [],
+          "classification": "BILLING_BLOCK_CONFIRMED",
+          "annotations": [
+            {
+              "annotation_level": "failure",
+              "blob_href": "https://github.com/Quirk-Systems/quirk-os/blob/9f26b090f4869590d824291c77c6352294f7f059/.github",
+              "end_column": null,
+              "end_line": 1,
+              "message": "The job was not started because your account is locked due to a billing issue.",
+              "path": ".github",
+              "raw_details": "",
+              "start_column": null,
+              "start_line": 1,
+              "title": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 41315365432,
+      "path": ".github/workflows/validate-skills.yml",
+      "head_sha": "9f26b090f4869590d824291c77c6352294f7f059",
+      "event": "push",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/Quirk-Systems/quirk-os/actions/runs/41315365432",
+      "jobs": [
+        {
+          "id": 124874135624,
+          "name": "skill-candidate-conformance",
+          "runner_id": 0,
+          "status": "completed",
+          "conclusion": "failure",
+          "steps": [],
+          "classification": "BILLING_BLOCK_CONFIRMED",
+          "annotations": [
+            {
+              "annotation_level": "failure",
+              "blob_href": "https://github.com/Quirk-Systems/quirk-os/blob/9f26b090f4869590d824291c77c6352294f7f059/.github",
+              "end_column": null,
+              "end_line": 1,
+              "message": "The job was not started because your account is locked due to a billing issue.",
+              "path": ".github",
+              "raw_details": "",
+              "start_column": null,
+              "start_line": 1,
+              "title": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 41315365387,
+      "path": ".github/workflows/distill-loop-conformance.yml",
+      "head_sha": "9f26b090f4869590d824291c77c6352294f7f059",
+      "event": "push",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/Quirk-Systems/quirk-os/actions/runs/41315365387",
+      "jobs": [
+        {
+          "id": 124874135531,
+          "name": "candidate-distill-loop-conformance",
+          "runner_id": 0,
+          "status": "completed",
+          "conclusion": "failure",
+          "steps": [],
+          "classification": "BILLING_BLOCK_CONFIRMED",
+          "annotations": [
+            {
+              "annotation_level": "failure",
+              "blob_href": "https://github.com/Quirk-Systems/quirk-os/blob/9f26b090f4869590d824291c77c6352294f7f059/.github",
+              "end_column": null,
+              "end_line": 1,
+              "message": "The job was not started because your account is locked due to a billing issue.",
+              "path": ".github",
+              "raw_details": "",
+              "start_column": null,
+              "start_line": 1,
+              "title": ""
+            }
+          ]
+        },
+        {
+          "id": 124874135814,
+          "name": "windows-distill-lock-contention",
+          "runner_id": 0,
+          "status": "completed",
+          "conclusion": "failure",
+          "steps": [],
+          "classification": "BILLING_BLOCK_CONFIRMED",
+          "annotations": [
+            {
+              "annotation_level": "failure",
+              "blob_href": "https://github.com/Quirk-Systems/quirk-os/blob/9f26b090f4869590d824291c77c6352294f7f059/.github",
+              "end_column": null,
+              "end_line": 1,
+              "message": "The job was not started because your account is locked due to a billing issue.",
+              "path": ".github",
+              "raw_details": "",
+              "start_column": null,
+              "start_line": 1,
+              "title": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 41315362555,
+      "path": ".github/workflows/validate-agents.yml",
+      "head_sha": "9f26b090f4869590d824291c77c6352294f7f059",
+      "event": "pull_request",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/Quirk-Systems/quirk-os/actions/runs/41315362555",
+      "jobs": [
+        {
+          "id": 124874126719,
+          "name": "agent-candidate-conformance",
+          "runner_id": 0,
+          "status": "completed",
+          "conclusion": "failure",
+          "steps": [],
+          "classification": "BILLING_BLOCK_CONFIRMED",
+          "annotations": [
+            {
+              "annotation_level": "failure",
+              "blob_href": "https://github.com/Quirk-Systems/quirk-os/blob/9f26b090f4869590d824291c77c6352294f7f059/.github",
+              "end_column": null,
+              "end_line": 1,
+              "message": "The job was not started because your account is locked due to a billing issue.",
+              "path": ".github",
+              "raw_details": "",
+              "start_column": null,
+              "start_line": 1,
+              "title": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 41315362457,
+      "path": ".github/workflows/one-to-infinity-candidate.yml",
+      "head_sha": "9f26b090f4869590d824291c77c6352294f7f059",
+      "event": "pull_request",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/Quirk-Systems/quirk-os/actions/runs/41315362457",
+      "jobs": [
+        {
+          "id": 124874126214,
+          "name": "one-to-infinity-candidate-conformance",
+          "runner_id": 0,
+          "status": "completed",
+          "conclusion": "failure",
+          "steps": [],
+          "classification": "BILLING_BLOCK_CONFIRMED",
+          "annotations": [
+            {
+              "annotation_level": "failure",
+              "blob_href": "https://github.com/Quirk-Systems/quirk-os/blob/9f26b090f4869590d824291c77c6352294f7f059/.github",
+              "end_column": null,
+              "end_line": 1,
+              "message": "The job was not started because your account is locked due to a billing issue.",
+              "path": ".github",
+              "raw_details": "",
+              "start_column": null,
+              "start_line": 1,
+              "title": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 41315362874,
+      "path": ".github/workflows/evidence-binding.yml",
+      "head_sha": "9f26b090f4869590d824291c77c6352294f7f059",
+      "event": "pull_request",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/Quirk-Systems/quirk-os/actions/runs/41315362874",
+      "jobs": [
+        {
+          "id": 124874127639,
+          "name": "validate / validate",
+          "runner_id": 0,
+          "status": "completed",
+          "conclusion": "failure",
+          "steps": [],
+          "classification": "BILLING_BLOCK_CONFIRMED",
+          "annotations": [
+            {
+              "annotation_level": "failure",
+              "blob_href": "https://github.com/Quirk-Systems/quirk-os/blob/9f26b090f4869590d824291c77c6352294f7f059/.github",
+              "end_column": null,
+              "end_line": 1,
+              "message": "The job was not started because your account is locked due to a billing issue.",
+              "path": ".github",
+              "raw_details": "",
+              "start_column": null,
+              "start_line": 1,
+              "title": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 41315362636,
+      "path": ".github/workflows/golden-gates.yml",
+      "head_sha": "9f26b090f4869590d824291c77c6352294f7f059",
+      "event": "pull_request",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/Quirk-Systems/quirk-os/actions/runs/41315362636",
+      "jobs": [
+        {
+          "id": 124874127306,
+          "name": "structural-integrity",
+          "runner_id": 0,
+          "status": "completed",
+          "conclusion": "failure",
+          "steps": [],
+          "classification": "BILLING_BLOCK_CONFIRMED",
+          "annotations": [
+            {
+              "annotation_level": "failure",
+              "blob_href": "https://github.com/Quirk-Systems/quirk-os/blob/9f26b090f4869590d824291c77c6352294f7f059/.github",
+              "end_column": null,
+              "end_line": 1,
+              "message": "The job was not started because your account is locked due to a billing issue.",
+              "path": ".github",
+              "raw_details": "",
+              "start_column": null,
+              "start_line": 1,
+              "title": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 41315358948,
+      "path": "dynamic/github-code-scanning/codeql",
+      "head_sha": "9f26b090f4869590d824291c77c6352294f7f059",
+      "event": "dynamic",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/Quirk-Systems/quirk-os/actions/runs/41315358948",
+      "jobs": [
+        {
+          "id": 124874118635,
+          "name": "Analyze (actions)",
+          "runner_id": 0,
+          "status": "completed",
+          "conclusion": "failure",
+          "steps": [],
+          "classification": "BILLING_BLOCK_CONFIRMED",
+          "annotations": [
+            {
+              "annotation_level": "failure",
+              "blob_href": "https://github.com/Quirk-Systems/quirk-os/blob/9f26b090f4869590d824291c77c6352294f7f059/.github",
+              "end_column": null,
+              "end_line": 1,
+              "message": "The job was not started because your account is locked due to a billing issue.",
+              "path": ".github",
+              "raw_details": "",
+              "start_column": null,
+              "start_line": 1,
+              "title": ""
+            },
+            {
+              "annotation_level": "notice",
+              "blob_href": "https://github.com/Quirk-Systems/quirk-os/blob/9f26b090f4869590d824291c77c6352294f7f059/.github",
+              "end_column": null,
+              "end_line": 1,
+              "message": "\"The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748\"",
+              "path": ".github",
+              "raw_details": "",
+              "start_column": null,
+              "start_line": 1,
+              "title": ""
+            }
+          ]
+        },
+        {
+          "id": 124874118787,
+          "name": "Analyze (python)",
+          "runner_id": 0,
+          "status": "completed",
+          "conclusion": "failure",
+          "steps": [],
+          "classification": "BILLING_BLOCK_CONFIRMED",
+          "annotations": [
+            {
+              "annotation_level": "failure",
+              "blob_href": "https://github.com/Quirk-Systems/quirk-os/blob/9f26b090f4869590d824291c77c6352294f7f059/.github",
+              "end_column": null,
+              "end_line": 1,
+              "message": "The job was not started because your account is locked due to a billing issue.",
+              "path": ".github",
+              "raw_details": "",
+              "start_column": null,
+              "start_line": 1,
+              "title": ""
+            },
+            {
+              "annotation_level": "notice",
+              "blob_href": "https://github.com/Quirk-Systems/quirk-os/blob/9f26b090f4869590d824291c77c6352294f7f059/.github",
+              "end_column": null,
+              "end_line": 1,
+              "message": "\"The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748\"",
+              "path": ".github",
+              "raw_details": "",
+              "start_column": null,
+              "start_line": 1,
+              "title": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

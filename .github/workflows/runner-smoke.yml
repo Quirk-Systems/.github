@@ -1,0 +1,44 @@
+name: Runner Smoke
+
+on:
+  workflow_dispatch:
+  # Allows an owner to test this candidate without merging it past blocked gates.
+  push:
+    branches: ['ci/runner-smoke']
+    paths: ['.github/workflows/runner-smoke.yml']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: runner-smoke-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  smoke:
+    name: smoke
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - name: Execute runner smoke
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+          SOURCE_REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$RUNNER_ENVIRONMENT" = github-hosted
+          python3 - <<'PY'
+          import json, os, platform
+          print(json.dumps({
+              "marker": "QUIRK_RUNNER_SMOKE_EXECUTED",
+              "repository": os.environ["SOURCE_REPOSITORY"],
+              "head_sha": os.environ["SOURCE_SHA"],
+              "run_id": os.environ["RUN_ID"],
+              "attempt": os.environ["RUN_ATTEMPT"],
+              "runner_environment": os.environ["RUNNER_ENVIRONMENT"],
+              "platform": platform.platform(),
+          }, sort_keys=True))
+          PY

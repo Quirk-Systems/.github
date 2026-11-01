@@ -10,6 +10,11 @@ Process:
 
 1. Read the complete failure output.
 2. Identify the earliest meaningful error, not merely the final cascade.
+   Inspect run head, attempt, runner assignment, executed steps and annotations.
+   For zero-step jobs, distinguish confirmed billing/policy restrictions from
+   unknown startup failures before changing application code. During an account
+   hold, use `quirk-ci-continuity.prompt.md`; stop blind retries and preserve the
+   hosted gate as blocked while continuing local work with exact-subject receipts.
 3. Reproduce it locally when possible.
 4. Determine whether the cause is code, tests, configuration, environment, dependency drift, or workflow logic.
 5. Implement the narrowest durable repair.
