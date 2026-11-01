@@ -87,6 +87,10 @@ python scripts/validate_evidence_receipts.py --repository Quirk-Systems/.github 
 
 ## Context Pointers
 
+- During hosted CI/account outages, use `docs/governance/CI_CONTINUITY.md` and
+  `prompt-packs/quirk/prompts/quirk-ci-continuity.prompt.md`. Continue local work
+  with receipts; keep hosted validation on hold. No skip-to-green or paid fallback.
+
 - Changing anything about receipts, decisions, or the PR gate: read
   `docs/governance/EVIDENCE_BINDING.md` first, because the validator's
   freshness and coverage rules are stricter than they look.

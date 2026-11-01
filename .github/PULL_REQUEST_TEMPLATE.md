@@ -64,6 +64,9 @@ What existing concept could this accidentally duplicate, redefine, or outrank?
 - Validator/evaluator commit or version:
 - Commands and observed results:
 - Checks not run and why:
+- Hosted execution: EXECUTED_PASS / EXECUTED_FAIL / STARTUP_BLOCKED / NOT_RUN
+- Hosted run IDs, attempts, head SHA and actual test-step results:
+- If hosted execution is blocked: incident link, local evidence and recovery gate:
 
 A green check is not evidence for untested behavior. A receipt locator must be
 resolved and validated before reliance. A receipt or decision does not grant
