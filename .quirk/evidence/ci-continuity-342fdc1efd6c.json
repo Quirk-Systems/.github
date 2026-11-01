@@ -1,0 +1,122 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.ci-continuity.342fdc1efd6c",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "45abd75aeea6681f0b3b04fa63e865037620e474",
+    "commit": "342fdc1efd6ca2a76d2926eedb89395e6a69ba23",
+    "changed_paths": [
+      ".github/PULL_REQUEST_TEMPLATE.md",
+      ".github/workflows/runner-smoke.yml",
+      "AGENTS.md",
+      "docs/governance/CI_CONTINUITY.md",
+      "docs/reviews/ci-startup-2026-11-01.json",
+      "prompt-packs/quirk/prompts/quirk-ci-continuity.prompt.md",
+      "prompt-packs/quirk/prompts/quirk-fix-ci.prompt.md",
+      "scripts/ci_continuity.py",
+      "tests/test_ci_continuity.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.ci-continuity.342fdc1efd6c",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Local execution capture, read-only hosted recovery assessment, smoke workflow candidate, incident snapshot and outage instructions. 243 local tests and executed validators passed; ruff passed separately. actionlint, hosted smoke, account administration and hosted recovery remain unverified. No settings, spend, merge, or Canon authority is granted.",
+      "evidence_paths": [
+        ".github/PULL_REQUEST_TEMPLATE.md",
+        ".github/workflows/runner-smoke.yml",
+        "AGENTS.md",
+        "docs/governance/CI_CONTINUITY.md",
+        "docs/reviews/ci-startup-2026-11-01.json",
+        "prompt-packs/quirk/prompts/quirk-ci-continuity.prompt.md",
+        "prompt-packs/quirk/prompts/quirk-fix-ci.prompt.md",
+        "scripts/ci_continuity.py",
+        "tests/test_ci_continuity.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".github/PULL_REQUEST_TEMPLATE.md",
+      "state": "present",
+      "git_blob": "b493ae114ef23a4ab80993e3b09989cf0b56fc3d",
+      "sha256": "sha256:a60915e2e64ea97f6a8974d486fa6ffec85dbdb7fd1f23c91c693be0fd9fdbca"
+    },
+    {
+      "path": ".github/workflows/runner-smoke.yml",
+      "state": "present",
+      "git_blob": "1875f235cab2907af47a0ccb8f6936d1b409ee7f",
+      "sha256": "sha256:19e790d152adccc2b21a8d7ffe0306077db22d04a67c5760ce68ca95b8a9778b"
+    },
+    {
+      "path": "AGENTS.md",
+      "state": "present",
+      "git_blob": "4fcf83dca1fad47a6ba8e3c66a1ba8904d88dc92",
+      "sha256": "sha256:57926a9086e6d7af9de2076f8041caf667b04a5c7ccd1db5b399db83475a4988"
+    },
+    {
+      "path": "docs/governance/CI_CONTINUITY.md",
+      "state": "present",
+      "git_blob": "37df0d2807907842bffdfd74c5fbc674f17968ab",
+      "sha256": "sha256:6488aca5830ef5d097a6b6fb1d1befe8c9392f9f60bc7b38adcec5cdfa086316"
+    },
+    {
+      "path": "docs/reviews/ci-startup-2026-11-01.json",
+      "state": "present",
+      "git_blob": "839677ed310722a419f57413ba655ee87602e85a",
+      "sha256": "sha256:372e6d1cb3f363cd9f434b82d5a4ed02a7fccd2a25b30dcdfd75a99c963c73bf"
+    },
+    {
+      "path": "prompt-packs/quirk/prompts/quirk-ci-continuity.prompt.md",
+      "state": "present",
+      "git_blob": "25015f85b5b76b069e6d7dc8c2684dc146c4d2dd",
+      "sha256": "sha256:8e4dd51ed2e01319d29c0a8328fbcd938ba9b5f0050355d261fd41705bd85e49"
+    },
+    {
+      "path": "prompt-packs/quirk/prompts/quirk-fix-ci.prompt.md",
+      "state": "present",
+      "git_blob": "3e2d0ea2b20bab38780893070f32c064afd2c96b",
+      "sha256": "sha256:0335184c79132a2baa376e819cbc156af14899a13d49eddf42d5d9bffebf9df6"
+    },
+    {
+      "path": "scripts/ci_continuity.py",
+      "state": "present",
+      "git_blob": "8c0803ef8c838bb395ba4c08c1ac87d085fd52d8",
+      "sha256": "sha256:3a4c0d1481947ee28318f44700b3268f8035ee77f8c9e5c302f3665ddf9a6859"
+    },
+    {
+      "path": "tests/test_ci_continuity.py",
+      "state": "present",
+      "git_blob": "a0436118ec8f5dceea6745f5af93adb1d2b88b21",
+      "sha256": "sha256:3f9ce98cce595d5afea4fe11aa142efdc678f14408f34921a16e0a9c589dceb9"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "UV_OFFLINE=1 scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "uv tool run --offline ruff check .",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff --check",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-11-01T19:02:19.714882Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:3276b7591e78836ce3c09a8fb92dececcda0e01f75abecbe0c7357f166fe712f"
+}
