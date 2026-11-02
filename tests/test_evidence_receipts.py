@@ -17,7 +17,7 @@ SCHEMA = ROOT / ".quirk" / "schemas" / "evidence-receipt.schema.json"
 GOVERNANCE_WORKFLOW = ROOT / ".github" / "workflows" / "governance-contracts.yml"
 REUSABLE_WORKFLOW = ROOT / ".github" / "workflows" / "reusable-evidence-binding.yml"
 CHECKOUT_PIN = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
-PYTHON_PIN = "actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97"
+PYTHON_PIN = "actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0"
 LEGACY_CHECKOUT_PIN = "actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955"
 LEGACY_PYTHON_PIN = "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065"
 
