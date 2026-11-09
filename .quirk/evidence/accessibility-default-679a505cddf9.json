@@ -1,0 +1,58 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.accessibility-default.679a505cddf9",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "45abd75aeea6681f0b3b04fa63e865037620e474",
+    "commit": "679a505cddf93284afeccf21104ad3ac3fa546e4",
+    "changed_paths": [
+      "ACCESSIBILITY.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.accessibility-default.679a505cddf9",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Adds an organization accessibility reporting guide and links to public standards. The page does not establish supported environments, accessibility conformance, usability, support response times, or deployment.",
+      "evidence_paths": [
+        "ACCESSIBILITY.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "ACCESSIBILITY.md",
+      "state": "present",
+      "git_blob": "e5e2e3103fa8b8465278532027979c8b06d14da3",
+      "sha256": "sha256:8f83cb6b81ea7ed4f1813cbe990c9f3b04f729fff1744ff20fc59dfc7d8773eb"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "git diff --check 45abd75aeea6681f0b3b04fa63e865037620e474 679a505cddf93284afeccf21104ad3ac3fa546e4",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_manifest.py .quirk/manifest.json",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_agent_assets.py",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-11-09T20:05:36Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:88d2a5aad1475a6c6234581f0553d9521dcddca5214cdf352cb79c6ffff9e2cc"
+}
