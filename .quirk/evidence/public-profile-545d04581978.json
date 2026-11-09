@@ -1,0 +1,58 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.public-profile.545d04581978",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "45abd75aeea6681f0b3b04fa63e865037620e474",
+    "commit": "545d045819787cefb841a23eed5c3d5bd51e3f6b",
+    "changed_paths": [
+      "profile/README.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.public-profile.545d04581978",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Revises the public organization profile with participation paths and source-aligned repository descriptions. It does not establish available player services, runtime integration, usability, admission, or deployment.",
+      "evidence_paths": [
+        "profile/README.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "profile/README.md",
+      "state": "present",
+      "git_blob": "45ee55fe64f7bb2f2c9d42e2090c641665004071",
+      "sha256": "sha256:bbebe706f066adbaf5532341ce9083f009773db613713e4a9dfefad065efb5b3"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "git diff --check 45abd75aeea6681f0b3b04fa63e865037620e474 545d045819787cefb841a23eed5c3d5bd51e3f6b",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_manifest.py .quirk/manifest.json",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_agent_assets.py",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-11-09T20:13:00Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:2ac4ad7837862fc986737394f06df94d0977a1388a18a36cd67f7fa12850b4bd"
+}
