@@ -1,0 +1,56 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.working-defaults.eab6b83f06ef",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "eb889adf3009951de873890103199600f4aad20f",
+    "commit": "eab6b83f06ef910df113f4ccaaa0306dcce8b0ff",
+    "changed_paths": [
+      "AGENTS.md",
+      "docs/governance/WORKING_DEFAULTS.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.working-defaults.eab6b83f06ef",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Documents user-directed scoped working defaults and links them from AGENTS. Repository validation passed in a normal checkout using its existing configuration; ruff and actionlint were unavailable. No runtime, canonical admission, or universal adoption is established.",
+      "evidence_paths": [
+        "AGENTS.md",
+        "docs/governance/WORKING_DEFAULTS.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "AGENTS.md",
+      "state": "present",
+      "git_blob": "bb2d8b1f7916fde57c0c39ab0e7190a1ef721755",
+      "sha256": "sha256:4eb99e0512bcd7304ff2f1f54aac694c7232ef397e84b7e12bd60ef75c7343bc"
+    },
+    {
+      "path": "docs/governance/WORKING_DEFAULTS.md",
+      "state": "present",
+      "git_blob": "f16201d9bb746e9ee64f468e169c905df012bcff",
+      "sha256": "sha256:6af5ed22b44518dec3177bc17d057bdefb2c707605579b02b8188c710e2d7106"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-14T10:20:53Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:af41743d84536523bc67d12e55e2d9bf48f21a1230400e813f9570d2a3adf5ad"
+}

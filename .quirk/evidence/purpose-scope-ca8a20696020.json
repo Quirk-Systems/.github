@@ -1,0 +1,58 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.purpose-scope.ca8a20696020",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "12ccf8f8b0c0d9077a9fae5ae94920f794752b29",
+    "commit": "ca8a20696020c09800db645c1e24f42d3e010ed4",
+    "changed_paths": [
+      "docs/governance/WORKING_DEFAULTS.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.purpose-scope.ca8a20696020",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Adds general scope-selection guidance, eight exceptions, explicit limits, and completion criteria. Diff whitespace, agent assets, and existing receipt checks passed. scripts/validate.sh ran 233 tests with one failure caused by an unchanged overdue planning document. Full repository validation, hosted checks, runtime adoption, and human benefit are not established.",
+      "evidence_paths": [
+        "docs/governance/WORKING_DEFAULTS.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/governance/WORKING_DEFAULTS.md",
+      "state": "present",
+      "git_blob": "113ff3678ddb0c2b1493aa6b8a16bc0364ac18f1",
+      "sha256": "sha256:44135e1ecf6eb1dfb45774ddc86db28bf3ac96a97ad78e743f6bbc0decd50426"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "git diff --check 12ccf8f8b0c0d9077a9fae5ae94920f794752b29 HEAD",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_agent_assets.py",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_evidence_receipts.py --repository Quirk-Systems/.github --root . --receipts .quirk/evidence",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-30T06:45:12.159370Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:5105260a36fea3370abe2c49ff19462a0434882a5aac6ab9045f71ba5b79da87"
+}
