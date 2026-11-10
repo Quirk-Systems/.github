@@ -1,0 +1,35 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.power-preserving-defaults.36135a0a2886",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "12ccf8f8b0c0d9077a9fae5ae94920f794752b29",
+    "commit": "36135a0a2886bdf39e5762287863a8834cb19d74",
+    "changed_paths": ["docs/governance/WORKING_DEFAULTS.md"]
+  },
+  "claims": [{
+    "claim_id": "qclaim.power-preserving-defaults.36135a0a2886",
+    "claim_type": "evidence",
+    "authority_effect": "none",
+    "statement": "The document preserves the prior source byte prefix and adds the nine approved directions. Only this structural assertion and the returned Git blob were checked. Full repository validation, the exact-range gate, fresh-host behavior, and human benefit were NOT_RUN. No admission, runtime change, or deployment is established.",
+    "evidence_paths": ["docs/governance/WORKING_DEFAULTS.md"]
+  }],
+  "artifacts": [{
+    "path": "docs/governance/WORKING_DEFAULTS.md",
+    "state": "present",
+    "git_blob": "b5e4c14fc47f535ad142b35ccbfc3b45d5f073ca",
+    "sha256": "sha256:dc36f1e8cf553fd3a192b2e0a7b8cd6b8861d41686d4297e99f0a6679235489a"
+  }],
+  "verification": {
+    "commands": [{
+      "command": "python3 -c 'from pathlib import Path; import hashlib; b=Path('\"'\"'docs/governance/WORKING_DEFAULTS.md'\"'\"').read_bytes(); p=b.split(b'\"'\"'\\n## Power, people, creativity, and portability\\n'\"'\"')[0]; assert hashlib.sha256(p).hexdigest() == '\"'\"'6af5ed22b44518dec3177bc17d057bdefb2c707605579b02b8188c710e2d7106'\"'\"'; assert all(('\"'\"'### %d. '\"'\"' % i).encode() in b for i in range(1,10)); print('\"'\"'PASS: original source preserved and nine additions present'\"'\"')'",
+      "result": "pass",
+      "exit_code": 0
+    }],
+    "verified_at": "2026-10-14T23:29:56Z"
+  },
+  "authority": {"admission_effect": "none", "authority_ref": null},
+  "correction": null,
+  "receipt_sha256": "sha256:06cf8551598f3d18c664ad73804a58346545d027624d0f52ce234d32d8f39d52"
+}
