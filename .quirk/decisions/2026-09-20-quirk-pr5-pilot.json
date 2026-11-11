@@ -1,0 +1,38 @@
+{
+  "schema_version": "governed-decision.v1",
+  "decision_id": "qdecision.quirk-pr5-read-only-pilot-2026-09-20",
+  "repository": "Quirk-Systems/Quirk",
+  "subject": {
+    "pull_request": 5,
+    "base_commit": "68e3400e165bb44a393764a45dadf68bfb383527",
+    "head_commit": "6a5139bb30fd9da4dcc8b099d6413fee12272504",
+    "changed_paths": []
+  },
+  "evidence": {
+    "receipts": []
+  },
+  "classification": "INSUFFICIENT_EVIDENCE",
+  "disposition": "HOLD",
+  "reason": "The Quirk-Systems/Quirk repository and PR #5 were not accessible from this repository context, so the pilot could not freshly resolve immutable receipt locators or re-verify exact subject bytes.",
+  "limitations": [
+    "Cross-repository reads for Quirk-Systems/Quirk#5 were unavailable here, so base/head freshness, changed paths, workflow runs, and unresolved review state were not freshly observed.",
+    "No immutable receipt locator could be materialized and verified from source_repository@source_commit:source_path; therefore receipt digest, schema, artifact, and coverage checks were not rerun for this pilot.",
+    "This decision records historical lineage only for the issue-cited head and cannot support CONTINUE or any consequential authority action."
+  ],
+  "actor": {
+    "identity": "copilot",
+    "authority_ref": null,
+    "decided_at": "2026-09-20T13:05:26Z"
+  },
+  "authority": {
+    "effect": "none",
+    "required_next": [
+      "merge",
+      "reauthorize"
+    ]
+  },
+  "staleness": {
+    "stale_if_head_changes": true
+  },
+  "decision_sha256": "sha256:877f536df4d389434e67b56cb0952c8552c5ec9d798befc4228c1c370d17b976"
+}

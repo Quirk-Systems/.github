@@ -40,6 +40,7 @@ Validate records with:
 ```sh
 python scripts/validate_governed_decisions.py \
   --repository Quirk-Systems/.github \
+  --repository Quirk-Systems/Quirk \
   --root . \
   --decisions .quirk/decisions
 ```
