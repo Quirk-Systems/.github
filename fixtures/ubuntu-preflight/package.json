@@ -1,0 +1,18 @@
+{
+  "name": "quirk-ubuntu-preflight-fixture",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "node --check build.mjs",
+    "type-check": "tsc --noEmit",
+    "test:run": "node --test build.test.mjs",
+    "build": "node build.mjs",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@types/node": "22.20.5",
+    "typescript": "5.9.3"
+  }
+}

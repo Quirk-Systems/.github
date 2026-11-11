@@ -10,6 +10,45 @@ permissions:
   contents: read
 
 jobs:
+  ubuntu-preflight:
+    name: Shared validation preflight / ${{ matrix.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        image: [ubuntu-24.04, ubuntu-26.04]
+    uses: $/.github/workflows/reusable-validate.yml
+    with:
+      package-manager: npm
+      node-version: "22"
+      working-directory: fixtures/ubuntu-preflight
+      ubuntu-image: ${{ matrix.image }}
+      run-e2e: true
+
+  ubuntu26-system-python:
+    name: Semantic and governance / Ubuntu 26 system Python
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact event revision with history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify exact head and record system Python
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          git show --no-patch --format='commit=%H'
+          cat /etc/os-release
+          printf 'ImageOS=%s ImageVersion=%s\n' "$ImageOS" "$ImageVersion"
+          python3 --version
+      - name: Test governance under the image's Python
+        run: python3 -m unittest discover -s tests -v
+      - name: Test semantic registry under the image's Python
+        run: python3 -I scripts/quirk_concept.py lint
+
   validate:
     name: validate
     runs-on: ubuntu-24.04

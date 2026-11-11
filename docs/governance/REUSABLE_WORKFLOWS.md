@@ -35,7 +35,7 @@ through `with:`; no reusable workflow interpolates caller input inside a
 | --- | --- | --- | --- | --- | --- |
 | `reusable-evidence-binding.yml` | `pull_request` only | none | `contents: read` | Every changed path in the PR range is covered by a fresh verified receipt | Semantic sufficiency, review, merge, canon |
 | `quirk-semantic-governance.yml` | any | none | `contents: read` | Caller `.quirk/manifest.json` has the required keys; the canonical registry, read at this workflow's own pinned commit, lints clean | That the manifest's domain claims are true |
-| `reusable-validate.yml` | any | `package-manager`, `node-version`, `bun-version`, `working-directory`, `test-script`, `run-build`, `run-e2e`, `e2e-script` | `contents: read` | JS lint, type-check, tests, build, optional Playwright e2e | Deployment or runtime behavior. Being hardened in a separate PR (pins, permissions) |
+| `reusable-validate.yml` | any | `package-manager`, `node-version`, `bun-version`, `working-directory`, `test-script`, `run-build`, `run-e2e`, `e2e-script`, `ubuntu-image` | `contents: read` | JS lint, type-check, tests, build, optional Playwright e2e | Deployment or runtime behavior. Being hardened in a separate PR (pins, permissions) |
 | `reusable-pr-title-lint.yml` | `pull_request` | none | `pull-requests: read` | PR title is a Conventional Commit | Commit contents |
 | `reusable-codeql.yml` | `push`, `pull_request`, `schedule` | `languages` (required), `build-mode`, `queries` | `contents: read`, `actions: read`, `security-events: write` | CodeQL analysis uploaded to code scanning | Absence of vulnerabilities outside the query suite |
 | `reusable-dependency-review.yml` | `pull_request` only | `fail-on-severity`, `deny-licenses` | `contents: read` | No newly introduced dependency crosses the severity or license policy | Runtime reachability of any advisory |
@@ -91,3 +91,26 @@ Repository files cannot activate rulesets. Follow
 [`REQUIRED_CHECKS_ROLLOUT.md`](./REQUIRED_CHECKS_ROLLOUT.md): observe the
 emitted check context on a representative pull request, record it, then move
 the ruleset from Evaluate to Active.
+
+## Ubuntu migration preflight (2026-10-08)
+
+`reusable-validate.yml` retains its existing `ubuntu-latest` default. The new
+`ubuntu-image` input accepts only `ubuntu-latest`, `ubuntu-24.04`, or
+`ubuntu-26.04`. Its closed runner mapping cannot select a self-hosted machine,
+and unsupported values fail before setup. Use `ubuntu-26.04` to obtain proof
+before the October 19–November 19 rollout; use `ubuntu-24.04` only for a documented
+compatibility blocker, with a retest and removal condition. Neither image label
+freezes weekly image updates.
+
+Governance Contracts calls the exact candidate's local reusable workflow with
+an npm fixture on Ubuntu 24 and 26. It installs the locked Playwright browsers
+and OS dependencies, then tests JavaScript execution in Chromium, Firefox, and
+WebKit. This fixture establishes only the tested workflow path, versions, and
+image, not every package manager or downstream application. Existing remote
+callers remain pinned to their reviewed revisions until a separately reviewed
+pin bump; a shared change does not repair an old SHA automatically.
+
+The reusable workflow now checks out the exact PR head rather than a synthetic
+merge commit. This makes its evidence subject explicit; it does not replace any
+repository's merge-integration checks or confer approval. Existing runner-pin
+policy for hardened governance jobs remains unchanged.

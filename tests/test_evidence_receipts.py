@@ -1006,7 +1006,12 @@ class EvidenceReceiptTest(unittest.TestCase):
         self.assertNotIn("${{ inputs", reusable)
         self.assertNotIn("verification-command", reusable)
         self.assertNotRegex(reusable, r"(?m)^\s+command:\s*$")
-        self.assertEqual(governance.count("persist-credentials: false"), 1)
+        # The original evidence gate still has one non-persisting checkout;
+        # additive OS probes must not loosen that boundary or persist credentials.
+        gate = governance.split("  validate:\n", 1)[1]
+        self.assertEqual(gate.count("persist-credentials: false"), 1)
+        self.assertEqual(governance.count("persist-credentials: false"),
+                         governance.count("uses: actions/checkout@"))
         self.assertEqual(reusable.count("persist-credentials: false"), 2)
 
 
