@@ -42,7 +42,7 @@ class MutationTests(unittest.TestCase):
     def setUp(self):
         self.module = load_module()
         self.tmp = Path(tempfile.mkdtemp())
-        for item in ("AGENTS.md", "CLAUDE.md", "agents", ".github", ".claude", "scripts", "prompt-packs", "docs"):
+        for item in ("AGENTS.md", "CLAUDE.md", "QUIRK-CONTEXT.md", ".quirk", "agents", ".github", ".claude", "scripts", "prompt-packs", "docs"):
             source = ROOT / item
             if source.is_dir():
                 shutil.copytree(source, self.tmp / item)

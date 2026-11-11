@@ -47,3 +47,11 @@ and the contract is `.quirk/schemas/design-tokens.schema.json` (see
   the concept IDs touched, per `docs/QUIRK_SEMANTIC_GOVERNANCE.md`.
 - Separate VERIFIED, INFERRED, and UNKNOWN.
 - Name the human authority still required. A filled template grants nothing.
+
+## Context inheritance
+
+New projects inherit the owning repository context profile or declare a scoped
+difference. Apply [context continuity](../QUIRK-CONTEXT.md) where context, taste,
+creative work, or participation is involved. Distinguish untried from unsuccessful;
+keep original sources, private/quiet paths, and useful alternatives. A profile or
+filled template is not proof of delivery, loading, behavior, or deployment.

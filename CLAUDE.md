@@ -14,3 +14,9 @@
   `uv run --python 3.12 -m unittest discover -s tests` before the final push.
 - When a PR is opened, use the template's fields literally: full SHAs, receipt
   locators, commands with observed results, and checks not run.
+
+## Context continuity
+
+For changes involving context, preferences, creative work, or participation, read
+[QUIRK-CONTEXT.md](QUIRK-CONTEXT.md) and preserve its scoped requirements.
+Do not treat this instruction entry point as proof of host loading or runtime adoption.

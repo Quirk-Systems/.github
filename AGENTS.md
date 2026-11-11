@@ -101,3 +101,9 @@ python scripts/validate_evidence_receipts.py --repository Quirk-Systems/.github 
 - Writing or editing an intention, goal, roadmap, or todo: use the
   `quirk-living-doc` skill and run `python scripts/validate_living_docs.py --strict`;
   a planning document names the head it observed and the date it goes stale.
+
+## Context continuity
+
+For changes involving context, preferences, creative work, or participation, read
+[QUIRK-CONTEXT.md](QUIRK-CONTEXT.md) and preserve its scoped requirements.
+Do not treat this instruction entry point as proof of host loading or runtime adoption.
