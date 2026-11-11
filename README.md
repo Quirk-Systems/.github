@@ -56,6 +56,18 @@ scripts/validate.sh
 Runs the unit suite, every validator, ruff, and (when installed) actionlint
 and zizmor. Python 3.12 standard library only; CI has no dependency step.
 
+For a complete local validation handoff, use:
+
+```sh
+scripts/validate.sh --require-tools
+```
+
+This checks for the configured Python executable, ruff, actionlint, and zizmor
+before running any checks and exits 2 if a tool is missing. Provision approved
+tool versions on the host first; strict mode never uses `uv` to acquire zizmor.
+The default mode remains useful for partial environments and reports skipped
+tools. Neither mode establishes hosted CI, human approval, or tool provenance.
+
 ## Ship a change here
 
 Every substantive change needs an exact-range evidence receipt or the pull

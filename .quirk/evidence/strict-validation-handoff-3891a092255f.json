@@ -1,0 +1,82 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.strict-validation-handoff.3891a092255f",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "c029a903c018e63633e4b2c8b4a83da54801e32f",
+    "commit": "3891a092255ff8a2052628f3b4b9b4aacf33bbe0",
+    "changed_paths": [
+      "README.md",
+      "docs/governance/AUTONOMOUS_OPERATIONS.md",
+      "scripts/validate.sh",
+      "tests/test_validation_entrypoint.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.strict-validation-handoff.3891a092255f",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Adds opt-in fail-closed local tool preflight, preserves default validation, prefers installed zizmor, and documents agent handoffs. Five adversarial preflight tests and complete local validation passed; hosted CI, human approval, and tool provenance enforcement are not established.",
+      "evidence_paths": [
+        "README.md",
+        "docs/governance/AUTONOMOUS_OPERATIONS.md",
+        "scripts/validate.sh",
+        "tests/test_validation_entrypoint.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "README.md",
+      "state": "present",
+      "git_blob": "3cb979ab4501d5d404c932929c540229e86c09fb",
+      "sha256": "sha256:f1b761b30dcf6632896829d6a9c43326ca4a410dbf4decc91055752e3f6914e2"
+    },
+    {
+      "path": "docs/governance/AUTONOMOUS_OPERATIONS.md",
+      "state": "present",
+      "git_blob": "7694ec2c60541010d85af7db2d913efb80b32a31",
+      "sha256": "sha256:26591dad973815d43fbe6d24d137bab23b3b9a6331f558e6e3ea62d41ec084e9"
+    },
+    {
+      "path": "scripts/validate.sh",
+      "state": "present",
+      "git_blob": "c0b68c9eaacd7f3cfca5848feb890ccaf8120cba",
+      "sha256": "sha256:bed6ebc8552167d133c99f3f4b9b11731af569fb9b98d8b651ef7f296a8e35b0"
+    },
+    {
+      "path": "tests/test_validation_entrypoint.py",
+      "state": "present",
+      "git_blob": "6663416f8e4cc7bd10cd5a792e4b11c48771f04b",
+      "sha256": "sha256:2dd2cc3cb72aed9e466584ee823402950853b778f102fa212366ca5a69e78c33"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "PATH=/root/.local/bin:/workspace/scratch/fe1f30cb7c50/tools:$PATH scripts/validate.sh --require-tools",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "bash -n scripts/validate.sh",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "git diff c029a903c018e63633e4b2c8b4a83da54801e32f 3891a092255ff8a2052628f3b4b9b4aacf33bbe0 --check",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-10-03T22:42:19Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:71703dd069d508627cacb2612f2bdf7c763820d5a71ba36db60bae041bf33c91"
+}
