@@ -1,0 +1,48 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.required-check-rollout-admission.35d01f8a54cd",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "fd5e480fe467eff44b9cdb1cf6fe210f163c00e7",
+    "commit": "35d01f8a54cdb45512ece4ca9c6c3431ab6b898e",
+    "changed_paths": [
+      "docs/governance/REQUIRED_CHECKS_ROLLOUT.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.required-check-rollout-admission.35d01f8a54cd",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Aligns rollout sequence text with required receipt run fields for exact-range governance documentation; ruleset activation and owner policy enforcement remain unproven and owner-authorized.",
+      "evidence_paths": [
+        "docs/governance/REQUIRED_CHECKS_ROLLOUT.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/governance/REQUIRED_CHECKS_ROLLOUT.md",
+      "state": "present",
+      "git_blob": "c118b69d514fd7e58620671011d358d69b660e21",
+      "sha256": "sha256:225a579a46b8e2706da18f219968268f96546c5657cedb1c76cc1d8faa1a14e2"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python -m unittest tests.test_required_checks_rollout -v",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-20T13:09:24Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:9e68f7542cd3a96dfdf2e525b2d01a1f639d2f957aadd9d0ba05430e2190209a"
+}
