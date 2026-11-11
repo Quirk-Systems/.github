@@ -1,0 +1,53 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.batch-json-validation.a099f49f706a",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "1263f5008838f743b16ee218046e26dac5c9edd8",
+    "commit": "a099f49f706a5cd9921d867e1e8e45e16855e559",
+    "changed_paths": [
+      "scripts/validate.sh"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.batch-json-validation.a099f49f706a",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "The cited bytes optimize scripts/validate.sh JSON parsing by validating .quirk and .claude JSON files in one Python process while preserving fail-closed behavior for parse and encoding errors. Unit-test and governed-decision validator success were observed locally on the cited subject; hosted execution and merge approval are not established.",
+      "evidence_paths": [
+        "scripts/validate.sh"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "scripts/validate.sh",
+      "state": "present",
+      "git_blob": "cc1a52e7014c4f523fbce320872bf6961bcfb077",
+      "sha256": "sha256:58d60b9c7d3ae5a6903fd4c0572376732571f0fcf7b1ce80cf162aedf9257689"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python -m unittest discover -s tests -v",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python scripts/validate_governed_decisions.py --repository Quirk-Systems/.github --root . --decisions .quirk/decisions",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-09-26T15:13:51Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:30c252c596585a2f9af0e4ffeb258687a916875a0092458bf316e8b8df13570a"
+}
