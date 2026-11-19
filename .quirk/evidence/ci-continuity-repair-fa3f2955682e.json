@@ -1,0 +1,72 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.ci-continuity-repair.fa3f2955682e",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "ba412c6f6eaa344b3cc5627cd30278d41164a413",
+    "commit": "fa3f2955682edac04bb8a29a091fced51171d4fa",
+    "changed_paths": [
+      "docs/governance/CI_CONTINUITY.md",
+      "scripts/ci_continuity.py",
+      "tests/test_ci_continuity.py",
+      "tests/test_evidence_receipts.py"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.ci-continuity-repair.fa3f2955682e",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "On Linux with Python 3.12.14, all 53 CI continuity and receipt tests passed, including process cleanup, write-once JSON publication, job classification, and merge ancestry. Regression log SHA-256 f25cb87acf96fdd505ad53bd9a3d48247ccedcca4ffe31c603d0df5a99c13cf6. Repository-wide validation ran 255 tests and failed its pre-existing living-document freshness test. Full log SHA-256 4835d24fdc1d194f424f2de975c40e677fd1c0089f040b52262c9b3396d05ad6. Hosted execution is a separate gate.",
+      "evidence_paths": [
+        "docs/governance/CI_CONTINUITY.md",
+        "scripts/ci_continuity.py",
+        "tests/test_ci_continuity.py",
+        "tests/test_evidence_receipts.py"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/governance/CI_CONTINUITY.md",
+      "state": "present",
+      "git_blob": "dbce4174ebbb5edc3165cb05aaf81a7238b8000b",
+      "sha256": "sha256:73988720ebf70457959448d8c704316c4b3407ac24a7817e92147294477ebead"
+    },
+    {
+      "path": "scripts/ci_continuity.py",
+      "state": "present",
+      "git_blob": "3c13e27281725bd455d70a291588ee192e64074c",
+      "sha256": "sha256:48aa2327a085ff6c590ef19964d7351a6fe1d2b2e113c6f9e9ee25c4fd41ff57"
+    },
+    {
+      "path": "tests/test_ci_continuity.py",
+      "state": "present",
+      "git_blob": "54b9bb70462dc2e4b33a8d1af06dcc8f5bdfc1d3",
+      "sha256": "sha256:a846e5acb379a876e310c9aa0f3b642041f4ada2a39d7fdb02d8db0aeaafa53b"
+    },
+    {
+      "path": "tests/test_evidence_receipts.py",
+      "state": "present",
+      "git_blob": "5cd5c0d7cf2de59e82fe793895a221a05c509302",
+      "sha256": "sha256:7306124507e6345c10341a10e659e52f9fcf56c820b249af432af91ae8cd6e2d"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "python -m unittest tests.test_ci_continuity tests.test_evidence_receipts -v",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-11-19T00:10:00.725074Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:e1a8081bfebac2cf67ca11daf807be76cb411486b189a9b821884a64a024b7e3"
+}
