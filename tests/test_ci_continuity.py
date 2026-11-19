@@ -1,12 +1,21 @@
 """Regressions for false-green recovery and misattributed local evidence."""
 
 import copy
+import hashlib
+import io
+import json
+import os
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from threading import Barrier
+from unittest import mock
 
+from scripts import ci_continuity
 from scripts.ci_continuity import REQUIRED, assess, capture, classify_job, collect
 
 
@@ -18,7 +27,8 @@ def successful_snapshot():
                 for name, steps in expected.items()]
         runs.append({"id": index, "path": path, "head_sha": "a" * 40, "event": "pull_request",
                      "conclusion": "success", "run_attempt": 1, "jobs": jobs})
-    return {"head_sha": "a" * 40, "final_head_sha": "a" * 40, "runs": runs}
+    return {"head_sha": "a" * 40, "final_head_sha": "a" * 40,
+            "base_sha": "b" * 40, "final_base_sha": "b" * 40, "runs": runs}
 
 
 class RecoveryTests(unittest.TestCase):
@@ -72,6 +82,97 @@ class RecoveryTests(unittest.TestCase):
                          "BILLING_BLOCK_CONFIRMED")
         job["conclusion"] = "skipped"
         self.assertEqual(classify_job(job, []), "NOT_RUN")
+
+    def test_executed_steps_take_precedence_over_billing_annotations(self):
+        annotation = {"message": "The job was not started because your account is locked due to a billing issue."}
+        for conclusion, expected in (("success", "EXECUTED_SUCCESS"), ("failure", "EXECUTED_FAILURE")):
+            with self.subTest(conclusion=conclusion):
+                snapshot = successful_snapshot()
+                run = snapshot["runs"][0]
+                job = run["jobs"][0]
+                job.update(conclusion=conclusion, annotations=[annotation])
+                job["steps"][0]["conclusion"] = conclusion
+                check = assess(snapshot)["checks"][run["path"]]
+                self.assertEqual(check["jobs"][0]["state"], expected)
+                self.assertEqual(check["state"], expected if conclusion == "success" else "HOLD")
+
+    def test_unobserved_steps_and_nonexecuting_jobs_do_not_confirm_billing(self):
+        annotation = {"message": "account is locked due to a billing issue"}
+        for status, conclusion, steps, expected in (
+            ("completed", "failure", None, "STEPS_UNAVAILABLE"),
+            ("queued", None, [], "PENDING"),
+            ("completed", "skipped", [], "NOT_RUN"),
+        ):
+            with self.subTest(status=status, conclusion=conclusion):
+                snapshot = successful_snapshot()
+                run = snapshot["runs"][0]
+                run["jobs"][0].update(steps=steps, status=status, conclusion=conclusion, annotations=[annotation])
+                check = assess(snapshot)["checks"][run["path"]]
+                self.assertEqual(check["state"], "HOLD")
+                self.assertEqual(check["jobs"][0]["state"], expected)
+        job = {"status": "completed", "conclusion": "failure", "steps": []}
+        self.assertEqual(classify_job(job, [{"message": "Lint warning in billing/payment.py"}]),
+                         "STARTUP_BLOCK_CAUSE_UNKNOWN")
+
+    def test_duplicate_job_name_keeps_failed_sibling_and_denies_pass(self):
+        snapshot = successful_snapshot()
+        run = snapshot["runs"][0]
+        failed = copy.deepcopy(run["jobs"][0])
+        failed.update(id=888, conclusion="failure")
+        run["jobs"].insert(0, failed)
+        check = assess(snapshot)["checks"][run["path"]]
+        self.assertEqual(check["state"], "HOLD")
+        self.assertEqual([j["id"] for j in check["jobs"]], [888, run["jobs"][1]["id"]])
+
+    def test_unobserved_base_is_not_a_stable_subject(self):
+        snapshot = successful_snapshot()
+        del snapshot["base_sha"], snapshot["final_base_sha"]
+        self.assertFalse(assess(snapshot)["subject_stable_during_collection"])
+        self.assertEqual(assess(snapshot)["state"], "HOLD")
+
+    def test_collection_cannot_replace_a_receipt_created_while_fetching(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "hosted.json"
+
+            def competing_writer(*args):
+                output.write_bytes(b"other collection\n")
+                return {"assessment": {"state": "HOLD"}}
+
+            with mock.patch.object(sys, "argv", ["ci_continuity", "collect", "--output", str(output)]), \
+                    mock.patch.object(ci_continuity, "collect", side_effect=competing_writer), \
+                    mock.patch("sys.stderr", new_callable=io.StringIO), \
+                    mock.patch("sys.stdout", new_callable=io.StringIO):
+                self.assertEqual(ci_continuity.main(), 2)
+            self.assertEqual(output.read_bytes(), b"other collection\n")
+            self.assertEqual(list(output.parent.iterdir()), [output])
+
+    def test_publication_failure_leaves_no_partial_receipt(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "hosted.json"
+            with self.assertRaises(TypeError):
+                ci_continuity.write_json(output, {"a_valid_prefix": 1, "z_invalid": object()})
+            self.assertEqual(list(output.parent.iterdir()), [])
+            ci_continuity.write_json(output, {"valid": 1})
+            self.assertEqual(json.loads(output.read_bytes()), {"valid": 1})
+
+    def test_concurrent_publication_preserves_one_complete_winner(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "hosted.json"
+            ready = Barrier(2)
+
+            def publish(writer):
+                ready.wait(timeout=5)
+                try:
+                    ci_continuity.write_json(output, {"writer": writer})
+                except FileExistsError:
+                    return None
+                return writer
+
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                winners = [writer for writer in pool.map(publish, ("one", "two")) if writer]
+            self.assertEqual(len(winners), 1)
+            self.assertEqual(json.loads(output.read_bytes()), {"writer": winners[0]})
+            self.assertEqual(list(output.parent.iterdir()), [output])
 
     def test_collector_binds_attempt_and_reads_head_again(self):
         class Fake:
@@ -129,6 +230,92 @@ class LocalTests(unittest.TestCase):
         self.assertEqual(self.run_command("timeout", "import time; time.sleep(20)", 1)["outcome"], "TIMED_OUT")
         result = capture(self.root, self.head, self.parent / "missing", ["/nonexistent/quirk-executable"], 1)
         self.assertEqual(result["outcome"], "NOT_RUN")
+
+    def test_large_output_is_retained_including_the_final_buffer(self):
+        result = self.run_command("verbose", "import sys; sys.stdout.buffer.write(b'x' * 1048576 + b'end')")
+        expected = b"x" * 1048576 + b"end"
+        self.assertEqual(result["outcome"], "COMMAND_PASSED")
+        self.assertEqual((self.parent / "verbose" / "command.log").read_bytes(), expected)
+        self.assertEqual(result["log_sha256"], hashlib.sha256(expected).hexdigest())
+
+    @unittest.skipUnless(os.name == "posix", "requires creation of a new session")
+    def test_detached_writer_cannot_change_a_finalized_log(self):
+        release, done = self.parent / "release", self.parent / "done"
+        writer = (
+            "from pathlib import Path\n"
+            "import os, time\n"
+            "deadline = time.monotonic() + 5\n"
+            f"while not Path({str(release)!r}).exists() and time.monotonic() < deadline: time.sleep(.01)\n"
+            "try: os.write(1, b'late write')\n"
+            "except BrokenPipeError: pass\n"
+            f"Path({str(done)!r}).touch()\n"
+        )
+        command = (
+            "import subprocess, sys\n"
+            f"subprocess.Popen([sys.executable, '-c', {writer!r}], start_new_session=True)\n"
+        )
+        try:
+            result = self.run_command("detached", command)
+        finally:
+            release.touch()
+        deadline = time.monotonic() + 3
+        while not done.exists() and time.monotonic() < deadline:
+            time.sleep(.01)
+        self.assertTrue(done.exists(), "the descendant must actually attempt its delayed write")
+        self.assertEqual(result["outcome"], "BACKGROUND_PROCESSES")
+        log = (self.parent / "detached" / "command.log").read_bytes()
+        self.assertNotIn(b"late write", log)
+        self.assertEqual(result["log_sha256"], hashlib.sha256(log).hexdigest())
+
+    @unittest.skipUnless(os.name == "posix", "requires POSIX process groups")
+    def test_background_writer_is_stopped_before_return_and_log_is_stable(self):
+        self.check_group_cleanup("", "BACKGROUND_PROCESSES")
+
+    @unittest.skipUnless(os.name == "posix", "requires POSIX process groups")
+    def test_timeout_also_stops_the_background_writer(self):
+        self.check_group_cleanup("time.sleep(30)", "TIMED_OUT")
+
+    def check_group_cleanup(self, leader_tail, outcome):
+        import fcntl
+
+        lock, release = self.parent / "child.lock", self.parent / "release"
+        child = (
+            "import fcntl, time\n"
+            "from pathlib import Path\n"
+            f"with open({str(lock)!r}, 'w') as handle:\n"
+            " fcntl.flock(handle, fcntl.LOCK_EX)\n"
+            " print('child ready', flush=True)\n"
+            " handle.write('ready'); handle.flush()\n"
+            " deadline = time.monotonic() + 8\n"
+            f" while not Path({str(release)!r}).exists() and time.monotonic() < deadline: time.sleep(.01)\n"
+        )
+        command = (
+            "import subprocess, sys, time\n"
+            "from pathlib import Path\n"
+            f"subprocess.Popen([sys.executable, '-c', {child!r}])\n"
+            f"lock = Path({str(lock)!r})\n"
+            "while not (lock.exists() and lock.stat().st_size): time.sleep(.005)\n"
+            f"{leader_tail}\n"
+        )
+        try:
+            result = self.run_command("background", command, timeout=2)
+            self.assertEqual(result["outcome"], outcome)
+            with lock.open() as handle:
+                # Allow the kernel to deliver SIGKILL and release the lock.
+                deadline = time.monotonic() + 2
+                while True:
+                    try:
+                        fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                        break
+                    except BlockingIOError:
+                        if time.monotonic() >= deadline:
+                            self.fail("capture left the background writer running")
+                        time.sleep(.01)
+            log = (self.parent / "background" / "command.log").read_bytes()
+            self.assertIn(b"child ready", log)
+            self.assertEqual(hashlib.sha256(log).hexdigest(), result["log_sha256"])
+        finally:
+            release.touch()
 
     def test_wrong_head_dirty_source_and_internal_output_rejected(self):
         with self.assertRaises(ValueError):

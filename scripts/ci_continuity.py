@@ -11,10 +11,12 @@ import shutil
 import signal
 import subprocess
 import sys
+import time
 import urllib.error
 import urllib.request
 from datetime import UTC, datetime
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 
 REQUIRED = {
     ".github/workflows/golden-gates.yml": {
@@ -41,7 +43,60 @@ def git(root, *args):
 
 
 def write_json(path, value):
-    path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    # Publish the completed bytes atomically, without replacing an earlier record.
+    staging = NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent, delete=False)
+    try:
+        with staging:
+            json.dump(value, staging, indent=2, sort_keys=True)
+            staging.write("\n")
+        os.link(staging.name, path)
+    finally:
+        os.unlink(staging.name)
+
+
+def capture_output(process, stream, timeout):
+    """Own the log's only writer and supervise the command through its deadline."""
+    deadline = time.monotonic() + timeout
+    timed_out = False
+    background = False
+    try:
+        os.set_blocking(process.stdout.fileno(), False)
+        while process.poll() is None:
+            if time.monotonic() >= deadline:
+                timed_out = True
+                break
+            chunk = process.stdout.read(65536)
+            if chunk:
+                stream.write(chunk)
+            else:
+                time.sleep(.01)
+    finally:
+        if os.name == "posix":
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+                background = True
+            except ProcessLookupError:
+                pass
+        elif process.returncode is None:
+            process.kill()
+        process.wait()
+
+    # Drain buffered output. A writer outside the group can keep its pipe open
+    # or write continuously, so require EOF for a pass and bound this final read.
+    drain_deadline = time.monotonic() + 1
+    while time.monotonic() < drain_deadline:
+        chunk = process.stdout.read(65536)
+        if not chunk:
+            background = background or chunk is None
+            break
+        stream.write(chunk)
+    else:
+        background = True
+    if timed_out:
+        return 124, "TIMED_OUT"
+    if background:
+        return process.returncode, "BACKGROUND_PROCESSES"
+    return process.returncode, "COMMAND_PASSED" if process.returncode == 0 else "COMMAND_FAILED"
 
 
 def capture(root, expected, output, command, timeout):
@@ -69,45 +124,45 @@ def capture(root, expected, output, command, timeout):
     }
     with log.open("wb") as stream:
         try:
-            process = subprocess.Popen(command, cwd=root, stdout=stream, stderr=subprocess.STDOUT,
+            process = subprocess.Popen(command, cwd=root, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=0,
                                        start_new_session=(os.name == "posix"))
-            try:
-                code = process.wait(timeout=timeout)
-                outcome = "COMMAND_PASSED" if code == 0 else "COMMAND_FAILED"
-            except subprocess.TimeoutExpired:
-                if os.name == "posix":
-                    os.killpg(process.pid, signal.SIGKILL)
-                else:
-                    process.kill()
-                process.wait()
-                code, outcome = 124, "TIMED_OUT"
         except OSError as error:
             stream.write(f"{type(error).__name__}: {error}\n".encode())
             code, outcome = 127, "NOT_RUN"
+        else:
+            with process:
+                code, outcome = capture_output(process, stream, timeout)
     dirty = bool(git(root, "status", "--porcelain", "--untracked-files=normal"))
     final_head = git(root, "rev-parse", "HEAD")
     if dirty or final_head != expected:
         outcome = "SOURCE_CHANGED"
+    with log.open("rb") as stream:
+        log_digest = hashlib.file_digest(stream, "sha256").hexdigest()
     record.update(finished_at=now(), exit_code=code, outcome=outcome,
                   final_head=final_head, working_tree_changed=dirty,
-                  log_sha256=hashlib.sha256(log.read_bytes()).hexdigest())
+                  log_sha256=log_digest)
     write_json(output / "execution.json", record)
     return record
 
 
 def classify_job(job, annotations):
-    messages = " ".join(a.get("message", "") for a in annotations).lower()
-    executed = [s for s in job.get("steps", []) if s.get("status") == "completed"
-                and s.get("conclusion") not in (None, "skipped")]
-    if "billing" in messages and ("locked" in messages or "payment" in messages):
-        return "BILLING_BLOCK_CONFIRMED"
     if job.get("status") != "completed":
         return "PENDING"
     if job.get("conclusion") == "skipped":
         return "NOT_RUN"
-    if not executed:
-        return "STARTUP_BLOCK_CAUSE_UNKNOWN"
-    return "EXECUTED_SUCCESS" if job.get("conclusion") == "success" else "EXECUTED_FAILURE"
+    steps = job.get("steps")
+    if not isinstance(steps, list):
+        return "STEPS_UNAVAILABLE"
+    if any(s.get("status") == "completed" and s.get("conclusion") not in (None, "skipped") for s in steps):
+        return "EXECUTED_SUCCESS" if job.get("conclusion") == "success" else "EXECUTED_FAILURE"
+    # Match an account startup diagnosis in one annotation, not keywords in lint messages.
+    if job.get("conclusion") == "failure":
+        for annotation in annotations:
+            message = (annotation.get("message") or "").lower()
+            if ("account is locked due to a billing issue" in message
+                    or "job was not started because recent account payments have failed" in message):
+                return "BILLING_BLOCK_CONFIRMED"
+    return "STARTUP_BLOCK_CAUSE_UNKNOWN"
 
 
 def assess(snapshot):
@@ -121,22 +176,27 @@ def assess(snapshot):
             results[path] = {"state": "NOT_RUN"}
             continue
         run = max(candidates, key=lambda r: (r["id"], r.get("run_attempt", 1)))
-        jobs = {j["name"]: j for j in run.get("jobs", [])}
+        jobs = run.get("jobs", [])
+        job_states = [{"id": j["id"], "name": j["name"], "state": classify_job(j, j.get("annotations", []))}
+                      for j in jobs]
         passed = run.get("conclusion") == "success" and not run.get("jobs_error")
         for name, steps in jobs_needed.items():
-            job = jobs.get(name, {})
-            observed = {s["name"] for s in job.get("steps", [])
+            matches = [j for j in jobs if j["name"] == name]
+            if len(matches) != 1:
+                passed = False
+                continue
+            job = matches[0]
+            observed = {s["name"] for s in (job.get("steps") or [])
                         if s.get("status") == "completed" and s.get("conclusion") == "success"}
             passed = passed and (job.get("conclusion") == "success" and bool(job.get("runner_id"))
                                  and set(steps).issubset(observed))
         # A green required job alongside a failed/skipped matrix sibling is not a full pass.
-        passed = passed and bool(jobs) and all(classify_job(j, []) == "EXECUTED_SUCCESS" for j in jobs.values())
+        passed = passed and bool(jobs) and all(j["state"] == "EXECUTED_SUCCESS" for j in job_states)
         results[path] = {"state": "EXECUTED_SUCCESS" if passed else "HOLD",
                          "run_id": run["id"], "attempt": run.get("run_attempt", 1),
-                         "jobs": [{"id": j["id"], "name": j["name"],
-                                   "state": classify_job(j, j.get("annotations", []))} for j in jobs.values()]}
-    stable = (snapshot.get("final_head_sha") == snapshot["head_sha"]
-              and snapshot.get("final_base_sha") == snapshot.get("base_sha"))
+                         "jobs": job_states}
+    stable = all(re.fullmatch(r"[0-9a-f]{40}", snapshot.get(key) or "")
+                 and snapshot[key] == snapshot.get(f"final_{key}") for key in ("head_sha", "base_sha"))
     return {"authority_effect": "none", "merge_authorized": False,
             "subject_stable_during_collection": stable, "checks": results,
             "state": "HOSTED_STEPS_VERIFIED" if stable and all(

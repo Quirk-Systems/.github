@@ -47,8 +47,16 @@ python scripts/ci_continuity.py capture --root ../quirk-os \
 One command produces `execution.json` and `command.log` outside the checkout.
 The record includes source head/tree, argv, runtime, timestamps, exit code and
 log SHA-256. It rejects a dirty tree, an unexpected head, output inside the
-checkout, and overwrite of earlier evidence. Source changes during execution
-invalidate a pass. Timeouts terminate the process group on POSIX. Ignored build
+checkout, and overwrite of earlier evidence. A changed HEAD or dirty checkout
+at exit invalidates a pass. A command can edit source, test it, and restore it
+between the two checks. Use a read-only source checkout when possible and
+inspect commands that generate files before relying on their results.
+
+Run foreground commands. Capture owns the log writer. It kills remaining POSIX
+process-group members and rejects a pass if the group survives the command or
+a descendant keeps its output pipe open. A timeout also terminates the group.
+Detached processes and descendants on other platforms may outlive capture.
+Ignored build
 files, installed dependencies and external services are not frozen by the Git
 SHA; use fresh environments and record tool versions and lockfile digests for
 reproducibility. The record is claimant-executed evidence, not an independent
@@ -72,9 +80,33 @@ dependencies may change. At observed head
 | Gate | Local command / dependency | Remaining hosted difference |
 | --- | --- | --- |
 | Golden Gates | `python scripts/validate_golden_pack.py`; `python -m unittest tests.test_admission_workplan -v`; `python scripts/admission_workplan.py --output /tmp/quirk-admission-workplan.json` | Python 3.13 runner and artifact upload; current checkout defaults to PR merge ref |
-| Evidence Binding | Policy checkout `6136fa5fa77116abfbc103c822d9d244a0e870b3`: run `scripts/validate_evidence_receipts.py --repository Quirk-Systems/quirk-os --root <os-checkout> --receipts .quirk/evidence --range-base <current-base> --range-head <current-head> --require-covered-diff` | Python 3.12, immutable policy checkout and Actions permissions |
+| Evidence Binding | Policy checkout `6136fa5fa77116abfbc103c822d9d244a0e870b3`: run `python scripts/validate_evidence_receipts.py --repository Quirk-Systems/quirk-os --root <os-checkout> --receipts .quirk/evidence --range-base <current-base> --range-head <current-head> --require-covered-diff` | Python 3.12, immutable policy checkout and Actions permissions |
 | Agent conformance | `python -m unittest tests.test_agent_manifest -v`; `python scripts/validate_agents.py --repo .` (inspect `--help` for output flags) | Python 3.13, `requirements-evals.txt`, runner and upload; current checkout defaults to merge ref |
-| One-to-Infinity | `python -m unittest discover -s programs/one-to-infinity/tests -p test_emit_ci_receipt.py -v`; `python programs/one-to-infinity/tests/validate_contracts.py`; `python programs/one-to-infinity/tests/emit_ci_receipt.py --repo-root . --expected-head <current-head>` | Python 3.13, jsonschema 4.26.0, exact checkout, upload |
+| One-to-Infinity | `python -m unittest discover -s programs/one-to-infinity/tests -p test_emit_ci_receipt.py -v`; then capture the validator and emitter together as shown below | Python 3.13, jsonschema 4.26.0, exact checkout, upload |
+
+At that revision the One-to-Infinity validator writes a fixed report in the
+checkout and the emitter reads it there. Start in the policy repository with
+a clean disposable quirk-os checkout. Run both reviewed commands in a single
+capture and move the generated report to the fresh external directory before
+the final Git status check. Inspect the checkout and outputs if either command
+fails. This procedure uses the pinned workflow's jsonschema 4.26.0 dependency.
+
+```sh
+os_root=$(git -C ../quirk-os rev-parse --show-toplevel)
+subject=$(git -C "$os_root" rev-parse HEAD)
+evidence=$(mktemp -d "${TMPDIR:-/tmp}/quirk-one-to-infinity.XXXXXXXX")
+python scripts/ci_continuity.py capture --root "$os_root" --expect-head "$subject" \
+  --output "$evidence/execution" -- sh -eu -c '
+    program=programs/one-to-infinity
+    report=$program/evidence/validation-report.generated.json
+    test -z "$(git ls-files -- "$report")"
+    test ! -e "$report" && test ! -L "$report" || exit 1
+    python "$program/tests/validate_contracts.py"
+    python "$program/tests/emit_ci_receipt.py" --repo-root . --expected-head "$1" \
+      --out "$2/ci-receipt.json"
+    mv -- "$report" "$2/validation-report.generated.json"
+  ' sh "$subject" "$evidence"
+```
 
 Do not call a Python 3.12 run equivalent to Python 3.13 execution. Full-suite
 passes, deterministic fixture conformance, model behavior, human preference and
@@ -84,7 +116,8 @@ while the human or online evaluation remains `NOT_RUN`.
 ## Read-only recovery evidence
 
 ```sh
-python scripts/ci_continuity.py collect --pr 62 --output ../evidence/pr62-hosted.json
+snapshots=$(mktemp -d "${TMPDIR:-/tmp}/quirk-hosted.XXXXXXXX")
+python scripts/ci_continuity.py collect --pr 62 --output "$snapshots/before-rerun.json"
 ```
 
 Uses public GET requests, or an explicitly provided `GH_TOKEN` for authorized
@@ -92,8 +125,9 @@ access; it does not discover credentials. Paginates runs, attempt-specific jobs
 and annotations; stops on errors/rate limits without a retry loop. Refetches the
 PR head and base at the end. The result preserves base/head, run IDs/attempts, job IDs,
 runner IDs, step results and annotations. An annotation access failure is recorded
-as unavailable, not inferred billing. Billing is confirmed only for jobs whose
-annotations name it; zero executed steps alone means unknown startup cause.
+as unavailable. A completed step takes precedence over a billing annotation.
+A confirmed billing startup block requires a terminal failure with explicit
+startup evidence. Missing step data leaves execution unverified.
 
 The four PR #62 checks are assessed independently using workflow path, event,
 exact API head, latest run/attempt, runner assignment and named successful test
@@ -139,8 +173,9 @@ This classifier deliberately cannot grant merge readiness.
    Reruns retain their original SHA/ref; an old run cannot validate a new head.
    If the correct PR-event run does not exist, use a normal authorized PR event;
    dispatch is not equivalent for Evidence Binding, which requires `pull_request`.
-6. Collect again and inspect all four gates plus every additional check currently
-   required. Preserve logs/artifacts before expiry. Refetch head/base immediately
+6. After the rerun, collect to a fresh path with
+   `python scripts/ci_continuity.py collect --pr 62 --output "$snapshots/after-rerun.json"`.
+   Inspect all four gates plus every additional check currently required. Preserve logs/artifacts before expiry. Refetch head/base immediately
    before review; any change makes the disposition stale. Keep drafts and merge
    holds until execution, review and current repository protections all agree.
 7. If smoke is still zero-step, stop bulk retries. Send a private support report

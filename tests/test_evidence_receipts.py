@@ -454,6 +454,28 @@ class EvidenceReceiptTest(unittest.TestCase):
             git_commit(fixture.root, "duplicate receipt")
             self.assertNotEqual(fixture.validate().returncode, 0)
 
+    def test_merge_keeps_receipt_subject_and_squash_of_identical_tree_loses_it(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = self.fixture(directory)
+            generated = fixture.generate()
+            self.assertEqual(generated.returncode, 0, generated.stderr)
+            candidate = git_commit(fixture.root, "receipt only")
+
+            git(fixture.root, "switch", "-c", "integration", fixture.base)
+            git(fixture.root, "merge", "--no-ff", "-m", "preserve tested subject", candidate)
+            merged = git(fixture.root, "rev-parse", "HEAD").stdout.strip()
+            args = ("--range-base", fixture.base, "--require-covered-diff", "--range-head")
+            result = fixture.validate(*args, merged)
+            self.assertEqual(result.returncode, 0, result.stderr)
+
+            git(fixture.root, "switch", "-c", "squashed", fixture.base)
+            git(fixture.root, "merge", "--squash", candidate)
+            squashed = git_commit(fixture.root, "same bytes without tested parent")
+            self.assertEqual(git(fixture.root, "diff", "--exit-code", merged, squashed).returncode, 0)
+            result = fixture.validate(*args, squashed)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("subject commit must be an ancestor", result.stderr)
+
     def test_non_ancestor_base_or_subject_fails(self):
         with tempfile.TemporaryDirectory() as directory:
             fixture = self.fixture(directory)
