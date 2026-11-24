@@ -50,8 +50,10 @@ automated, and states what is deliberately not.
   merge bot, and no self-triggering loop. Routines and cloud agents are
   optional external schedulers, configured by the owner, that must still open
   pull requests that pass the same gates.
-- **Merge, canon, release, deploy, publish.** Owner-only, through rulesets
-  and environment protections that repository files cannot change.
+- **Merge, canon, release, deploy, publish.** The owner decides each effect.
+  During the runner outage, a named operator can execute a reviewed merge under
+  the [contributor procedure](../../CONTRIBUTING.md#working-through-a-hosted-runner-outage).
+  Check the grant separately for any release, deployment, or publication triggered by merging.
 
 ## Kill switch
 

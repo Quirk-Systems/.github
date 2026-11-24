@@ -120,7 +120,9 @@ Markdown output names them under its findings.
   person or a session on a host they control. It executes only the command a
   repository declares and reports exit codes; it is not a substitute for that
   repository's own required checks.
-- **Merge, canon, release, deploy.** Unchanged: owner-only.
+- **Merge, canon, release, deploy.** The owner decides. For execution of an
+  owner-authorized merge during the runner outage, see the
+  [contributor procedure](../../CONTRIBUTING.md#working-through-a-hosted-runner-outage).
 
 ## Adding the scheduled loops
 
