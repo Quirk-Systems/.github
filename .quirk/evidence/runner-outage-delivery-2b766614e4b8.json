@@ -1,0 +1,82 @@
+{
+  "schema_version": "evidence-receipt.v1",
+  "receipt_id": "qreceipt.runner-outage-delivery.2b766614e4b8",
+  "repository": "Quirk-Systems/.github",
+  "status": "verified",
+  "subject": {
+    "base_commit": "45abd75aeea6681f0b3b04fa63e865037620e474",
+    "commit": "2b766614e4b82373200e45bab6dafcd6638f2166",
+    "changed_paths": [
+      "AGENTS.md",
+      "CONTRIBUTING.md",
+      "docs/governance/AUTONOMOUS_OPERATIONS.md",
+      "docs/governance/WORKSPACE_TOOLING.md"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "qclaim.runner-outage-delivery.2b766614e4b8",
+      "claim_type": "evidence",
+      "authority_effect": "none",
+      "statement": "Four contributor and agent documents describe assigned branch work, early review, and owner-directed merges during a hosted runner outage. The documentation tests establish structural consistency. Hosted execution, merge approval, and live configuration are separate observations. The repository-wide validation encountered a pre-existing living-document freshness failure.",
+      "evidence_paths": [
+        "AGENTS.md",
+        "CONTRIBUTING.md",
+        "docs/governance/AUTONOMOUS_OPERATIONS.md",
+        "docs/governance/WORKSPACE_TOOLING.md"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "AGENTS.md",
+      "state": "present",
+      "git_blob": "506705a5c4c436cd039b45cad277480c912e3e28",
+      "sha256": "sha256:2a888a40445adbc67ab129ba80775d9f9452f398a282a721f1cd4ea5e32c7d8b"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "state": "present",
+      "git_blob": "d31aea61501626e8a88edcd8283e70964596e703",
+      "sha256": "sha256:ab6f47753ffc50c609db05050704deff11ac3e63a0e43e1fceda8b4b7cdc7e58"
+    },
+    {
+      "path": "docs/governance/AUTONOMOUS_OPERATIONS.md",
+      "state": "present",
+      "git_blob": "fd7118aa099db3a1614e7213699bea703e47281e",
+      "sha256": "sha256:959b5178965a91cd20b9fff7a76626c95c4d2c4633d4ec54efc9a3ce4231555f"
+    },
+    {
+      "path": "docs/governance/WORKSPACE_TOOLING.md",
+      "state": "present",
+      "git_blob": "ea2b1754601914e45895d80431bffd6050bf3e8d",
+      "sha256": "sha256:7e157a5033382c3eb87c925d98f424377b6185d331a05dfc8f462869ab258c09"
+    }
+  ],
+  "verification": {
+    "commands": [
+      {
+        "command": "git diff --check 45abd75aeea6681f0b3b04fa63e865037620e474 HEAD",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 scripts/validate_agent_assets.py",
+        "result": "pass",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 -m unittest tests.test_agent_assets tests.test_evidence_receipts",
+        "result": "pass",
+        "exit_code": 0
+      }
+    ],
+    "verified_at": "2026-11-24T17:57:33Z"
+  },
+  "authority": {
+    "admission_effect": "none",
+    "authority_ref": null
+  },
+  "correction": null,
+  "receipt_sha256": "sha256:8dcc99062eb7b3c1d96133748d516288bb83f6c4b0efc81e1fb9e07c94224dc8"
+}

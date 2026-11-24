@@ -46,7 +46,36 @@ Each repo exposes a single command that runs the full local validation pipeline:
 | [.github](https://github.com/Quirk-Systems/.github)                   | `scripts/validate.sh` (unit tests + validators + ruff + actionlint + zizmor) |
 | [project-scaffold](https://github.com/Quirk-Systems/project-scaffold) | `bun run validate` (lint + type-check + test + build)                       |
 
-Run it before opening a PR. CI runs the same checks; passing locally first saves a round trip.
+Run it before requesting review. A draft may open earlier and list what still needs testing.
+
+### Working through a hosted runner outage
+
+During [incident #62](https://github.com/Quirk-Systems/.github/issues/62), an assigned
+change can move through these steps. Follow any narrower repository, role, or
+PR-specific direction, including an explicit instruction to keep a draft or hold a merge.
+
+| Action | When to proceed |
+| --- | --- |
+| Commit and push | The assignment covers the repository and the change. Create or use a dedicated work branch, commit in coherent pieces, and push normally. One assignment covers subsequent in-scope pushes. |
+| Open or update a draft | Share work as soon as a reviewer could help. List unfinished work and checks still to run. |
+| Mark ready for review | The diff is ready for a reviewer. Give the base and head, local commands and results, and any gaps. A hosted job that never started can be recorded as such and review can begin. |
+| Merge | An owner can authorize one reviewed PR or a batch by listing each repository, PR, base, head, and who may execute the merge. The named operator may then use GitHub's ordinary merge path without another round of approval. |
+
+For a merge during the incident, inspect the local evidence, blocking findings,
+required reviews and checks, and any effects triggered by merging. An optional
+hosted job that never acquired a runner can be recorded as unexecuted. An
+unsatisfied required check, a failing relevant test, an unresolved blocker, or an
+effect outside the grant keeps that PR on hold. If a check's requirement or
+execution is unknown, establish it before relying on the outage allowance.
+
+Immediately before merging, re-read the base, head and owner decision. If either
+SHA moved, review the delta and renew the entry for that PR. Supply the expected
+head to the ordinary merge operation with bypass disabled and use a merge commit for receipt-bearing
+work. Record the resulting merge SHA. The author cannot supply their own
+independent review. Required CI contexts keep their own provenance.
+
+Return to the normal hosted validation procedure when runner recovery is
+verified under #62. The owner can withdraw a grant earlier.
 
 ### Shipping a change to `.github` (evidence binding)
 

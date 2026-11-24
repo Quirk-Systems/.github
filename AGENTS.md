@@ -78,10 +78,14 @@ python scripts/validate_evidence_receipts.py --repository Quirk-Systems/.github 
 ## Permissions
 
 - **Allowed without asking**: read anything; run tests, validators, lint;
-  edit files in the assigned scope; commit on the assigned branch; open a draft PR.
+  edit files in the assigned scope; create a work branch for that assignment;
+  commit, push normally, and open or update a draft PR. During the runner outage,
+  follow "Working through a hosted runner outage" in `CONTRIBUTING.md` to
+  request review and execute an owner's recorded merge decision within its scope.
 - **Ask first**: changing a schema version, editing `.quirk/registry.json`
   concepts, adding a workflow with any `write` permission, deleting receipts.
-- **Never**: approve or merge your own PR; dismiss reviews; force-push or
+- **Never**: approve your own PR; merge it outside the owner's explicit
+  incident procedure; dismiss reviews; force-push or
   `--no-verify`; edit rulesets, secrets, or org settings; claim canon,
   admission, deployment, or publication happened.
 
