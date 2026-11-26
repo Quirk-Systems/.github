@@ -1,0 +1,83 @@
+{
+  "reviewed": "2026-11-26",
+  "timezone": "UTC",
+  "authority_effect": "none",
+  "scope": "Public-source traceability for issue #69's November 24 aggregate visibility update. Private repository details are intentionally excluded.",
+  "sources": [
+    {
+      "role": "issue report",
+      "url": "https://github.com/Quirk-Systems/.github/issues/69",
+      "source_date": "2026-11-24 update; issue opened 2026-11-20",
+      "checked": true,
+      "evidence": "The issue reports 7 public and 43 private repositories; says all 43 private repositories were checked for refs, default-branch trees where available, issue/PR presence, releases, and Actions run counts; notes two repositories with no branches had an issue; and identifies the private governance boundary as remaining private.",
+      "evidence_class": "REPORTED, not independently verified"
+    },
+    {
+      "role": "historical census source",
+      "url": "https://github.com/Quirk-Systems/quirk-os/blob/a38a73548c0f2ec0c9f668c654256599c6468c25/docs/cross-repo/repository-census.json",
+      "source_revision": "a38a73548c0f2ec0c9f668c654256599c6468c25",
+      "source_date": "2026-10-14 (file inspected_at; commit date not checked)",
+      "checked": true,
+      "evidence": "The file says its installed-repository search returned 49 results, with 44 private and 5 public. Its repository list contains five public entries; private entries are only represented in aggregate.",
+      "evidence_class": "INDEPENDENTLY VERIFIED file content at the cited revision; historical snapshot only"
+    },
+    {
+      "role": "PR locator and current status",
+      "url": "https://github.com/Quirk-Systems/.github/pull/71",
+      "source_revision": "head 1892136d752f3673e8eb134c344030a9760c7d7b; base 45abd75aeea6681f0b3b04fa63e865037620e474",
+      "source_date": "2026-11-26",
+      "checked": true,
+      "evidence": "The PR is open and draft, with one initial-plan commit. Its body repeats issue #69 and does not provide repository-specific approved visibility changes.",
+      "evidence_class": "INDEPENDENTLY VERIFIED PR metadata"
+    },
+    {
+      "role": "local portfolio record",
+      "repository_path": ".quirk/repositories.json",
+      "source_revision": null,
+      "source_date": "local working-tree snapshot; commit not resolved",
+      "checked": true,
+      "evidence": "The local registry records Quirk-Systems/.github-private as private, class canon, lifecycle active. This review does not modify that record or use the unresolved local revision as a dated external source.",
+      "evidence_class": "INDEPENDENTLY OBSERVED locally; immutable source revision unknown"
+    }
+  ],
+  "claims_and_limits": {
+    "reported_not_verified": [
+      "The November 24 organization inventory count is 7 public and 43 private.",
+      "All 43 private repositories received the checks described in issue #69.",
+      "Two repositories with no branch refs nevertheless had an issue."
+    ],
+    "independently_verified": [
+      "The census file at the cited Quirk-Systems/quirk-os revision is an October 14 snapshot stating 49 total, 44 private, and 5 public; it lists only five public repositories.",
+      "PR #71 has the cited one-commit head and base and remains an open draft at the checked metadata."
+    ],
+    "not_established": [
+      "The live organization-wide visibility count or per-repository visibility as of this review.",
+      "The contents or outcomes of the private-repository checks described in the issue.",
+      "Approval to make any repository public."
+    ]
+  },
+  "status_and_boundary": {
+    "private_governance_boundary": "Preserve Quirk-Systems/.github-private as private; the local registry records it as canon/active. No visibility or lifecycle change is made.",
+    "portfolio_proposals": "The three class/lifecycle pairs in issue #69 remain proposals, not approved dispositions; no registry classifications or statuses are changed.",
+    "visibility_changes": "Issue #69 contains no repository-specific approved visibility changes. No repository visibility is changed."
+  },
+  "reconciliation": {
+    "observation": "The issue's November 24 reported count (7 public, 43 private; 50 total) differs from the census's October 14 snapshot (5 public, 44 private; 49 total).",
+    "interpretation": "These are differently dated snapshots. The older census is not current-count evidence and does not independently verify the later issue report.",
+    "unresolved": "No independent live organization inventory or per-repository verification was performed for this review."
+  },
+  "references": {
+    "checked": [
+      "https://github.com/Quirk-Systems/.github/issues/69",
+      "https://github.com/Quirk-Systems/.github/pull/71",
+      "https://github.com/Quirk-Systems/quirk-os/blob/a38a73548c0f2ec0c9f668c654256599c6468c25/docs/cross-repo/repository-census.json",
+      ".quirk/repositories.json (local working-tree snapshot; revision unresolved)"
+    ],
+    "unchecked": [
+      "https://github.com/orgs/Quirk-Systems/repositories (not independently opened for this review)",
+      "Private repository revision links and underlying per-repository check evidence (not inspected or reproduced)"
+    ]
+  },
+  "next_unresolved_decision": "An authorized owner must decide whether any specifically named repository is eligible for a visibility change and record that disposition. Keep the private governance boundary private. Only after an authorized change should the resulting GitHub visibility and aggregate count be rechecked and recorded.",
+  "verification_limits": "scripts/validate.sh was attempted in the worktree and failed: 233 tests ran and test_repository_documents_are_fresh_today reported four living documents overdue for review. The command stopped at that failure, was not run against a committed subject SHA, and its later checks did not run. No link checker, receipt generator, or evidence-receipt gate was run."
+}
